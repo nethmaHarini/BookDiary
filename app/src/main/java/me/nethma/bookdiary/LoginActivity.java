@@ -17,6 +17,13 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import me.nethma.bookdiary.database.AppDatabase;
+import me.nethma.bookdiary.database.User;
+import me.nethma.bookdiary.database.UserDao;
+
 public class LoginActivity extends AppCompatActivity {
 
     private EditText etEmail, etPassword;
@@ -26,6 +33,8 @@ public class LoginActivity extends AppCompatActivity {
     private TextView tvForgotPassword, tvCreateAccount;
 
     private boolean passwordVisible = false;
+    private UserDao userDao;
+    private final ExecutorService executor = Executors.newSingleThreadExecutor();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +49,8 @@ public class LoginActivity extends AppCompatActivity {
                             systemBars.right, systemBars.bottom);
                     return insets;
                 });
+
+        userDao = AppDatabase.getInstance(this).userDao();
 
         bindViews();
         setListeners();
@@ -56,6 +67,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void setListeners() {
+
         // Toggle password visibility
         btnTogglePassword.setOnClickListener(v -> {
             passwordVisible = !passwordVisible;
@@ -66,11 +78,10 @@ public class LoginActivity extends AppCompatActivity {
                 etPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
                 btnTogglePassword.setImageResource(R.drawable.ic_visibility);
             }
-            // Keep cursor at end
             etPassword.setSelection(etPassword.getText().length());
         });
 
-        // Log In button
+        // Log In button → query Room on background thread
         btnLogin.setOnClickListener(v -> {
             String email    = etEmail.getText().toString().trim();
             String password = etPassword.getText().toString();
@@ -85,8 +96,27 @@ public class LoginActivity extends AppCompatActivity {
                 etPassword.requestFocus();
                 return;
             }
-            // TODO: wire up authentication
-            Toast.makeText(this, "Logging in…", Toast.LENGTH_SHORT).show();
+
+            btnLogin.setEnabled(false);
+            executor.execute(() -> {
+                User user = userDao.login(email, password);
+                runOnUiThread(() -> {
+                    btnLogin.setEnabled(true);
+                    if (user != null) {
+                        Toast.makeText(this,
+                                "Welcome back, " + user.username + "!", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(this, MainActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        Toast.makeText(this,
+                                "Invalid email or password.", Toast.LENGTH_SHORT).show();
+                        etPassword.setError("Invalid email or password");
+                        etPassword.requestFocus();
+                    }
+                });
+            });
         });
 
         // Google sign-in
@@ -103,7 +133,10 @@ public class LoginActivity extends AppCompatActivity {
         tvCreateAccount.setOnClickListener(v ->
                 startActivity(new Intent(this, RegisterActivity.class)));
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        executor.shutdown();
+    }
 }
-
-
-
