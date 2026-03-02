@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "557838479717",
+    "project_id": "bookdiary-41ff5",
+    "storage_bucket": "bookdiary-41ff5.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:557838479717:android:44860a4cd382cee4cbf18c",
+        "android_client_info": {
+          "package_name": "me.nethma.bookdiary"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "557838479717-c8t7k7i9u74bkdivr3mqja57o1ibrfjp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCInB7MdJnkwD-8wH-91h6K4677ZA5Nsac"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "557838479717-c8t7k7i9u74bkdivr3mqja57o1ibrfjp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
