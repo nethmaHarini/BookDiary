@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">BookDiary</string>
+
+    <!-- Splash -->
     <string name="splash_title">Book Recommendation Diary</string>
     <string name="splash_tagline">YOUR PERSONAL LITERARY JOURNEY</string>
     <string name="splash_loading">Loading…</string>
@@ -7,4 +9,19 @@
     <string name="splash_crafted">CRAFTED FOR READERS</string>
     <string name="cd_book_icon">Book Diary logo</string>
     <string name="cd_star_badge">Star badge</string>
+
+    <!-- Login -->
+    <string name="login_welcome">Welcome</string>
+    <string name="login_subtitle">Sign in to your reading diary.</string>
+    <string name="login_label_email">Email</string>
+    <string name="login_hint_email">Enter your email</string>
+    <string name="login_label_password">Password</string>
+    <string name="login_hint_password">••••••••</string>
+    <string name="login_btn">Log In</string>
+    <string name="login_forgot">Forgot password?</string>
+    <string name="login_or">Or continue with</string>
+    <string name="login_google">Continue with Google</string>
+    <string name="login_no_account">Don\'t have an account?</string>
+    <string name="login_create">Create an account</string>
+    <string name="cd_google_logo">Google logo</string>
 </resources>
