@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Radial gradient glow: rgba(17,82,212,0.15) at center → transparent -->
+<!--
+  Matches CSS: radial-gradient(circle at center, rgba(17,82,212,0.15) 0%, transparent 70%)
+  startColor = #1152D4 at 15% opacity = #261152D4
+  endColor   = fully transparent background dark = #00101622
+  gradientRadius is large (800dp) so it spans the full screen and fades out gently
+-->
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="oval">
+    android:shape="rectangle">
     <gradient
         android:type="radial"
-        android:gradientRadius="50%p"
+        android:gradientRadius="800dp"
+        android:centerX="0.5"
+        android:centerY="0.5"
         android:startColor="#261152D4"
         android:endColor="#00101622" />
 </shape>
-
