@@ -19,5 +19,10 @@ public interface UserDao {
     // Check if email already registered
     @Query("SELECT * FROM users WHERE email = :email LIMIT 1")
     User findByEmail(String email);
+
+    // Reset password: update password for a given email
+    @Query("UPDATE users SET password = :newPassword WHERE email = :email")
+    void updatePassword(String email, String newPassword);
 }
+
 

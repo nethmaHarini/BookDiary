@@ -41,4 +41,23 @@
     <string name="register_or">OR</string>
     <string name="register_have_account">Already have an account?</string>
     <string name="register_login">Log in</string>
+
+    <!-- Forgot Password -->
+    <string name="forgot_title">Forgot Password</string>
+    <string name="forgot_subtitle">Enter your registered email address to find your account and reset your password.</string>
+    <string name="forgot_label_email">Email Address</string>
+    <string name="forgot_hint_email">example@email.com</string>
+    <string name="forgot_btn">Find My Account</string>
+    <string name="forgot_remember">Remember your password?</string>
+    <string name="forgot_login">Log in</string>
+
+    <!-- Reset Password -->
+    <string name="reset_title">Reset Password</string>
+    <string name="reset_subtitle">Enter your new password below to regain access to your account.</string>
+    <string name="reset_label_new">New Password</string>
+    <string name="reset_hint_password">••••••••</string>
+    <string name="reset_label_confirm">Confirm New Password</string>
+    <string name="reset_btn">Reset Password</string>
+    <string name="reset_remember">Remember your password?</string>
+    <string name="reset_login">Log in</string>
 </resources>
