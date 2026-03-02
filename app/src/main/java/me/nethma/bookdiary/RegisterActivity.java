@@ -7,7 +7,6 @@ import android.text.method.PasswordTransformationMethod;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,13 +16,12 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-public class LoginActivity extends AppCompatActivity {
+public class RegisterActivity extends AppCompatActivity {
 
-    private EditText etEmail, etPassword;
-    private ImageButton btnTogglePassword;
-    private Button btnLogin;
-    private LinearLayout btnGoogle;
-    private TextView tvForgotPassword, tvCreateAccount;
+    private EditText etUsername, etEmail, etPassword, etConfirmPassword;
+    private ImageButton btnTogglePassword, btnBack;
+    private Button btnRegister;
+    private TextView tvLogin;
 
     private boolean passwordVisible = false;
 
@@ -31,10 +29,10 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_register);
 
         ViewCompat.setOnApplyWindowInsetsListener(
-                findViewById(R.id.login_root), (v, insets) -> {
+                findViewById(R.id.register_root), (v, insets) -> {
                     Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
                     v.setPadding(systemBars.left, systemBars.top,
                             systemBars.right, systemBars.bottom);
@@ -46,16 +44,21 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void bindViews() {
+        etUsername        = findViewById(R.id.et_username);
         etEmail           = findViewById(R.id.et_email);
         etPassword        = findViewById(R.id.et_password);
+        etConfirmPassword = findViewById(R.id.et_confirm_password);
         btnTogglePassword = findViewById(R.id.btn_toggle_password);
-        btnLogin          = findViewById(R.id.btn_login);
-        btnGoogle         = findViewById(R.id.btn_google);
-        tvForgotPassword  = findViewById(R.id.tv_forgot_password);
-        tvCreateAccount   = findViewById(R.id.tv_create_account);
+        btnRegister       = findViewById(R.id.btn_register);
+        btnBack           = findViewById(R.id.btn_back);
+        tvLogin           = findViewById(R.id.tv_login);
     }
 
     private void setListeners() {
+
+        // Back button
+        btnBack.setOnClickListener(v -> finish());
+
         // Toggle password visibility
         btnTogglePassword.setOnClickListener(v -> {
             passwordVisible = !passwordVisible;
@@ -66,44 +69,47 @@ public class LoginActivity extends AppCompatActivity {
                 etPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
                 btnTogglePassword.setImageResource(R.drawable.ic_visibility);
             }
-            // Keep cursor at end
             etPassword.setSelection(etPassword.getText().length());
         });
 
-        // Log In button
-        btnLogin.setOnClickListener(v -> {
+        // Create Account button
+        btnRegister.setOnClickListener(v -> {
+            String username = etUsername.getText().toString().trim();
             String email    = etEmail.getText().toString().trim();
             String password = etPassword.getText().toString();
+            String confirm  = etConfirmPassword.getText().toString();
 
+            if (username.isEmpty()) {
+                etUsername.setError("Please enter your username");
+                etUsername.requestFocus();
+                return;
+            }
             if (email.isEmpty()) {
                 etEmail.setError("Please enter your email");
                 etEmail.requestFocus();
                 return;
             }
-            if (password.isEmpty()) {
-                etPassword.setError("Please enter your password");
+            if (password.length() < 8) {
+                etPassword.setError("Password must be at least 8 characters");
                 etPassword.requestFocus();
                 return;
             }
-            // TODO: wire up authentication
-            Toast.makeText(this, "Logging in…", Toast.LENGTH_SHORT).show();
+            if (!password.equals(confirm)) {
+                etConfirmPassword.setError("Passwords do not match");
+                etConfirmPassword.requestFocus();
+                return;
+            }
+            // TODO: wire up registration logic
+            Toast.makeText(this, "Account created!", Toast.LENGTH_SHORT).show();
         });
 
-        // Google sign-in
-        btnGoogle.setOnClickListener(v ->
-                Toast.makeText(this, "Google sign-in coming soon", Toast.LENGTH_SHORT).show()
-        );
-
-        // Forgot password
-        tvForgotPassword.setOnClickListener(v ->
-                Toast.makeText(this, "Forgot password flow coming soon", Toast.LENGTH_SHORT).show()
-        );
-
-        // Create account
-        tvCreateAccount.setOnClickListener(v ->
-                startActivity(new Intent(this, RegisterActivity.class)));
+        // Already have an account? → go back to Login
+        tvLogin.setOnClickListener(v -> {
+            Intent intent = new Intent(this, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(intent);
+            finish();
+        });
     }
 }
-
-
 

@@ -24,4 +24,21 @@
     <string name="login_no_account">Don\'t have an account?</string>
     <string name="login_create">Create an account</string>
     <string name="cd_google_logo">Google logo</string>
+
+    <!-- Register -->
+    <string name="register_title">Create Account</string>
+    <string name="register_header">Create your Account</string>
+    <string name="register_subtitle">Start your reading journey today.</string>
+    <string name="register_label_username">User Name</string>
+    <string name="register_hint_username">User Name</string>
+    <string name="register_label_email">Email Address</string>
+    <string name="register_hint_email">example@gmail.com</string>
+    <string name="register_label_password">Password</string>
+    <string name="register_hint_password">Min. 8 characters</string>
+    <string name="register_label_confirm">Confirm Password</string>
+    <string name="register_hint_confirm">Repeat your password</string>
+    <string name="register_btn">Create Account</string>
+    <string name="register_or">OR</string>
+    <string name="register_have_account">Already have an account?</string>
+    <string name="register_login">Log in</string>
 </resources>
