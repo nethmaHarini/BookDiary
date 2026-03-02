@@ -41,6 +41,7 @@
                 android:layout_width="52dp"
                 android:layout_height="52dp"
                 android:layout_gravity="center"
+                android:contentDescription="@string/cd_book_icon"
                 android:src="@drawable/ic_book_logo"
                 android:scaleType="fitCenter" />
 
@@ -50,6 +51,7 @@
                 android:layout_width="28dp"
                 android:layout_height="28dp"
                 android:layout_gravity="top|end"
+                android:contentDescription="@string/cd_star_badge"
                 android:src="@drawable/ic_star_badge" />
         </FrameLayout>
 
@@ -62,7 +64,7 @@
             android:alpha="0"
             android:fontFamily="serif"
             android:letterSpacing="-0.02"
-            android:text="Book Diary"
+            android:text="@string/splash_title"
             android:textColor="@color/text_primary_dark"
             android:textSize="32sp"
             android:textStyle="bold"
@@ -75,14 +77,14 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
             android:alpha="0"
-            android:text="Your Reading Companion"
+            android:text="@string/splash_tagline"
             android:textColor="@color/text_secondary_dark"
             android:textSize="15sp"
             android:translationY="16dp" />
 
     </LinearLayout>
 
-    <!-- Loading dots row at bottom -->
+    <!-- Progress bar loading indicator at bottom -->
     <LinearLayout
         android:id="@+id/loading_container"
         android:layout_width="wrap_content"
@@ -90,30 +92,41 @@
         android:layout_marginBottom="72dp"
         android:alpha="0"
         android:gravity="center"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <View
-            android:id="@+id/dot1"
-            android:layout_width="8dp"
-            android:layout_height="8dp"
-            android:layout_marginEnd="6dp"
-            android:background="@drawable/bg_dot_active" />
+        <!-- "Loading…" label -->
+        <TextView
+            android:id="@+id/tv_loading_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="@string/splash_loading"
+            android:textColor="@color/text_secondary_dark"
+            android:textSize="12sp"
+            android:letterSpacing="0.08" />
 
-        <View
-            android:id="@+id/dot2"
-            android:layout_width="8dp"
-            android:layout_height="8dp"
-            android:layout_marginEnd="6dp"
-            android:background="@drawable/bg_dot_inactive" />
+        <!-- Progress bar track -->
+        <FrameLayout
+            android:layout_width="200dp"
+            android:layout_height="6dp">
 
-        <View
-            android:id="@+id/dot3"
-            android:layout_width="8dp"
-            android:layout_height="8dp"
-            android:background="@drawable/bg_dot_inactive" />
+            <!-- Track (background) -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bg_progress_track" />
+
+            <!-- Fill (foreground) – width animated in code -->
+            <View
+                android:id="@+id/progress_fill"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/bg_progress_fill" />
+
+        </FrameLayout>
 
     </LinearLayout>
 
@@ -124,7 +137,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="18dp"
         android:alpha="0"
-        android:text="v1.0"
+        android:text="@string/splash_version"
         android:textColor="#475569"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
