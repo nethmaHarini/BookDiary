@@ -26,4 +26,16 @@
     <color name="star_color">#FBBF24</color>
     <color name="divider_dark">#1E293B</color>
     <color name="divider_light">#E2E8F0</color>
+
+    <!-- Login Screen -->
+    <color name="card_bg_dark">#4D0A1628</color>
+    <color name="card_border_dark">#1AFFFFFF</color>
+    <color name="input_bg_dark">#0F172A</color>
+    <color name="input_border_dark">#334155</color>
+    <color name="input_icon_color">#94A3B8</color>
+    <color name="label_color_dark">#CBD5E1</color>
+    <color name="text_hint_dark">#64748B</color>
+    <color name="divider_or_dark">#334155</color>
+    <color name="social_btn_bg_dark">#0F172A</color>
+    <color name="social_btn_border_dark">#1E293B</color>
 </resources>
