@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/splash_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_dark">
+
+    <!-- Center content block: logo + name + tagline -->
+    <LinearLayout
+        android:id="@+id/center_block"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.42">
+
+        <!-- Logo circle container -->
+        <FrameLayout
+            android:id="@+id/logo_container"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:alpha="0"
+            android:scaleX="0.6"
+            android:scaleY="0.6">
+
+            <!-- Circle bg: semi-transparent primary -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bg_logo_circle" />
+
+            <!-- auto_stories book icon, blue tint -->
+            <ImageView
+                android:id="@+id/iv_book_icon"
+                android:layout_width="52dp"
+                android:layout_height="52dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_book_logo"
+                android:scaleType="fitCenter" />
+
+            <!-- Star badge: top-right corner -->
+            <ImageView
+                android:id="@+id/iv_star_badge"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_gravity="top|end"
+                android:src="@drawable/ic_star_badge" />
+        </FrameLayout>
+
+        <!-- App name: "Book Diary" bold serif -->
+        <TextView
+            android:id="@+id/tv_app_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:alpha="0"
+            android:fontFamily="serif"
+            android:letterSpacing="-0.02"
+            android:text="Book Diary"
+            android:textColor="@color/text_primary_dark"
+            android:textSize="32sp"
+            android:textStyle="bold"
+            android:translationY="24dp" />
+
+        <!-- Tagline: "Your Reading Companion" -->
+        <TextView
+            android:id="@+id/tv_tagline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:alpha="0"
+            android:text="Your Reading Companion"
+            android:textColor="@color/text_secondary_dark"
+            android:textSize="15sp"
+            android:translationY="16dp" />
+
+    </LinearLayout>
+
+    <!-- Loading dots row at bottom -->
+    <LinearLayout
+        android:id="@+id/loading_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="72dp"
+        android:alpha="0"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <View
+            android:id="@+id/dot1"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:layout_marginEnd="6dp"
+            android:background="@drawable/bg_dot_active" />
+
+        <View
+            android:id="@+id/dot2"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:layout_marginEnd="6dp"
+            android:background="@drawable/bg_dot_inactive" />
+
+        <View
+            android:id="@+id/dot3"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:background="@drawable/bg_dot_inactive" />
+
+    </LinearLayout>
+
+    <!-- Version label pinned to very bottom -->
+    <TextView
+        android:id="@+id/tv_version"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="18dp"
+        android:alpha="0"
+        android:text="v1.0"
+        android:textColor="#475569"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
