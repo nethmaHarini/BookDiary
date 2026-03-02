@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
     <style name="Base.Theme.BookDiary" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="colorPrimary">@color/primary</item>
@@ -6,10 +6,26 @@
         <item name="colorOnPrimary">@color/white</item>
         <item name="android:windowBackground">@color/background_dark</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@color/background_dark</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
     </style>
 
     <style name="Theme.BookDiary" parent="Base.Theme.BookDiary" />
+
+    <!-- Bottom nav label styles -->
+    <style name="BottomNavTextActive">
+        <item name="android:textSize">9sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:letterSpacing">0.08</item>
+    </style>
+
+    <style name="BottomNavTextInactive">
+        <item name="android:textSize">9sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:letterSpacing">0.08</item>
+    </style>
 
     <!-- Splash screen theme - no action bar, full screen dark -->
     <style name="Theme.BookDiary.Splash" parent="Theme.BookDiary">

@@ -34,6 +34,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private boolean passwordVisible = false;
     private UserDao userDao;
+    private SessionManager sessionManager;
     private GoogleSignInHelper googleSignInHelper;
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
 
@@ -52,6 +53,7 @@ public class LoginActivity extends AppCompatActivity {
                 });
 
         userDao             = AppDatabase.getInstance(this).userDao();
+        sessionManager      = new SessionManager(this);
         googleSignInHelper  = new GoogleSignInHelper(this);
 
         bindViews();
@@ -105,6 +107,7 @@ public class LoginActivity extends AppCompatActivity {
                 runOnUiThread(() -> {
                     btnLogin.setEnabled(true);
                     if (user != null) {
+                        sessionManager.saveSession(user.id, user.username, user.email, user.photoUrl);
                         Toast.makeText(this,
                                 "Welcome back, " + user.username + "!", Toast.LENGTH_SHORT).show();
                         goToMain();
@@ -142,8 +145,10 @@ public class LoginActivity extends AppCompatActivity {
                             }
                         }
                         final String welcomeName = existing != null ? existing.username : displayName;
+                        final int    savedId    = existing != null ? existing.id : -1;
                         runOnUiThread(() -> {
                             btnGoogle.setEnabled(true);
+                            sessionManager.saveSession(savedId, welcomeName, email, photoUrl);
                             Toast.makeText(LoginActivity.this,
                                     "Welcome, " + welcomeName + "!", Toast.LENGTH_SHORT).show();
                             goToMain();
