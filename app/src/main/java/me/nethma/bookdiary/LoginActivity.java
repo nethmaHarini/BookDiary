@@ -34,6 +34,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private boolean passwordVisible = false;
     private UserDao userDao;
+    private GoogleSignInHelper googleSignInHelper;
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
 
     @Override
@@ -50,7 +51,8 @@ public class LoginActivity extends AppCompatActivity {
                     return insets;
                 });
 
-        userDao = AppDatabase.getInstance(this).userDao();
+        userDao             = AppDatabase.getInstance(this).userDao();
+        googleSignInHelper  = new GoogleSignInHelper(this);
 
         bindViews();
         setListeners();
@@ -81,7 +83,7 @@ public class LoginActivity extends AppCompatActivity {
             etPassword.setSelection(etPassword.getText().length());
         });
 
-        // Log In button → query Room on background thread
+        // Email / password login
         btnLogin.setOnClickListener(v -> {
             String email    = etEmail.getText().toString().trim();
             String password = etPassword.getText().toString();
@@ -105,10 +107,7 @@ public class LoginActivity extends AppCompatActivity {
                     if (user != null) {
                         Toast.makeText(this,
                                 "Welcome back, " + user.username + "!", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(this, MainActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
-                        finish();
+                        goToMain();
                     } else {
                         Toast.makeText(this,
                                 "Invalid email or password.", Toast.LENGTH_SHORT).show();
@@ -119,19 +118,61 @@ public class LoginActivity extends AppCompatActivity {
             });
         });
 
-        // Google sign-in
-        btnGoogle.setOnClickListener(v ->
-                Toast.makeText(this, "Google sign-in coming soon", Toast.LENGTH_SHORT).show()
-        );
+        // Google Sign-In
+        btnGoogle.setOnClickListener(v -> {
+            btnGoogle.setEnabled(false);
+            googleSignInHelper.signIn(new GoogleSignInHelper.Callback() {
+                @Override
+                public void onSuccess(String email, String displayName,
+                                      String photoUrl, String googleId) {
+                    executor.execute(() -> {
+                        User existing = userDao.findByGoogleId(googleId);
+                        if (existing == null) {
+                            existing = userDao.findByEmail(email);
+                            if (existing != null) {
+                                // Link Google ID to existing email/password account
+                                existing.googleId = googleId;
+                                existing.photoUrl = photoUrl;
+                                userDao.insertUser(existing);
+                            } else {
+                                // Brand new Google user
+                                User newUser = new User(displayName, email, googleId, photoUrl);
+                                userDao.insertGoogleUser(newUser);
+                                existing = userDao.findByGoogleId(googleId);
+                            }
+                        }
+                        final String welcomeName = existing != null ? existing.username : displayName;
+                        runOnUiThread(() -> {
+                            btnGoogle.setEnabled(true);
+                            Toast.makeText(LoginActivity.this,
+                                    "Welcome, " + welcomeName + "!", Toast.LENGTH_SHORT).show();
+                            goToMain();
+                        });
+                    });
+                }
+
+                @Override
+                public void onError(String message) {
+                    btnGoogle.setEnabled(true);
+                    Toast.makeText(LoginActivity.this, message, Toast.LENGTH_LONG).show();
+                }
+            });
+        });
 
         // Forgot password
         tvForgotPassword.setOnClickListener(v ->
-                startActivity(new Intent(this, ForgotPasswordActivity.class))
-        );
+                startActivity(new Intent(this, ForgotPasswordActivity.class)));
 
         // Create account
         tvCreateAccount.setOnClickListener(v ->
                 startActivity(new Intent(this, RegisterActivity.class)));
+    }
+
+    private void goToMain() {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
     }
 
     @Override

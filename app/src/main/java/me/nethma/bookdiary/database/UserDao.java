@@ -23,6 +23,14 @@ public interface UserDao {
     // Reset password: update password for a given email
     @Query("UPDATE users SET password = :newPassword WHERE email = :email")
     void updatePassword(String email, String newPassword);
+
+    // Google Sign-In: find existing user by Google ID
+    @Query("SELECT * FROM users WHERE googleId = :googleId LIMIT 1")
+    User findByGoogleId(String googleId);
+
+    // Google Sign-In: insert with IGNORE so existing account is not overwritten
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    long insertGoogleUser(User user);
 }
 
 

@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -42,6 +43,15 @@ dependencies {
     implementation(libs.constraintlayout)
     implementation(libs.room.runtime)
     annotationProcessor(libs.room.compiler)
+    // Google Sign-In via CredentialManager
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.auth)
+    implementation(libs.google.identity.googleid)
+    implementation(libs.gms.play.services.auth)
+    // Firebase BoM — manages all Firebase library versions
+    implementation(platform(libs.firebase.bom))
+    // Firebase Authentication (required for Google Sign-In token verification)
+    implementation(libs.firebase.auth)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
