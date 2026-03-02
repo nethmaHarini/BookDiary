@@ -6,6 +6,7 @@ import android.text.method.PasswordTransformationMethod;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,7 +20,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private EditText etEmail, etPassword;
     private ImageButton btnTogglePassword;
-    private Button btnLogin, btnGoogle;
+    private Button btnLogin;
+    private LinearLayout btnGoogle;
     private TextView tvForgotPassword, tvCreateAccount;
 
     private boolean passwordVisible = false;
@@ -102,5 +104,6 @@ public class LoginActivity extends AppCompatActivity {
         );
     }
 }
+
 
 
