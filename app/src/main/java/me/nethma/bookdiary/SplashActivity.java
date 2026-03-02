@@ -4,19 +4,20 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
+import android.view.animation.LinearInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -29,10 +30,9 @@ public class SplashActivity extends AppCompatActivity {
     private TextView tvTagline;
     private View loadingContainer;
     private View tvVersion;
+    private View progressFill;
 
-    private View dot1, dot2, dot3;
-    private final Handler dotHandler = new Handler(Looper.getMainLooper());
-    private int dotStep = 0;
+    private final Handler handler = new Handler(Looper.getMainLooper());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,9 +58,7 @@ public class SplashActivity extends AppCompatActivity {
         tvTagline        = findViewById(R.id.tv_tagline);
         loadingContainer = findViewById(R.id.loading_container);
         tvVersion        = findViewById(R.id.tv_version);
-        dot1             = findViewById(R.id.dot1);
-        dot2             = findViewById(R.id.dot2);
-        dot3             = findViewById(R.id.dot3);
+        progressFill     = findViewById(R.id.progress_fill);
     }
 
     private void startSplashAnimation() {
@@ -96,48 +94,50 @@ public class SplashActivity extends AppCompatActivity {
         tagAnim.setDuration(400);
         tagAnim.setStartDelay(850);
 
-        // Loading dots + version fade in
-        ObjectAnimator dotsAlpha    = ObjectAnimator.ofFloat(loadingContainer, View.ALPHA, 0f, 1f);
-        ObjectAnimator versionAlpha = ObjectAnimator.ofFloat(tvVersion, View.ALPHA, 0f, 0.6f);
-        dotsAlpha.setDuration(350);
-        dotsAlpha.setStartDelay(1050);
+        // Progress bar container + version fade in
+        ObjectAnimator progressAlpha = ObjectAnimator.ofFloat(loadingContainer, View.ALPHA, 0f, 1f);
+        ObjectAnimator versionAlpha  = ObjectAnimator.ofFloat(tvVersion, View.ALPHA, 0f, 0.6f);
+        progressAlpha.setDuration(350);
+        progressAlpha.setStartDelay(1050);
         versionAlpha.setDuration(350);
         versionAlpha.setStartDelay(1050);
 
         AnimatorSet masterSet = new AnimatorSet();
-        masterSet.playTogether(logoAnim, nameAnim, tagAnim, dotsAlpha, versionAlpha);
+        masterSet.playTogether(logoAnim, nameAnim, tagAnim, progressAlpha, versionAlpha);
         masterSet.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
-                startDotAnimation();
+                startProgressAnimation();
             }
         });
         masterSet.start();
     }
 
-    private final Runnable dotRunnable = new Runnable() {
-        @Override
-        public void run() {
-            Drawable active   = ContextCompat.getDrawable(SplashActivity.this, R.drawable.bg_dot_active);
-            Drawable inactive = ContextCompat.getDrawable(SplashActivity.this, R.drawable.bg_dot_inactive);
+    private void startProgressAnimation() {
+        loadingContainer.post(() -> {
+            ViewGroup track = (ViewGroup) progressFill.getParent();
+            int trackWidth = track.getWidth();
 
-            dot1.setBackground(dotStep == 0 ? active : inactive);
-            dot2.setBackground(dotStep == 1 ? active : inactive);
-            dot3.setBackground(dotStep == 2 ? active : inactive);
-
-            dotStep = (dotStep + 1) % 3;
-            dotHandler.postDelayed(this, 400);
-        }
-    };
-
-    private void startDotAnimation() {
-        dotHandler.post(dotRunnable);
-        // Navigate after 1.6s of dots
-        dotHandler.postDelayed(this::navigateToMain, 1600);
+            ValueAnimator animator = ValueAnimator.ofInt(0, trackWidth);
+            animator.setDuration(1600);
+            animator.setInterpolator(new LinearInterpolator());
+            animator.addUpdateListener(animation -> {
+                int w = (int) animation.getAnimatedValue();
+                ViewGroup.LayoutParams lp = progressFill.getLayoutParams();
+                lp.width = w;
+                progressFill.setLayoutParams(lp);
+            });
+            animator.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    handler.postDelayed(SplashActivity.this::navigateToMain, 300);
+                }
+            });
+            animator.start();
+        });
     }
 
     private void navigateToMain() {
-        dotHandler.removeCallbacks(dotRunnable);
         View root = findViewById(R.id.splash_root);
         root.animate()
                 .alpha(0f)
@@ -154,6 +154,6 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        dotHandler.removeCallbacksAndMessages(null);
+        handler.removeCallbacksAndMessages(null);
     }
 }
