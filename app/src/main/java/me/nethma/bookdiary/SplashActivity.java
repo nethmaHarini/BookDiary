@@ -29,7 +29,7 @@ public class SplashActivity extends AppCompatActivity {
     private TextView tvAppName;
     private TextView tvTagline;
     private View loadingContainer;
-    private View tvVersion;
+    private View tvFooter;
     private View progressFill;
 
     private final Handler handler = new Handler(Looper.getMainLooper());
@@ -57,24 +57,24 @@ public class SplashActivity extends AppCompatActivity {
         tvAppName        = findViewById(R.id.tv_app_name);
         tvTagline        = findViewById(R.id.tv_tagline);
         loadingContainer = findViewById(R.id.loading_container);
-        tvVersion        = findViewById(R.id.tv_version);
+        tvFooter         = findViewById(R.id.tv_footer);
         progressFill     = findViewById(R.id.progress_fill);
     }
 
     private void startSplashAnimation() {
-        // Logo pop-in (scale + fade)
-        ObjectAnimator logoScaleX = ObjectAnimator.ofFloat(logoContainer, View.SCALE_X, 0.6f, 1f);
-        ObjectAnimator logoScaleY = ObjectAnimator.ofFloat(logoContainer, View.SCALE_Y, 0.6f, 1f);
+        // Logo pop-in (scale + fade) — OvershootInterpolator for a bouncy feel
+        ObjectAnimator logoScaleX = ObjectAnimator.ofFloat(logoContainer, View.SCALE_X, 0.7f, 1f);
+        ObjectAnimator logoScaleY = ObjectAnimator.ofFloat(logoContainer, View.SCALE_Y, 0.7f, 1f);
         ObjectAnimator logoAlpha  = ObjectAnimator.ofFloat(logoContainer, View.ALPHA,  0f, 1f);
-        logoScaleX.setInterpolator(new OvershootInterpolator(1.5f));
-        logoScaleY.setInterpolator(new OvershootInterpolator(1.5f));
+        logoScaleX.setInterpolator(new OvershootInterpolator(1.4f));
+        logoScaleY.setInterpolator(new OvershootInterpolator(1.4f));
         logoAlpha.setInterpolator(new DecelerateInterpolator());
         AnimatorSet logoAnim = new AnimatorSet();
         logoAnim.playTogether(logoScaleX, logoScaleY, logoAlpha);
         logoAnim.setDuration(550);
         logoAnim.setStartDelay(200);
 
-        // App name slide-up + fade
+        // Title slide-up + fade
         ObjectAnimator nameAlpha  = ObjectAnimator.ofFloat(tvAppName, View.ALPHA, 0f, 1f);
         ObjectAnimator nameTransY = ObjectAnimator.ofFloat(tvAppName, View.TRANSLATION_Y, 24f, 0f);
         nameAlpha.setInterpolator(new DecelerateInterpolator());
@@ -94,16 +94,18 @@ public class SplashActivity extends AppCompatActivity {
         tagAnim.setDuration(400);
         tagAnim.setStartDelay(850);
 
-        // Progress bar container + version fade in
+        // Progress bar container fade in
         ObjectAnimator progressAlpha = ObjectAnimator.ofFloat(loadingContainer, View.ALPHA, 0f, 1f);
-        ObjectAnimator versionAlpha  = ObjectAnimator.ofFloat(tvVersion, View.ALPHA, 0f, 0.6f);
         progressAlpha.setDuration(350);
         progressAlpha.setStartDelay(1050);
-        versionAlpha.setDuration(350);
-        versionAlpha.setStartDelay(1050);
+
+        // Footer fade in
+        ObjectAnimator footerAlpha = ObjectAnimator.ofFloat(tvFooter, View.ALPHA, 0f, 1f);
+        footerAlpha.setDuration(350);
+        footerAlpha.setStartDelay(1050);
 
         AnimatorSet masterSet = new AnimatorSet();
-        masterSet.playTogether(logoAnim, nameAnim, tagAnim, progressAlpha, versionAlpha);
+        masterSet.playTogether(logoAnim, nameAnim, tagAnim, progressAlpha, footerAlpha);
         masterSet.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {

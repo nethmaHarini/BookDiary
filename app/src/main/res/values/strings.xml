@@ -1,9 +1,10 @@
 <resources>
     <string name="app_name">BookDiary</string>
-    <string name="splash_title">Book Diary</string>
-    <string name="splash_tagline">Your Reading Companion</string>
+    <string name="splash_title">Book Recommendation Diary</string>
+    <string name="splash_tagline">YOUR PERSONAL LITERARY JOURNEY</string>
     <string name="splash_loading">Loading…</string>
     <string name="splash_version">v1.0</string>
+    <string name="splash_crafted">CRAFTED FOR READERS</string>
     <string name="cd_book_icon">Book Diary logo</string>
     <string name="cd_star_badge">Star badge</string>
 </resources>

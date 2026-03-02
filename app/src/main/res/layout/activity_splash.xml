@@ -7,119 +7,116 @@
     android:layout_height="match_parent"
     android:background="@color/background_dark">
 
-    <!-- Center content block: logo + name + tagline -->
+    <!-- Radial gradient glow (radial-gradient at center, primary/15 → transparent) -->
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/bg_splash_glow"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="1"
+        app:layout_constraintDimensionRatio="1:1" />
+
+    <!-- ── Center content column ── -->
     <LinearLayout
         android:id="@+id/center_block"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="vertical"
+        android:paddingHorizontal="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.42">
+        app:layout_constraintVertical_bias="0.44">
 
-        <!-- Logo circle container -->
+        <!-- ── Logo: 128dp circle with auto_stories icon + star badge ── -->
         <FrameLayout
             android:id="@+id/logo_container"
-            android:layout_width="96dp"
-            android:layout_height="96dp"
+            android:layout_width="128dp"
+            android:layout_height="128dp"
             android:alpha="0"
-            android:scaleX="0.6"
-            android:scaleY="0.6">
+            android:scaleX="0.7"
+            android:scaleY="0.7"
+            android:layout_marginBottom="32dp">
 
-            <!-- Circle bg: semi-transparent primary -->
+            <!-- Circle bg: primary/10 fill + primary/20 border -->
             <View
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/bg_logo_circle" />
 
-            <!-- auto_stories book icon, blue tint -->
+            <!-- auto_stories icon: thin weight, primary color, large -->
             <ImageView
                 android:id="@+id/iv_book_icon"
-                android:layout_width="52dp"
-                android:layout_height="52dp"
+                android:layout_width="72dp"
+                android:layout_height="72dp"
                 android:layout_gravity="center"
                 android:contentDescription="@string/cd_book_icon"
                 android:src="@drawable/ic_book_logo"
                 android:scaleType="fitCenter" />
 
-            <!-- Star badge: top-right corner -->
+            <!-- Star badge: absolute top-right, 40dp circle -->
             <ImageView
                 android:id="@+id/iv_star_badge"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_gravity="top|end"
+                android:layout_marginTop="-4dp"
+                android:layout_marginEnd="-4dp"
                 android:contentDescription="@string/cd_star_badge"
                 android:src="@drawable/ic_star_badge" />
         </FrameLayout>
 
-        <!-- App name: "Book Diary" bold serif -->
+        <!-- ── Title: "Book Recommendation Diary" serif bold ── -->
         <TextView
             android:id="@+id/tv_app_name"
-            android:layout_width="wrap_content"
+            android:layout_width="280dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
             android:alpha="0"
             android:fontFamily="serif"
+            android:gravity="center"
             android:letterSpacing="-0.02"
             android:text="@string/splash_title"
             android:textColor="@color/text_primary_dark"
-            android:textSize="32sp"
+            android:textSize="30sp"
             android:textStyle="bold"
             android:translationY="24dp" />
 
-        <!-- Tagline: "Your Reading Companion" -->
+        <!-- ── Tagline: uppercase, wide tracking, xs, slate-400 ── -->
         <TextView
             android:id="@+id/tv_tagline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
+            android:layout_marginTop="12dp"
             android:alpha="0"
+            android:fontFamily="sans-serif-light"
+            android:gravity="center"
+            android:letterSpacing="0.18"
             android:text="@string/splash_tagline"
+            android:textAllCaps="true"
             android:textColor="@color/text_secondary_dark"
-            android:textSize="15sp"
+            android:textSize="10sp"
             android:translationY="16dp" />
 
-    </LinearLayout>
-
-    <!-- Progress bar loading indicator at bottom -->
-    <LinearLayout
-        android:id="@+id/loading_container"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="72dp"
-        android:alpha="0"
-        android:gravity="center"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <!-- "Loading…" label -->
-        <TextView
-            android:id="@+id/tv_loading_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:text="@string/splash_loading"
-            android:textColor="@color/text_secondary_dark"
-            android:textSize="12sp"
-            android:letterSpacing="0.08" />
-
-        <!-- Progress bar track -->
+        <!-- ── Progress bar: 192dp wide, 4dp tall, rounded ── -->
         <FrameLayout
-            android:layout_width="200dp"
-            android:layout_height="6dp">
+            android:id="@+id/loading_container"
+            android:layout_width="192dp"
+            android:layout_height="4dp"
+            android:layout_marginTop="64dp"
+            android:alpha="0">
 
-            <!-- Track (background) -->
+            <!-- Track: slate-800 (#1E293B) -->
             <View
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/bg_progress_track" />
 
-            <!-- Fill (foreground) – width animated in code -->
+            <!-- Fill: primary blue, animated 0 → full -->
             <View
                 android:id="@+id/progress_fill"
                 android:layout_width="0dp"
@@ -130,16 +127,19 @@
 
     </LinearLayout>
 
-    <!-- Version label pinned to very bottom -->
+    <!-- ── Footer: "CRAFTED FOR READERS" pinned bottom ── -->
     <TextView
-        android:id="@+id/tv_version"
+        android:id="@+id/tv_footer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="18dp"
+        android:layout_marginBottom="40dp"
         android:alpha="0"
-        android:text="@string/splash_version"
-        android:textColor="#475569"
-        android:textSize="12sp"
+        android:fontFamily="sans-serif"
+        android:letterSpacing="0.2"
+        android:text="@string/splash_crafted"
+        android:textAllCaps="true"
+        android:textColor="#6B7280"
+        android:textSize="10sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
