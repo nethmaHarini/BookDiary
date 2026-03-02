@@ -1,5 +1,6 @@
 package me.nethma.bookdiary;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.ViewGroup;
 
@@ -18,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
 
     private BottomNavigationView bottomNav;
     private FragmentContainerView fragmentContainer;
+    private SessionManager sessionManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
         bottomNav         = findViewById(R.id.bottom_nav);
         fragmentContainer = findViewById(R.id.fragment_container);
+        sessionManager    = new SessionManager(this);
 
         // Apply window insets:
         // - status bar top padding to the fragment container
@@ -92,6 +95,15 @@ public class MainActivity extends AppCompatActivity {
         tx.replace(R.id.fragment_container, fragment);
         if (addToBackStack) tx.addToBackStack(null);
         tx.commit();
+    }
+
+    /** Call this from any Fragment (e.g. ProfileFragment) to log out */
+    public void logout() {
+        sessionManager.clearSession();
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
     }
 
     @Override
