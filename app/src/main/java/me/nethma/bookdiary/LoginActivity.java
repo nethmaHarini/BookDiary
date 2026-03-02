@@ -126,7 +126,7 @@ public class LoginActivity extends AppCompatActivity {
 
         // Forgot password
         tvForgotPassword.setOnClickListener(v ->
-                Toast.makeText(this, "Forgot password flow coming soon", Toast.LENGTH_SHORT).show()
+                startActivity(new Intent(this, ForgotPasswordActivity.class))
         );
 
         // Create account
