@@ -495,7 +495,7 @@ All Room database operations run on a **background thread** via `ExecutorService
 - [ ] 🌙 **Theme Toggle** — light/dark mode preference persisted via `SharedPreferences`
 - [ ] 🔒 **Password Hashing** — SHA-256 via `MessageDigest` before storing to Room DB
 
----
+<!-- ---
 
 ## 👥 Team & Responsibilities
 
@@ -508,6 +508,7 @@ All Room database operations run on a **background thread** via `ExecutorService
 | *(Team Member 5)* | **Profile Screen**, Edit Profile, Change Profile Picture |
 | *(Team Member 6)* | Favourites, Notifications, Theme Preference |
 
+-->
 > ### 📌 Note for Profile Screen Developer
 >
 > The `ProfileFragment` is already **wired into `MainActivity`'s bottom navigation**.
