@@ -17,8 +17,6 @@
 > **Module:** ICT3214 — Mobile Application Development
 >
 > **Project Idea:** #5 — Book Recommendation Diary
->
-> **Package:** `me.nethma.bookdiary`
 
 </div>
 
@@ -557,5 +555,6 @@ This project is submitted as academic coursework for ICT3214 — Mobile Applicat
   <i>"Read. Review. Remember."</i><br><br>
   Built with ❤️ for ICT3214 — Mobile Application Development
 </div>
+
 
 
