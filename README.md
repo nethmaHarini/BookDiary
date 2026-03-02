@@ -361,28 +361,7 @@ BookDiary/
 ├── gradle/
 │   └── libs.versions.toml                ← Version catalog
 ├── build.gradle.kts                      ← Root Gradle config
-├── settings.gradle.kts
-└── UI_Screens/                           ← Design references (HTML + PNG per screen)
-    ├── splash_screen/
-    ├── login_screen_with_icons/
-    ├── updated_registration_screen/
-    ├── forgot_password_with_splash_logo/
-    ├── reset_password_with_logo/
-    ├── home_dashboard_updated_nav/
-    ├── add_book_screen/
-    ├── book_detail_one_review/
-    ├── edit_book_with_status_selection/
-    ├── reading_diary_balanced_consistent_font/
-    ├── search_filter_no_reset/
-    ├── ratings_reviews/
-    ├── favourites_screen/
-    ├── profile_screen_updated_nav/
-    ├── edit_profile/
-    ├── change_profile_picture_simplified/
-    ├── dark_mode_notifications_recommendations_only/
-    ├── notification_settings_simplified/
-    ├── theme_preference_no_nav/
-    └── logout_screen_updated_logo/
+└── settings.gradle.kts
 ```
 
 ---
@@ -578,4 +557,5 @@ This project is submitted as academic coursework for ICT3214 — Mobile Applicat
   <i>"Read. Review. Remember."</i><br><br>
   Built with ❤️ for ICT3214 — Mobile Application Development
 </div>
+
 
