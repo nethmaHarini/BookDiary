@@ -60,4 +60,11 @@
     <string name="reset_btn">Reset Password</string>
     <string name="reset_remember">Remember your password?</string>
     <string name="reset_login">Log in</string>
+
+    <!-- Bottom Navigation -->
+    <string name="nav_home">Home</string>
+    <string name="nav_search">Search</string>
+    <string name="nav_add">Add</string>
+    <string name="nav_diary">Diary</string>
+    <string name="nav_profile">Profile</string>
 </resources>
