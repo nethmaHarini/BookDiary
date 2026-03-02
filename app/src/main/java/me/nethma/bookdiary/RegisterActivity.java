@@ -16,6 +16,13 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import me.nethma.bookdiary.database.AppDatabase;
+import me.nethma.bookdiary.database.User;
+import me.nethma.bookdiary.database.UserDao;
+
 public class RegisterActivity extends AppCompatActivity {
 
     private EditText etUsername, etEmail, etPassword, etConfirmPassword;
@@ -24,6 +31,8 @@ public class RegisterActivity extends AppCompatActivity {
     private TextView tvLogin;
 
     private boolean passwordVisible = false;
+    private UserDao userDao;
+    private final ExecutorService executor = Executors.newSingleThreadExecutor();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +47,8 @@ public class RegisterActivity extends AppCompatActivity {
                             systemBars.right, systemBars.bottom);
                     return insets;
                 });
+
+        userDao = AppDatabase.getInstance(this).userDao();
 
         bindViews();
         setListeners();
@@ -79,6 +90,7 @@ public class RegisterActivity extends AppCompatActivity {
             String password = etPassword.getText().toString();
             String confirm  = etConfirmPassword.getText().toString();
 
+            // Validate inputs on UI thread
             if (username.isEmpty()) {
                 etUsername.setError("Please enter your username");
                 etUsername.requestFocus();
@@ -99,8 +111,38 @@ public class RegisterActivity extends AppCompatActivity {
                 etConfirmPassword.requestFocus();
                 return;
             }
-            // TODO: wire up registration logic
-            Toast.makeText(this, "Account created!", Toast.LENGTH_SHORT).show();
+
+            // Database work on background thread
+            btnRegister.setEnabled(false);
+            executor.execute(() -> {
+                User existing = userDao.findByEmail(email);
+                if (existing != null) {
+                    runOnUiThread(() -> {
+                        btnRegister.setEnabled(true);
+                        etEmail.setError("Email already registered");
+                        etEmail.requestFocus();
+                    });
+                    return;
+                }
+
+                try {
+                    userDao.insertUser(new User(username, email, password));
+                    runOnUiThread(() -> {
+                        Toast.makeText(this,
+                                "Account created! Please log in.", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(this, LoginActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        startActivity(intent);
+                        finish();
+                    });
+                } catch (Exception e) {
+                    runOnUiThread(() -> {
+                        btnRegister.setEnabled(true);
+                        Toast.makeText(this,
+                                "Registration failed. Try again.", Toast.LENGTH_SHORT).show();
+                    });
+                }
+            });
         });
 
         // Already have an account? → go back to Login
@@ -111,5 +153,10 @@ public class RegisterActivity extends AppCompatActivity {
             finish();
         });
     }
-}
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        executor.shutdown();
+    }
+}
