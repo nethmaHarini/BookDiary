@@ -1,5 +1,5 @@
 <div align="center">
-<img src="app/src/main/res/drawable/logo.png" width="110" alt="BookDiary Logo"/>
+<img src="app/src/main/res/drawable/logo.png" width="100" height="80" alt="BookDiary Logo"/>
 
 # BookDiary
 
