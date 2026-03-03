@@ -72,6 +72,12 @@
             android:exported="false"
             android:theme="@style/Theme.BookDiary" />
 
+        <!-- Theme Preference Activity -->
+        <activity
+            android:name=".ThemePreferenceActivity"
+            android:exported="false"
+            android:theme="@style/Theme.BookDiary" />
+
         <!-- Boot Receiver to reschedule notifications after reboot -->
         <receiver
             android:name=".utils.BootReceiver"

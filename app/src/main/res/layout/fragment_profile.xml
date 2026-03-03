@@ -485,6 +485,7 @@
 
             <!-- "Dark" badge: text-xs font-bold text-primary px-2 py-1 bg-primary/10 rounded-lg uppercase -->
             <TextView
+                android:id="@+id/tv_theme_badge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"

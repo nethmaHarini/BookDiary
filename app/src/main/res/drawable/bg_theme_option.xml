@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Theme option row: selected = primary border + tinted bg, normal = dark card -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_checked="true">
+        <shape android:shape="rectangle">
+            <solid android:color="#0D1152D4" />
+            <corners android:radius="16dp" />
+            <stroke android:width="2dp" android:color="#1152D4" />
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#1A2236" />
+            <corners android:radius="16dp" />
+            <stroke android:width="1dp" android:color="#1E293B" />
+        </shape>
+    </item>
+</selector>
+
