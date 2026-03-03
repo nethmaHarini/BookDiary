@@ -4,9 +4,9 @@
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryVariant">@color/primary_dark</item>
         <item name="colorOnPrimary">@color/white</item>
-        <item name="android:windowBackground">@color/background_dark</item>
+        <item name="android:windowBackground">@color/app_background</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:navigationBarColor">@color/background_dark</item>
+        <item name="android:navigationBarColor">@color/nav_bar_bg</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
     </style>
 
@@ -27,9 +27,9 @@
         <item name="android:letterSpacing">0.08</item>
     </style>
 
-    <!-- Splash screen theme - no action bar, full screen dark -->
+    <!-- Splash screen theme -->
     <style name="Theme.BookDiary.Splash" parent="Theme.BookDiary">
-        <item name="android:windowBackground">@color/background_dark</item>
+        <item name="android:windowBackground">@color/app_background</item>
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowContentOverlay">@null</item>
     </style>

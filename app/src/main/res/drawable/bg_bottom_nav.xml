@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Bottom nav background with top border: border-t border-slate-800 -->
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- Top border line: slate-800 = #1E293B -->
     <item android:top="0dp" android:bottom="0dp">
         <shape android:shape="rectangle">
-            <solid android:color="#1E293B" />
+            <solid android:color="@color/app_divider" />
         </shape>
     </item>
-    <!-- Main background: background_dark, offset by 1dp to show the top border -->
     <item android:top="1dp">
         <shape android:shape="rectangle">
-            <solid android:color="@color/background_dark" />
+            <solid android:color="@color/app_background" />
         </shape>
     </item>
 </layer-list>

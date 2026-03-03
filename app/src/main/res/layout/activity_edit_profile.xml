@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_dark"
+    android:background="@color/app_background"
     android:orientation="vertical"
     android:fitsSystemWindows="true">
 
@@ -12,7 +12,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/background_dark"
+        android:background="@color/app_background"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingStart="12dp"
@@ -34,7 +34,7 @@
                 android:layout_height="match_parent"
                 android:contentDescription="@null"
                 android:src="@drawable/ic_arrow_back"
-                app:tint="@color/text_primary_dark" />
+                app:tint="@color/text_primary" />
         </FrameLayout>
 
         <TextView
@@ -43,7 +43,7 @@
             android:layout_marginStart="8dp"
             android:layout_weight="1"
             android:text="Edit Profile"
-            android:textColor="@color/text_primary_dark"
+            android:textColor="@color/text_primary"
             android:textSize="18sp"
             android:textStyle="bold" />
 
@@ -208,14 +208,14 @@
                                     android:layout_height="20dp"
                                     android:contentDescription="@null"
                                     android:src="@drawable/ic_camera"
-                                    app:tint="@color/text_primary_dark" />
+                                    app:tint="@color/text_primary" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="8dp"
                                     android:text="Take Photo"
-                                    android:textColor="@color/text_primary_dark"
+                                    android:textColor="@color/text_primary"
                                     android:textSize="15sp"
                                     android:textStyle="bold" />
                             </LinearLayout>
@@ -286,7 +286,7 @@
                             android:letterSpacing="0.12"
                             android:text="Personal Information"
                             android:textAllCaps="true"
-                            android:textColor="@color/text_primary_dark"
+                            android:textColor="@color/text_primary"
                             android:textSize="12sp"
                             android:textStyle="bold" />
                     </LinearLayout>
@@ -297,7 +297,7 @@
                         android:layout_marginStart="4dp"
                         android:layout_marginBottom="6dp"
                         android:text="Full Name"
-                        android:textColor="@color/text_secondary_dark"
+                        android:textColor="@color/text_secondary"
                         android:textSize="13sp" />
 
                     <EditText
@@ -310,8 +310,8 @@
                         android:inputType="textPersonName"
                         android:paddingStart="16dp"
                         android:paddingEnd="16dp"
-                        android:textColor="@color/text_primary_dark"
-                        android:textColorHint="@color/text_secondary_dark"
+                        android:textColor="@color/text_primary"
+                        android:textColorHint="@color/text_secondary"
                         android:textSize="15sp" />
 
                     <TextView
@@ -320,7 +320,7 @@
                         android:layout_marginStart="4dp"
                         android:layout_marginBottom="6dp"
                         android:text="Email Address"
-                        android:textColor="@color/text_secondary_dark"
+                        android:textColor="@color/text_secondary"
                         android:textSize="13sp" />
 
                     <EditText
@@ -334,7 +334,7 @@
                         android:paddingStart="16dp"
                         android:paddingEnd="16dp"
                         android:textColor="#80F1F5F9"
-                        android:textColorHint="@color/text_secondary_dark"
+                        android:textColorHint="@color/text_secondary"
                         android:textSize="15sp" />
                 </LinearLayout>
 
@@ -368,7 +368,7 @@
                             android:letterSpacing="0.12"
                             android:text="Change Password"
                             android:textAllCaps="true"
-                            android:textColor="@color/text_primary_dark"
+                            android:textColor="@color/text_primary"
                             android:textSize="12sp"
                             android:textStyle="bold" />
                     </LinearLayout>
@@ -379,7 +379,7 @@
                         android:layout_marginStart="4dp"
                         android:layout_marginBottom="6dp"
                         android:text="Current Password"
-                        android:textColor="@color/text_secondary_dark"
+                        android:textColor="@color/text_secondary"
                         android:textSize="13sp" />
 
                     <RelativeLayout
@@ -396,8 +396,8 @@
                             android:inputType="textPassword"
                             android:paddingStart="16dp"
                             android:paddingEnd="52dp"
-                            android:textColor="@color/text_primary_dark"
-                            android:textColorHint="@color/text_secondary_dark"
+                            android:textColor="@color/text_primary"
+                            android:textColorHint="@color/text_secondary"
                             android:textSize="15sp" />
 
                         <ImageView
@@ -411,7 +411,7 @@
                             android:contentDescription="@null"
                             android:focusable="true"
                             android:src="@drawable/ic_visibility_off"
-                            app:tint="@color/text_secondary_dark" />
+                            app:tint="@color/text_secondary" />
                     </RelativeLayout>
 
                     <TextView
@@ -420,7 +420,7 @@
                         android:layout_marginStart="4dp"
                         android:layout_marginBottom="6dp"
                         android:text="New Password"
-                        android:textColor="@color/text_secondary_dark"
+                        android:textColor="@color/text_secondary"
                         android:textSize="13sp" />
 
                     <RelativeLayout
@@ -437,8 +437,8 @@
                             android:inputType="textPassword"
                             android:paddingStart="16dp"
                             android:paddingEnd="52dp"
-                            android:textColor="@color/text_primary_dark"
-                            android:textColorHint="@color/text_secondary_dark"
+                            android:textColor="@color/text_primary"
+                            android:textColorHint="@color/text_secondary"
                             android:textSize="15sp" />
 
                         <ImageView
@@ -452,7 +452,7 @@
                             android:contentDescription="@null"
                             android:focusable="true"
                             android:src="@drawable/ic_visibility_off"
-                            app:tint="@color/text_secondary_dark" />
+                            app:tint="@color/text_secondary" />
                     </RelativeLayout>
 
                     <TextView
@@ -461,7 +461,7 @@
                         android:layout_marginStart="4dp"
                         android:layout_marginBottom="6dp"
                         android:text="Confirm New Password"
-                        android:textColor="@color/text_secondary_dark"
+                        android:textColor="@color/text_secondary"
                         android:textSize="13sp" />
 
                     <RelativeLayout
@@ -478,8 +478,8 @@
                             android:inputType="textPassword"
                             android:paddingStart="16dp"
                             android:paddingEnd="52dp"
-                            android:textColor="@color/text_primary_dark"
-                            android:textColorHint="@color/text_secondary_dark"
+                            android:textColor="@color/text_primary"
+                            android:textColorHint="@color/text_secondary"
                             android:textSize="15sp" />
 
                         <ImageView
@@ -493,7 +493,7 @@
                             android:contentDescription="@null"
                             android:focusable="true"
                             android:src="@drawable/ic_visibility_off"
-                            app:tint="@color/text_secondary_dark" />
+                            app:tint="@color/text_secondary" />
                     </RelativeLayout>
 
                 </LinearLayout>

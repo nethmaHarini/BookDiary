@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_dark"
+    android:background="@color/app_background"
     android:fillViewport="true"
     android:overScrollMode="never"
     android:scrollbars="none">
@@ -39,7 +39,7 @@
                     android:layout_gravity="center"
                     android:contentDescription="@null"
                     android:src="@drawable/ic_arrow_back"
-                    app:tint="@color/text_primary_dark" />
+                    app:tint="@color/text_primary" />
             </FrameLayout>
 
             <TextView
@@ -48,7 +48,7 @@
                 android:layout_centerInParent="true"
                 android:fontFamily="sans-serif-medium"
                 android:text="Theme Preference"
-                android:textColor="@color/text_primary_dark"
+                android:textColor="@color/text_primary"
                 android:textSize="18sp"
                 android:textStyle="bold" />
         </RelativeLayout>
@@ -108,7 +108,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Light"
-                    android:textColor="@color/text_primary_dark"
+                    android:textColor="@color/text_primary"
                     android:textSize="15sp"
                     android:textStyle="bold" />
 
@@ -117,7 +117,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
                     android:text="Classic white background"
-                    android:textColor="@color/text_secondary_dark"
+                    android:textColor="@color/text_secondary"
                     android:textSize="12sp" />
             </LinearLayout>
 
@@ -168,7 +168,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Dark"
-                    android:textColor="@color/text_primary_dark"
+                    android:textColor="@color/text_primary"
                     android:textSize="15sp"
                     android:textStyle="bold" />
 
@@ -177,7 +177,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
                     android:text="Easy on the eyes in low light"
-                    android:textColor="@color/text_secondary_dark"
+                    android:textColor="@color/text_secondary"
                     android:textSize="12sp" />
             </LinearLayout>
 
@@ -227,7 +227,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="System Default"
-                    android:textColor="@color/text_primary_dark"
+                    android:textColor="@color/text_primary"
                     android:textSize="15sp"
                     android:textStyle="bold" />
 
@@ -236,7 +236,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
                     android:text="Follows your device's settings"
-                    android:textColor="@color/text_secondary_dark"
+                    android:textColor="@color/text_secondary"
                     android:textSize="12sp" />
             </LinearLayout>
 
@@ -317,7 +317,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:text="Ocean Blue"
-                        android:textColor="@color/text_secondary_dark"
+                        android:textColor="@color/text_secondary"
                         android:textSize="11sp"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -359,7 +359,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:text="Royal Purple"
-                        android:textColor="@color/text_secondary_dark"
+                        android:textColor="@color/text_secondary"
                         android:textSize="11sp"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -401,7 +401,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:text="Emerald"
-                        android:textColor="@color/text_secondary_dark"
+                        android:textColor="@color/text_secondary"
                         android:textSize="11sp"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -443,7 +443,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:text="Sunset"
-                        android:textColor="@color/text_secondary_dark"
+                        android:textColor="@color/text_secondary"
                         android:textSize="11sp"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -506,7 +506,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Dark Mode"
-                        android:textColor="@color/text_primary_dark"
+                        android:textColor="@color/text_primary"
                         android:textSize="15sp"
                         android:textStyle="bold" />
 
@@ -516,7 +516,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="3dp"
                         android:text="Accent: Ocean Blue"
-                        android:textColor="@color/text_secondary_dark"
+                        android:textColor="@color/text_secondary"
                         android:textSize="12sp" />
                 </LinearLayout>
 

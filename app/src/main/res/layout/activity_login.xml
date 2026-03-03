@@ -1,10 +1,10 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/login_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_dark"
+    android:background="@color/app_background"
     android:fillViewport="true">
 
     <LinearLayout
@@ -32,7 +32,7 @@
             android:layout_marginTop="24dp"
             android:fontFamily="serif"
             android:text="@string/login_welcome"
-            android:textColor="@color/text_primary_dark"
+            android:textColor="@color/text_primary"
             android:textSize="28sp"
             android:textStyle="bold"
             android:letterSpacing="-0.02" />
@@ -44,7 +44,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="32dp"
             android:text="@string/login_subtitle"
-            android:textColor="@color/text_secondary_dark"
+            android:textColor="@color/text_secondary"
             android:textSize="14sp" />
 
         <!-- Login Card: bg-blue-950/30, border-white/10, rounded-2xl -->
@@ -62,7 +62,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="6dp"
                 android:text="@string/login_label_email"
-                android:textColor="@color/label_color_dark"
+                android:textColor="@color/text_primary"
                 android:textSize="13sp" />
 
             <!-- Email input row -->
@@ -80,8 +80,8 @@
                     android:inputType="textEmailAddress"
                     android:paddingStart="44dp"
                     android:paddingEnd="16dp"
-                    android:textColor="@color/text_primary_dark"
-                    android:textColorHint="@color/text_hint_dark"
+                    android:textColor="@color/text_primary"
+                    android:textColorHint="@color/text_hint"
                     android:textSize="14sp"
                     android:singleLine="true" />
 
@@ -101,7 +101,7 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="6dp"
                 android:text="@string/login_label_password"
-                android:textColor="@color/label_color_dark"
+                android:textColor="@color/text_primary"
                 android:textSize="13sp" />
 
             <!-- Password input row -->
@@ -119,8 +119,8 @@
                     android:inputType="textPassword"
                     android:paddingStart="44dp"
                     android:paddingEnd="48dp"
-                    android:textColor="@color/text_primary_dark"
-                    android:textColorHint="@color/text_hint_dark"
+                    android:textColor="@color/text_primary"
+                    android:textColorHint="@color/text_hint"
                     android:textSize="14sp"
                     android:singleLine="true" />
 
@@ -182,13 +182,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_centerVertical="true"
-                android:background="@color/divider_or_dark" />
+                android:background="@color/app_divider" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:background="@color/background_dark"
+                android:background="@color/app_background"
                 android:paddingHorizontal="16dp"
                 android:text="@string/login_or"
                 android:textAllCaps="true"
@@ -221,7 +221,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
                 android:text="@string/login_google"
-                android:textColor="@color/text_primary_dark"
+                android:textColor="@color/text_primary"
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
@@ -239,7 +239,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/login_no_account"
-                android:textColor="@color/text_secondary_dark"
+                android:textColor="@color/text_secondary"
                 android:textSize="13sp" />
 
             <TextView

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_dark"
+    android:background="@color/app_background"
     android:fillViewport="true"
     android:overScrollMode="never"
     android:scrollbars="none">
@@ -39,7 +39,7 @@
                     android:layout_gravity="center"
                     android:contentDescription="@null"
                     android:src="@drawable/ic_arrow_back"
-                    app:tint="@color/text_primary_dark" />
+                    app:tint="@color/text_primary" />
             </FrameLayout>
 
             <TextView
@@ -48,7 +48,7 @@
                 android:layout_centerInParent="true"
                 android:fontFamily="sans-serif-medium"
                 android:text="Notification Settings"
-                android:textColor="@color/text_primary_dark"
+                android:textColor="@color/text_primary"
                 android:textSize="18sp"
                 android:textStyle="bold" />
         </RelativeLayout>
@@ -154,7 +154,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="New Recommendations"
-                    android:textColor="@color/text_primary_dark"
+                    android:textColor="@color/text_primary"
                     android:textSize="15sp"
                     android:textStyle="bold" />
 
@@ -163,7 +163,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
                     android:text="Get notified when we find books you might like"
-                    android:textColor="@color/text_secondary_dark"
+                    android:textColor="@color/text_secondary"
                     android:textSize="12sp" />
             </LinearLayout>
 
@@ -220,7 +220,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Reading Reminders"
-                        android:textColor="@color/text_primary_dark"
+                        android:textColor="@color/text_primary"
                         android:textSize="15sp"
                         android:textStyle="bold" />
 
@@ -229,7 +229,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="3dp"
                         android:text="Stay on track with your daily reading goals"
-                        android:textColor="@color/text_secondary_dark"
+                        android:textColor="@color/text_secondary"
                         android:textSize="12sp" />
                 </LinearLayout>
 
@@ -265,7 +265,7 @@
                     android:layout_height="18dp"
                     android:contentDescription="@null"
                     android:src="@drawable/ic_settings"
-                    app:tint="@color/text_secondary_dark" />
+                    app:tint="@color/text_secondary" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -273,7 +273,7 @@
                     android:layout_marginStart="10dp"
                     android:layout_weight="1"
                     android:text="Remind me at"
-                    android:textColor="@color/text_secondary_dark"
+                    android:textColor="@color/text_secondary"
                     android:textSize="13sp" />
 
                 <TextView
@@ -291,7 +291,7 @@
                     android:layout_marginStart="4dp"
                     android:contentDescription="@null"
                     android:src="@drawable/ic_chevron_right"
-                    app:tint="@color/text_secondary_dark" />
+                    app:tint="@color/text_secondary" />
             </LinearLayout>
         </LinearLayout>
 
@@ -332,7 +332,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Daily Quotes"
-                    android:textColor="@color/text_primary_dark"
+                    android:textColor="@color/text_primary"
                     android:textSize="15sp"
                     android:textStyle="bold" />
 
@@ -341,7 +341,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
                     android:text="Inspiring literary quotes delivered daily"
-                    android:textColor="@color/text_secondary_dark"
+                    android:textColor="@color/text_secondary"
                     android:textSize="12sp" />
             </LinearLayout>
 
@@ -409,7 +409,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="App Updates"
-                    android:textColor="@color/text_primary_dark"
+                    android:textColor="@color/text_primary"
                     android:textSize="15sp"
                     android:textStyle="bold" />
 
@@ -418,7 +418,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
                     android:text="News about new features and improvements"
-                    android:textColor="@color/text_secondary_dark"
+                    android:textColor="@color/text_secondary"
                     android:textSize="12sp" />
             </LinearLayout>
 
@@ -464,7 +464,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
                 android:text="Send a test notification to confirm everything is working correctly."
-                android:textColor="@color/text_secondary_dark"
+                android:textColor="@color/text_secondary"
                 android:textSize="13sp" />
 
             <LinearLayout

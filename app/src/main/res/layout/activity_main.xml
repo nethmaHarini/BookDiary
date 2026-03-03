@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_dark"
+    android:background="@color/app_background"
     android:clipChildren="false"
     android:clipToPadding="false"
     android:fitsSystemWindows="false">
@@ -86,7 +86,7 @@
                 android:layout_height="24dp"
                 android:contentDescription="@null"
                 android:src="@drawable/ic_nav_search"
-                app:tint="#64748B" />
+                app:tint="@color/text_secondary" />
 
             <TextView
                 android:id="@+id/tv_search"
@@ -96,7 +96,7 @@
                 android:letterSpacing="0.08"
                 android:text="@string/nav_search"
                 android:textAllCaps="true"
-                android:textColor="#64748B"
+                android:textColor="@color/text_secondary"
                 android:textSize="9sp"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -168,7 +168,7 @@
                 android:layout_height="24dp"
                 android:contentDescription="@null"
                 android:src="@drawable/ic_nav_diary"
-                app:tint="#64748B" />
+                app:tint="@color/text_secondary" />
 
             <TextView
                 android:id="@+id/tv_diary"
@@ -178,7 +178,7 @@
                 android:letterSpacing="0.08"
                 android:text="@string/nav_diary"
                 android:textAllCaps="true"
-                android:textColor="#64748B"
+                android:textColor="@color/text_secondary"
                 android:textSize="9sp"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -202,7 +202,7 @@
                 android:layout_height="24dp"
                 android:contentDescription="@null"
                 android:src="@drawable/ic_nav_profile"
-                app:tint="#64748B" />
+                app:tint="@color/text_secondary" />
 
             <TextView
                 android:id="@+id/tv_profile"
@@ -212,7 +212,7 @@
                 android:letterSpacing="0.08"
                 android:text="@string/nav_profile"
                 android:textAllCaps="true"
-                android:textColor="#64748B"
+                android:textColor="@color/text_secondary"
                 android:textSize="9sp"
                 android:textStyle="bold" />
         </LinearLayout>

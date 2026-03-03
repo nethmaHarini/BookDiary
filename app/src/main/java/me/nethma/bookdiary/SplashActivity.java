@@ -23,7 +23,6 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import me.nethma.bookdiary.utils.SessionManager;
-import me.nethma.bookdiary.utils.ThemePrefsManager;
 
 @SuppressWarnings("CustomSplashScreen")
 public class SplashActivity extends AppCompatActivity {
@@ -39,8 +38,6 @@ public class SplashActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // Apply saved theme before inflation so the correct night mode is set
-        ThemePrefsManager.applyTheme(this);
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_splash);
