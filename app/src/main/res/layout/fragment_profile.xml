@@ -90,8 +90,8 @@
                 The outer ring is 4dp border with primary/20 tint, 4dp padding inside before the image
             -->
             <FrameLayout
-                android:layout_width="136dp"
-                android:layout_height="136dp">
+                android:layout_width="104dp"
+                android:layout_height="104dp">
 
                 <!-- Ring border ring: border-4 border-primary/20 -->
                 <View
@@ -99,16 +99,16 @@
                     android:layout_height="match_parent"
                     android:background="@drawable/bg_avatar_ring" />
 
-                <!-- Avatar image: fills inside with 8dp margin (border 4dp + padding 4dp) -->
+                <!-- Avatar image: fills inside with 6dp margin (border 4dp + padding ~2dp) -->
                 <ImageView
                     android:id="@+id/iv_avatar"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="8dp"
+                    android:layout_margin="6dp"
                     android:background="@drawable/bg_avatar_circle"
                     android:contentDescription="@null"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/ic_person" />
+                    android:scaleType="center"
+                    android:src="@drawable/ic_person_placeholder" />
 
                 <!--
                     Edit badge: absolute bottom-1 right-1
@@ -117,15 +117,15 @@
                 -->
                 <FrameLayout
                     android:id="@+id/btn_edit_avatar"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
                     android:layout_gravity="bottom|end"
-                    android:layout_margin="2dp"
+                    android:layout_margin="1dp"
                     android:background="@drawable/bg_edit_badge"
                     android:clickable="true"
                     android:elevation="4dp"
                     android:focusable="true"
-                    android:padding="7dp">
+                    android:padding="6dp">
 
                     <ImageView
                         android:layout_width="match_parent"
