@@ -22,7 +22,7 @@ import java.util.concurrent.Executors;
 import me.nethma.bookdiary.database.AppDatabase;
 import me.nethma.bookdiary.database.UserDao;
 
-public class ResetPasswordActivity extends AppCompatActivity {
+public class ResetPasswordActivity extends BaseActivity {
 
     private ImageButton btnBack, btnToggleNew, btnToggleConfirm;
     private EditText etNewPassword, etConfirmPassword;

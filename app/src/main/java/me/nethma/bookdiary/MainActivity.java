@@ -2,13 +2,14 @@ package me.nethma.bookdiary;
 
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -19,10 +20,12 @@ import androidx.fragment.app.FragmentTransaction;
 import me.nethma.bookdiary.utils.NotificationHelper;
 import me.nethma.bookdiary.utils.NotificationScheduler;
 import me.nethma.bookdiary.utils.SessionManager;
+import me.nethma.bookdiary.utils.ThemePrefsManager;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
-    private static final int COLOR_ACTIVE   = 0xFF1152D4;
+    // COLOR_ACTIVE is loaded from ThemePrefsManager at runtime
+    private int COLOR_ACTIVE;
     private static final int COLOR_INACTIVE = 0xFF64748B;
 
     private FragmentContainerView fragmentContainer;
@@ -34,6 +37,10 @@ public class MainActivity extends AppCompatActivity {
     private ImageView icHome, icSearch, icDiary, icProfile;
     private TextView tvHome, tvSearch, tvAdd, tvDiary, tvProfile;
 
+    // Add button specific views
+    private FrameLayout addBtnBg;
+    private ImageView icAdd;
+
     private int selectedNavId = R.id.nav_home;
 
     @Override
@@ -41,6 +48,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
+
+        // Load accent colour from prefs
+        COLOR_ACTIVE = ThemePrefsManager.getAccentColor(this);
 
         fragmentContainer = findViewById(R.id.fragment_container);
         bottomNav         = findViewById(R.id.bottom_nav);
@@ -67,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         bindNavViews();
+        applyAccentToAddButton(); // set accent circle on add button immediately
 
         // Create notification channels and schedule background workers
         NotificationHelper.createNotificationChannels(this);
@@ -84,6 +95,41 @@ public class MainActivity extends AppCompatActivity {
         navProfile.setOnClickListener(v -> selectTab(R.id.nav_profile, new ProfileFragment()));
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume(); // BaseActivity scans the full view tree
+        // Refresh nav bar active colour (set programmatically, not via XML)
+        COLOR_ACTIVE = ThemePrefsManager.getAccentColor(this);
+        setNavSelected(selectedNavId);
+        // Apply accent to the floating add button
+        applyAccentToAddButton();
+    }
+
+    private void applyAccentToAddButton() {
+        int accent = ThemePrefsManager.getAccentColor(this);
+
+        // Recolor the FrameLayout background border stroke with accent/20
+        if (addBtnBg != null && addBtnBg.getBackground() instanceof GradientDrawable) {
+            GradientDrawable bg = (GradientDrawable) addBtnBg.getBackground().mutate();
+            bg.setStroke(2, (accent & 0x00FFFFFF) | 0x33000000);
+        }
+
+        if (icAdd == null) return;
+
+        // Draw an accent-colored circle as the ImageView background
+        // and show only the white plus on top — this way accent changes are visible
+        // without the plus disappearing (which happens when tinting the full circle+plus vector)
+        GradientDrawable accentCircle = new GradientDrawable();
+        accentCircle.setShape(GradientDrawable.OVAL);
+        accentCircle.setColor(accent);
+        icAdd.setBackground(accentCircle);
+        icAdd.setPadding(10, 10, 10, 10);
+
+        // Use a white-plus-only icon (no circle path) — tint cleared
+        icAdd.setImageTintList(null);
+        icAdd.setImageResource(R.drawable.ic_add_plus_white);
+    }
+
     private void bindNavViews() {
         navHome    = findViewById(R.id.nav_home);
         navSearch  = findViewById(R.id.nav_search);
@@ -95,6 +141,9 @@ public class MainActivity extends AppCompatActivity {
         icSearch  = findViewById(R.id.ic_search);
         icDiary   = findViewById(R.id.ic_diary);
         icProfile = findViewById(R.id.ic_profile);
+
+        addBtnBg  = findViewById(R.id.add_btn_bg);
+        icAdd     = findViewById(R.id.ic_add);
 
         tvHome    = findViewById(R.id.tv_home);
         tvSearch  = findViewById(R.id.tv_search);

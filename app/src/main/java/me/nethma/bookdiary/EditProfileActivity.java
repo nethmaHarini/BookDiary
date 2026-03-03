@@ -1,6 +1,5 @@
 package me.nethma.bookdiary;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapShader;
@@ -23,8 +22,6 @@ import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -39,7 +36,7 @@ import me.nethma.bookdiary.database.User;
 import me.nethma.bookdiary.database.UserDao;
 import me.nethma.bookdiary.utils.SessionManager;
 
-public class EditProfileActivity extends AppCompatActivity {
+public class EditProfileActivity extends BaseActivity {
 
     private SessionManager sessionManager;
     private UserDao userDao;
@@ -82,6 +79,33 @@ public class EditProfileActivity extends AppCompatActivity {
         bindViews();
         populateExistingData();
         setupListeners();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume(); // BaseActivity handles generic tree scan
+        applyAccentColors();
+    }
+
+    private void applyAccentColors() {
+        int accent = accentColor();
+
+        // Save Changes button background
+        android.view.View btnSave = findViewById(R.id.btn_save);
+        if (btnSave != null && btnSave.getBackground() instanceof android.graphics.drawable.GradientDrawable) {
+            ((android.graphics.drawable.GradientDrawable) btnSave.getBackground().mutate()).setColor(accent);
+        }
+
+        // Camera badge background (inner circle = accent)
+        android.view.View cameraBadge = findViewById(R.id.btn_camera_badge);
+        if (cameraBadge != null) {
+            // bg_edit_badge is a layer-list; set backgroundTint to accent
+            cameraBadge.setBackgroundTintList(android.content.res.ColorStateList.valueOf(accent));
+        }
+
+        // "Change Photo" text color
+        android.widget.TextView tvChangePhoto = findViewById(R.id.btn_change_photo_text);
+        if (tvChangePhoto != null) tvChangePhoto.setTextColor(accent);
     }
 
     private void bindViews() {

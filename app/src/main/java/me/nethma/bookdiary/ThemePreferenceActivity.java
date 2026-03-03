@@ -9,12 +9,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import me.nethma.bookdiary.utils.ThemePrefsManager;
 
-public class ThemePreferenceActivity extends AppCompatActivity {
+public class ThemePreferenceActivity extends BaseActivity {
 
     private ThemePrefsManager themePrefs;
 
@@ -63,6 +62,19 @@ public class ThemePreferenceActivity extends AppCompatActivity {
         refreshAccentSelection();
         refreshPreview();
         setListeners();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        applyAccentToSaveButton(themePrefs != null ? themePrefs.getAccentColor() : selectedAccent);
+    }
+
+    private void applyAccentToSaveButton(int accent) {
+        android.view.View btnSave = findViewById(R.id.btn_save);
+        if (btnSave != null && btnSave.getBackground() instanceof android.graphics.drawable.GradientDrawable) {
+            ((android.graphics.drawable.GradientDrawable) btnSave.getBackground().mutate()).setColor(accent);
+        }
     }
 
     // ── View binding ──────────────────────────────────────────────────────────
@@ -231,6 +243,8 @@ public class ThemePreferenceActivity extends AppCompatActivity {
         refreshAccentSelection();
         refreshPreview();
         refreshModeSelection(); // re-draw radio buttons with new accent colour
+        // NOTE: save button colour is intentionally NOT updated here —
+        // it only reflects the SAVED accent, not the preview selection.
     }
 
     private void saveAndApply() {
@@ -262,6 +276,11 @@ public class ThemePreferenceActivity extends AppCompatActivity {
         return Math.round(dp * getResources().getDisplayMetrics().density);
     }
 }
+
+
+
+
+
 
 
 

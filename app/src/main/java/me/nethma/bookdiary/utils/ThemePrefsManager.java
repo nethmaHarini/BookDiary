@@ -56,6 +56,11 @@ public class ThemePrefsManager {
         AppCompatDelegate.setDefaultNightMode(mode);
     }
 
+    /** Convenience: get accent color without creating an instance. */
+    public static int getAccentColor(Context context) {
+        return new ThemePrefsManager(context).getAccentColor();
+    }
+
     /** Human-readable label for the given mode. */
     public static String modeLabel(int mode) {
         if (mode == MODE_LIGHT)  return "Light";
@@ -63,5 +68,6 @@ public class ThemePrefsManager {
         return "System Default";
     }
 }
+
 
 

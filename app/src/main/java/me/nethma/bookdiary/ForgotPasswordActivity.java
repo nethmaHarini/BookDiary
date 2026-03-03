@@ -20,7 +20,7 @@ import java.util.concurrent.Executors;
 import me.nethma.bookdiary.database.AppDatabase;
 import me.nethma.bookdiary.database.User;
 import me.nethma.bookdiary.database.UserDao;
-public class ForgotPasswordActivity extends AppCompatActivity {
+public class ForgotPasswordActivity extends BaseActivity {
 
     private ImageButton btnBack;
     private EditText etEmail;

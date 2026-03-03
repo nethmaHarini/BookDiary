@@ -118,6 +118,7 @@
 
             <!-- Pop-up container: negative top margin makes it float above the bar -->
             <FrameLayout
+                android:id="@+id/add_btn_bg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="-28dp"
@@ -129,12 +130,14 @@
                 android:padding="8dp">
 
                 <ImageView
+                    android:id="@+id/ic_add"
                     android:layout_width="34dp"
                     android:layout_height="34dp"
                     android:layout_gravity="center"
                     android:contentDescription="@null"
+                    android:padding="10dp"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/ic_add_circle_filled" />
+                    android:src="@drawable/ic_add_plus_white" />
             </FrameLayout>
 
             <TextView

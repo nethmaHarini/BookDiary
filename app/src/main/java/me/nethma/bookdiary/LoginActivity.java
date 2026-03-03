@@ -26,7 +26,7 @@ import me.nethma.bookdiary.database.UserDao;
 import me.nethma.bookdiary.utils.GoogleSignInHelper;
 import me.nethma.bookdiary.utils.SessionManager;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends BaseActivity {
 
     private EditText etEmail, etPassword;
     private ImageButton btnTogglePassword;

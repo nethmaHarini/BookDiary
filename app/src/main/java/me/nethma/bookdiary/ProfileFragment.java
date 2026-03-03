@@ -17,14 +17,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.Fragment;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -34,11 +32,12 @@ import java.util.concurrent.Executors;
 import me.nethma.bookdiary.utils.SessionManager;
 import me.nethma.bookdiary.utils.ThemePrefsManager;
 
-public class ProfileFragment extends Fragment {
+public class ProfileFragment extends BaseFragment {
 
     private SessionManager sessionManager;
     private ImageView ivAvatar;
     private TextView tvUsername, tvEmail, tvTotalBooks, tvFavourites, tvReviews;
+    private View btnEditAvatar;  // keep reference for accent re-apply
 
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
@@ -67,6 +66,7 @@ public class ProfileFragment extends Fragment {
         tvTotalBooks = view.findViewById(R.id.tv_total_books);
         tvFavourites = view.findViewById(R.id.tv_favourites);
         tvReviews    = view.findViewById(R.id.tv_reviews);
+        btnEditAvatar = view.findViewById(R.id.btn_edit_avatar);
 
         // Update theme badge with current saved mode
         TextView tvThemeBadge = view.findViewById(R.id.tv_theme_badge);
@@ -79,10 +79,6 @@ public class ProfileFragment extends Fragment {
         view.findViewById(R.id.btn_back).setOnClickListener(v -> {
             if (getActivity() != null) getActivity().getSupportFragmentManager().popBackStack();
         });
-
-        // Settings button
-        view.findViewById(R.id.btn_settings).setOnClickListener(v ->
-                Toast.makeText(requireContext(), "Settings coming soon", Toast.LENGTH_SHORT).show());
 
         // Edit avatar badge — open edit profile directly
         view.findViewById(R.id.btn_edit_avatar).setOnClickListener(v -> openEditProfile());
@@ -105,6 +101,22 @@ public class ProfileFragment extends Fragment {
 
         populateUserInfo();
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume(); // BaseFragment handles generic tree scan (textColor/imageTint)
+        applyAccentToBadge();
+    }
+
+    /** Apply accent to the edit-avatar pencil badge (bg_edit_badge LayerDrawable). */
+    private void applyAccentToBadge() {
+        if (btnEditAvatar == null) return;
+        int accent = accentColor();
+        // bg_edit_badge is a LayerDrawable — setBackgroundTintList tints the whole thing.
+        // This correctly recolors the inner primary-colored circle to the accent color.
+        btnEditAvatar.setBackgroundTintList(
+                android.content.res.ColorStateList.valueOf(accent));
     }
 
     private void openEditProfile() {
