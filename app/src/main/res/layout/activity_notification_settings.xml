@@ -174,8 +174,8 @@
                 android:layout_marginStart="12dp"
                 android:checked="true"
                 android:showText="false"
-                app:thumbTint="@color/white"
-                app:trackTint="@color/primary" />
+                app:thumbTint="@color/switch_thumb_tint"
+                app:trackTint="@color/switch_track_tint" />
         </LinearLayout>
 
         <!-- Reading Reminders card -->
@@ -240,8 +240,8 @@
                     android:layout_marginStart="12dp"
                     android:checked="true"
                     android:showText="false"
-                    app:thumbTint="@color/white"
-                    app:trackTint="@color/primary" />
+                    app:thumbTint="@color/switch_thumb_tint"
+                    app:trackTint="@color/switch_track_tint" />
             </LinearLayout>
 
             <!-- Time picker row (only visible when reminders are ON) -->
@@ -352,8 +352,8 @@
                 android:layout_marginStart="12dp"
                 android:checked="false"
                 android:showText="false"
-                app:thumbTint="@color/white"
-                app:trackTint="@color/primary" />
+                app:thumbTint="@color/switch_thumb_tint"
+                app:trackTint="@color/switch_track_tint" />
         </LinearLayout>
 
         <!-- ══════════════════════════════════
@@ -429,8 +429,8 @@
                 android:layout_marginStart="12dp"
                 android:checked="true"
                 android:showText="false"
-                app:thumbTint="@color/white"
-                app:trackTint="@color/primary" />
+                app:thumbTint="@color/switch_thumb_tint"
+                app:trackTint="@color/switch_track_tint" />
         </LinearLayout>
 
         <!-- ══════════════════════════════════
@@ -522,4 +522,8 @@
 
     </LinearLayout>
 </ScrollView>
+
+
+
+
 

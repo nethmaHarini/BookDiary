@@ -37,6 +37,7 @@ import java.util.concurrent.Executors;
 import me.nethma.bookdiary.database.AppDatabase;
 import me.nethma.bookdiary.database.User;
 import me.nethma.bookdiary.database.UserDao;
+import me.nethma.bookdiary.utils.SessionManager;
 
 public class EditProfileActivity extends AppCompatActivity {
 

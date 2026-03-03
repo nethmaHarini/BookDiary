@@ -1,4 +1,4 @@
-package me.nethma.bookdiary;
+package me.nethma.bookdiary.utils;
 
 import android.app.Activity;
 import android.util.Log;
@@ -23,12 +23,6 @@ import java.util.concurrent.Executors;
 
 /**
  * Helper that wraps the Credential Manager + Firebase Auth Google Sign-In flow.
- *
- * Prerequisites:
- *  1. Place real google-services.json in app/ (from Firebase Console).
- *  2. Firebase Console → Authentication → Sign-in method → Enable Google.
- *  3. Replace WEB_CLIENT_ID with your OAuth 2.0 Web Client ID from
- *     Firebase Console → Project Settings → Your Apps → (Web client ID).
  */
 public class GoogleSignInHelper {
 
@@ -100,7 +94,6 @@ public class GoogleSignInHelper {
                         ? googleCredential.getProfilePictureUri().toString() : null;
                 String googleId    = googleCredential.getId();
 
-                // Sign in to Firebase Auth with the Google ID token
                 AuthCredential firebaseCredential =
                         GoogleAuthProvider.getCredential(idToken, null);
 
@@ -127,3 +120,4 @@ public class GoogleSignInHelper {
         }
     }
 }
+

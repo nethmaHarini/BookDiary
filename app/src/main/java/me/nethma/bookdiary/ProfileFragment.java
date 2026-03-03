@@ -32,6 +32,8 @@ import java.net.URL;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import me.nethma.bookdiary.utils.SessionManager;
+
 public class ProfileFragment extends Fragment {
 
     private SessionManager sessionManager;

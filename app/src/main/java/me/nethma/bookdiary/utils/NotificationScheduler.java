@@ -1,4 +1,4 @@
-package me.nethma.bookdiary;
+package me.nethma.bookdiary.utils;
 
 import android.content.Context;
 
@@ -13,9 +13,9 @@ import java.util.concurrent.TimeUnit;
  */
 public class NotificationScheduler {
 
-    private static final String WORK_READING_REMINDER  = "work_reading_reminder";
-    private static final String WORK_RECOMMENDATION    = "work_recommendation";
-    private static final String WORK_DAILY_QUOTE       = "work_daily_quote";
+    private static final String WORK_READING_REMINDER = "work_reading_reminder";
+    private static final String WORK_RECOMMENDATION   = "work_recommendation";
+    private static final String WORK_DAILY_QUOTE      = "work_daily_quote";
 
     /** Call this once at login / app start and from BootReceiver. */
     public static void scheduleAll(Context context) {
