@@ -12,28 +12,36 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingBottom="32dp">
+        android:paddingBottom="40dp">
 
-        <!-- Header -->
+        <!-- ── Header ── -->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingStart="20dp"
-            android:paddingTop="16dp"
-            android:paddingEnd="20dp"
+            android:paddingStart="24dp"
+            android:paddingTop="24dp"
+            android:paddingEnd="24dp"
             android:paddingBottom="8dp">
 
-            <ImageView
+            <!-- Back button: slate-800/50 rounded-xl -->
+            <FrameLayout
                 android:id="@+id/btn_back"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
-                android:background="@drawable/bg_profile_menu_row"
-                android:contentDescription="@null"
-                android:padding="8dp"
-                android:src="@drawable/ic_arrow_back"
-                app:tint="@color/text_primary_dark" />
+                android:background="@drawable/bg_header_btn"
+                android:clickable="true"
+                android:focusable="true">
+
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_arrow_back"
+                    app:tint="@color/text_primary_dark" />
+            </FrameLayout>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -45,58 +53,75 @@
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
-            <ImageView
+            <!-- Settings button: slate-800/50 rounded-xl -->
+            <FrameLayout
                 android:id="@+id/btn_settings"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:background="@drawable/bg_profile_menu_row"
-                android:contentDescription="@null"
-                android:padding="8dp"
-                android:src="@drawable/ic_palette"
-                app:tint="@color/text_primary_dark" />
+                android:background="@drawable/bg_header_btn"
+                android:clickable="true"
+                android:focusable="true">
+
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_settings"
+                    app:tint="@color/text_primary_dark" />
+            </FrameLayout>
         </RelativeLayout>
 
-        <!-- Avatar section -->
+        <!-- ── Avatar + Name ── -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="vertical"
-            android:paddingTop="16dp"
-            android:paddingBottom="8dp">
+            android:paddingTop="8dp"
+            android:paddingBottom="4dp"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp">
 
-            <!-- Avatar frame with ring border -->
+            <!--
+                HTML: size-32 (128dp) rounded-full border-4 border-primary/20 p-1
+                The outer ring is 4dp border with primary/20 tint, 4dp padding inside before the image
+            -->
             <FrameLayout
-                android:layout_width="130dp"
-                android:layout_height="130dp"
-                android:padding="4dp">
+                android:layout_width="104dp"
+                android:layout_height="104dp">
 
-                <!-- Outer ring -->
+                <!-- Ring border ring: border-4 border-primary/20 -->
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/bg_profile_avatar_ring" />
+                    android:background="@drawable/bg_avatar_ring" />
 
-                <!-- Avatar image (circle) -->
+                <!-- Avatar image: fills inside with 6dp margin (border 4dp + padding ~2dp) -->
                 <ImageView
                     android:id="@+id/iv_avatar"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="4dp"
-                    android:background="@drawable/bg_profile_edit_badge"
+                    android:layout_margin="6dp"
+                    android:background="@drawable/bg_avatar_circle"
                     android:contentDescription="@null"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/ic_person" />
+                    android:scaleType="center"
+                    android:src="@drawable/ic_person_placeholder" />
 
-                <!-- Edit badge (bottom-right) -->
+                <!--
+                    Edit badge: absolute bottom-1 right-1
+                    bg-primary rounded-full border-4 border-background-dark
+                    p-2 (8dp padding) so total badge is ~36dp
+                -->
                 <FrameLayout
                     android:id="@+id/btn_edit_avatar"
-                    android:layout_width="34dp"
-                    android:layout_height="34dp"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
                     android:layout_gravity="bottom|end"
-                    android:background="@drawable/bg_profile_edit_badge"
+                    android:layout_margin="1dp"
+                    android:background="@drawable/bg_edit_badge"
                     android:clickable="true"
                     android:elevation="4dp"
                     android:focusable="true"
@@ -111,63 +136,66 @@
                 </FrameLayout>
             </FrameLayout>
 
-            <!-- Name & email -->
+            <!-- Name -->
             <TextView
                 android:id="@+id/tv_username"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="14dp"
-                android:fontFamily="sans-serif-medium"
-                android:text="Book Reader"
+                android:layout_marginTop="16dp"
+                android:text="Alex Manrope"
                 android:textColor="@color/text_primary_dark"
                 android:textSize="22sp"
                 android:textStyle="bold" />
 
+            <!-- Email -->
             <TextView
                 android:id="@+id/tv_email"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="reader@example.com"
+                android:text="alex@example.com"
                 android:textColor="@color/text_secondary_dark"
-                android:textSize="14sp" />
-
+                android:textSize="14sp"
+                android:fontFamily="sans-serif-medium" />
         </LinearLayout>
 
-        <!-- Reading Stats -->
+        <!-- ── Reading Stats ── -->
+        <!-- Section header: text-sm uppercase tracking-widest text-slate-500 mb-4 -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
             android:layout_marginBottom="12dp"
-            android:fontFamily="sans-serif-medium"
-            android:letterSpacing="0.12"
-            android:text="READING STATS"
+            android:letterSpacing="0.15"
+            android:text="Reading Stats"
             android:textAllCaps="true"
-            android:textColor="@color/text_secondary_dark"
-            android:textSize="11sp"
+            android:textColor="#64748B"
+            android:textSize="12sp"
             android:textStyle="bold" />
 
+        <!-- 3-column grid: gap-3 (12dp) px-6 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:baselineAligned="false"
             android:orientation="horizontal"
-            android:paddingStart="20dp"
-            android:paddingEnd="20dp"
-            android:weightSum="3">
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp">
 
-            <!-- Total Books -->
+            <!-- Total Books card: bg-slate-800/40 border-slate-700/50 rounded-xl p-4 -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="6dp"
                 android:layout_weight="1"
-                android:background="@drawable/bg_profile_stat_card"
+                android:background="@drawable/bg_stat_card"
                 android:gravity="center"
                 android:orientation="vertical"
                 android:paddingTop="16dp"
-                android:paddingBottom="16dp">
+                android:paddingBottom="16dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp">
 
                 <TextView
                     android:id="@+id/tv_total_books"
@@ -175,7 +203,7 @@
                     android:layout_height="wrap_content"
                     android:text="0"
                     android:textColor="@color/primary"
-                    android:textSize="24sp"
+                    android:textSize="22sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -184,25 +212,27 @@
                     android:layout_marginTop="4dp"
                     android:gravity="center"
                     android:letterSpacing="0.06"
-                    android:text="TOTAL&#10;BOOKS"
+                    android:text="Total Books"
                     android:textAllCaps="true"
-                    android:textColor="@color/text_secondary_dark"
-                    android:textSize="9sp"
+                    android:textColor="#64748B"
+                    android:textSize="10sp"
                     android:textStyle="bold" />
             </LinearLayout>
 
-            <!-- Favourites -->
+            <!-- Favourites card -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="6dp"
                 android:layout_marginEnd="6dp"
                 android:layout_weight="1"
-                android:background="@drawable/bg_profile_stat_card"
+                android:background="@drawable/bg_stat_card"
                 android:gravity="center"
                 android:orientation="vertical"
                 android:paddingTop="16dp"
-                android:paddingBottom="16dp">
+                android:paddingBottom="16dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp">
 
                 <TextView
                     android:id="@+id/tv_favourites"
@@ -210,7 +240,7 @@
                     android:layout_height="wrap_content"
                     android:text="0"
                     android:textColor="@color/primary"
-                    android:textSize="24sp"
+                    android:textSize="22sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -219,24 +249,26 @@
                     android:layout_marginTop="4dp"
                     android:gravity="center"
                     android:letterSpacing="0.06"
-                    android:text="FAVOUR-&#10;ITES"
+                    android:text="Favorites"
                     android:textAllCaps="true"
-                    android:textColor="@color/text_secondary_dark"
-                    android:textSize="9sp"
+                    android:textColor="#64748B"
+                    android:textSize="10sp"
                     android:textStyle="bold" />
             </LinearLayout>
 
-            <!-- Reviews -->
+            <!-- Reviews card -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="6dp"
                 android:layout_weight="1"
-                android:background="@drawable/bg_profile_stat_card"
+                android:background="@drawable/bg_stat_card"
                 android:gravity="center"
                 android:orientation="vertical"
                 android:paddingTop="16dp"
-                android:paddingBottom="16dp">
+                android:paddingBottom="16dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp">
 
                 <TextView
                     android:id="@+id/tv_reviews"
@@ -244,7 +276,7 @@
                     android:layout_height="wrap_content"
                     android:text="0"
                     android:textColor="@color/primary"
-                    android:textSize="24sp"
+                    android:textSize="22sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -253,48 +285,48 @@
                     android:layout_marginTop="4dp"
                     android:gravity="center"
                     android:letterSpacing="0.06"
-                    android:text="RE-&#10;VIEWS"
+                    android:text="Reviews"
                     android:textAllCaps="true"
-                    android:textColor="@color/text_secondary_dark"
-                    android:textSize="9sp"
+                    android:textColor="#64748B"
+                    android:textSize="10sp"
                     android:textStyle="bold" />
             </LinearLayout>
         </LinearLayout>
 
-        <!-- Account Settings header -->
+        <!-- ── Account Settings ── -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="28dp"
             android:layout_marginBottom="12dp"
-            android:fontFamily="sans-serif-medium"
-            android:letterSpacing="0.12"
-            android:text="ACCOUNT SETTINGS"
+            android:letterSpacing="0.15"
+            android:text="Account Settings"
             android:textAllCaps="true"
-            android:textColor="@color/text_secondary_dark"
-            android:textSize="11sp"
+            android:textColor="#64748B"
+            android:textSize="12sp"
             android:textStyle="bold" />
 
-        <!-- Edit Profile row -->
+        <!-- Edit Profile row: bg-slate-800/40 rounded-xl -->
         <LinearLayout
             android:id="@+id/row_edit_profile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
             android:layout_marginBottom="10dp"
-            android:background="@drawable/bg_profile_menu_row"
+            android:background="@drawable/bg_menu_row"
             android:clickable="true"
             android:focusable="true"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:padding="16dp">
 
+            <!-- Icon box: size-10 rounded-lg bg-primary/10 -->
             <FrameLayout
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:background="@drawable/bg_profile_icon_box">
+                android:background="@drawable/bg_row_icon_box">
 
                 <ImageView
                     android:layout_width="22dp"
@@ -308,14 +340,13 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="14dp"
+                android:layout_marginStart="16dp"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-medium"
                     android:text="Edit Profile"
                     android:textColor="@color/text_primary_dark"
                     android:textSize="15sp"
@@ -330,12 +361,13 @@
                     android:textSize="12sp" />
             </LinearLayout>
 
+            <!-- chevron_right -->
             <ImageView
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:contentDescription="@null"
                 android:src="@drawable/ic_arrow_right"
-                app:tint="@color/text_secondary_dark" />
+                app:tint="#64748B" />
         </LinearLayout>
 
         <!-- Notification Settings row -->
@@ -343,10 +375,10 @@
             android:id="@+id/row_notifications"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
             android:layout_marginBottom="10dp"
-            android:background="@drawable/bg_profile_menu_row"
+            android:background="@drawable/bg_menu_row"
             android:clickable="true"
             android:focusable="true"
             android:gravity="center_vertical"
@@ -356,7 +388,7 @@
             <FrameLayout
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:background="@drawable/bg_profile_icon_box">
+                android:background="@drawable/bg_row_icon_box">
 
                 <ImageView
                     android:layout_width="22dp"
@@ -370,14 +402,13 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="14dp"
+                android:layout_marginStart="16dp"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-medium"
                     android:text="Notification Settings"
                     android:textColor="@color/text_primary_dark"
                     android:textSize="15sp"
@@ -397,7 +428,7 @@
                 android:layout_height="20dp"
                 android:contentDescription="@null"
                 android:src="@drawable/ic_arrow_right"
-                app:tint="@color/text_secondary_dark" />
+                app:tint="#64748B" />
         </LinearLayout>
 
         <!-- Theme Preferences row -->
@@ -405,10 +436,9 @@
             android:id="@+id/row_theme"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/bg_profile_menu_row"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:background="@drawable/bg_menu_row"
             android:clickable="true"
             android:focusable="true"
             android:gravity="center_vertical"
@@ -418,7 +448,7 @@
             <FrameLayout
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:background="@drawable/bg_profile_icon_box">
+                android:background="@drawable/bg_row_icon_box">
 
                 <ImageView
                     android:layout_width="22dp"
@@ -432,14 +462,13 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="14dp"
+                android:layout_marginStart="16dp"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-medium"
                     android:text="Theme Preferences"
                     android:textColor="@color/text_primary_dark"
                     android:textSize="15sp"
@@ -454,22 +483,21 @@
                     android:textSize="12sp" />
             </LinearLayout>
 
-            <!-- Dark badge + arrow -->
+            <!-- "Dark" badge: text-xs font-bold text-primary px-2 py-1 bg-primary/10 rounded-lg uppercase -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:background="@drawable/bg_profile_icon_box"
-                android:fontFamily="sans-serif-medium"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/bg_dark_badge"
                 android:letterSpacing="0.06"
                 android:paddingStart="8dp"
                 android:paddingTop="4dp"
                 android:paddingEnd="8dp"
                 android:paddingBottom="4dp"
-                android:text="DARK"
+                android:text="Dark"
                 android:textAllCaps="true"
                 android:textColor="@color/primary"
-                android:textSize="10sp"
+                android:textSize="11sp"
                 android:textStyle="bold" />
 
             <ImageView
@@ -477,28 +505,32 @@
                 android:layout_height="20dp"
                 android:contentDescription="@null"
                 android:src="@drawable/ic_arrow_right"
-                app:tint="@color/text_secondary_dark" />
+                app:tint="#64748B" />
         </LinearLayout>
 
-        <!-- Logout button -->
+        <!--
+            Logout button: mt-6 (24dp top margin), bg-rose-500/10, border border-rose-500/20, rounded-xl
+            Icon box: bg-rose-500 rounded-lg (no primary/10, it's solid rose)
+        -->
         <LinearLayout
             android:id="@+id/btn_logout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="20dp"
-            android:background="@drawable/bg_profile_logout_btn"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="24dp"
+            android:background="@drawable/bg_logout_row"
             android:clickable="true"
             android:focusable="true"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:padding="16dp">
 
+            <!-- bg-rose-500 icon box (solid, not tinted) -->
             <FrameLayout
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:background="@drawable/bg_profile_logout_icon_box">
+                android:background="@drawable/bg_logout_icon_box">
 
                 <ImageView
                     android:layout_width="22dp"
@@ -512,15 +544,13 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="14dp"
+                android:layout_marginStart="16dp"
                 android:layout_weight="1"
-                android:fontFamily="sans-serif-medium"
                 android:text="Logout"
-                android:textColor="#E63946"
+                android:textColor="#F43F5E"
                 android:textSize="15sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
     </LinearLayout>
 </ScrollView>
-

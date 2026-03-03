@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- slate-800/50 rounded-xl: #1E293B at 50% opacity = #801E293B, corners 12dp -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="#801A2438" />
+    <corners android:radius="12dp" />
+</shape>
+

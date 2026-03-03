@@ -1,5 +1,6 @@
 package me.nethma.bookdiary;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapShader;
@@ -18,6 +19,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -36,7 +39,16 @@ public class ProfileFragment extends Fragment {
     private TextView tvUsername, tvEmail, tvTotalBooks, tvFavourites, tvReviews;
 
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
-    private final Handler mainHandler  = new Handler(Looper.getMainLooper());
+    private final Handler mainHandler = new Handler(Looper.getMainLooper());
+
+    // Launch EditProfileActivity and refresh on OK result
+    private final ActivityResultLauncher<Intent> editProfileLauncher =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == android.app.Activity.RESULT_OK) {
+                    // Refresh displayed data after save
+                    populateUserInfo();
+                }
+            });
 
     @Nullable
     @Override
@@ -47,31 +59,27 @@ public class ProfileFragment extends Fragment {
 
         sessionManager = new SessionManager(requireContext());
 
-        ivAvatar      = view.findViewById(R.id.iv_avatar);
-        tvUsername    = view.findViewById(R.id.tv_username);
-        tvEmail       = view.findViewById(R.id.tv_email);
-        tvTotalBooks  = view.findViewById(R.id.tv_total_books);
-        tvFavourites  = view.findViewById(R.id.tv_favourites);
-        tvReviews     = view.findViewById(R.id.tv_reviews);
+        ivAvatar     = view.findViewById(R.id.iv_avatar);
+        tvUsername   = view.findViewById(R.id.tv_username);
+        tvEmail      = view.findViewById(R.id.tv_email);
+        tvTotalBooks = view.findViewById(R.id.tv_total_books);
+        tvFavourites = view.findViewById(R.id.tv_favourites);
+        tvReviews    = view.findViewById(R.id.tv_reviews);
 
-        // Back button — go back to previous fragment
+        // Back button
         view.findViewById(R.id.btn_back).setOnClickListener(v -> {
-            if (getActivity() != null) {
-                getActivity().getSupportFragmentManager().popBackStack();
-            }
+            if (getActivity() != null) getActivity().getSupportFragmentManager().popBackStack();
         });
 
-        // Settings / Theme — show coming-soon toast
+        // Settings button
         view.findViewById(R.id.btn_settings).setOnClickListener(v ->
-                Toast.makeText(requireContext(), "Theme preferences coming soon", Toast.LENGTH_SHORT).show());
+                Toast.makeText(requireContext(), "Settings coming soon", Toast.LENGTH_SHORT).show());
 
-        // Edit avatar — placeholder
-        view.findViewById(R.id.btn_edit_avatar).setOnClickListener(v ->
-                Toast.makeText(requireContext(), "Photo editing coming soon", Toast.LENGTH_SHORT).show());
+        // Edit avatar badge — open edit profile directly
+        view.findViewById(R.id.btn_edit_avatar).setOnClickListener(v -> openEditProfile());
 
-        // Menu rows
-        view.findViewById(R.id.row_edit_profile).setOnClickListener(v ->
-                Toast.makeText(requireContext(), "Edit Profile coming soon", Toast.LENGTH_SHORT).show());
+        // Edit Profile row — opens EditProfileActivity
+        view.findViewById(R.id.row_edit_profile).setOnClickListener(v -> openEditProfile());
 
         view.findViewById(R.id.row_notifications).setOnClickListener(v ->
                 Toast.makeText(requireContext(), "Notification settings coming soon", Toast.LENGTH_SHORT).show());
@@ -83,12 +91,15 @@ public class ProfileFragment extends Fragment {
         view.findViewById(R.id.btn_logout).setOnClickListener(v -> showLogoutDialog());
 
         populateUserInfo();
-
         return view;
     }
 
+    private void openEditProfile() {
+        Intent intent = new Intent(requireContext(), EditProfileActivity.class);
+        editProfileLauncher.launch(intent);
+    }
+
     private void populateUserInfo() {
-        // Set name and email from session
         String username = sessionManager.getUsername();
         String email    = sessionManager.getEmail();
         String photoUrl = sessionManager.getPhotoUrl();
@@ -96,18 +107,36 @@ public class ProfileFragment extends Fragment {
         tvUsername.setText(username != null && !username.isEmpty() ? username : "Book Reader");
         tvEmail.setText(email != null && !email.isEmpty() ? email : "");
 
-        // Load Google profile photo if available
         if (photoUrl != null && !photoUrl.isEmpty()) {
-            loadNetworkImage(photoUrl);
+            // Check if it's a local file path or a remote URL
+            if (photoUrl.startsWith("/") || photoUrl.startsWith("file://")) {
+                loadLocalImage(photoUrl);
+            } else {
+                loadNetworkImage(photoUrl);
+            }
         } else {
-            // Show initials avatar
             showInitialsAvatar(username);
         }
 
-        // Stats are placeholders — 0 until book DB tables are implemented
         tvTotalBooks.setText("0");
         tvFavourites.setText("0");
         tvReviews.setText("0");
+    }
+
+    private void loadLocalImage(String path) {
+        executor.execute(() -> {
+            try {
+                Bitmap raw = BitmapFactory.decodeFile(path.replace("file://", ""));
+                if (raw != null) {
+                    Bitmap circular = toCircleBitmap(raw);
+                    mainHandler.post(() -> setAvatarBitmap(circular));
+                } else {
+                    mainHandler.post(() -> showInitialsAvatar(sessionManager.getUsername()));
+                }
+            } catch (Exception e) {
+                mainHandler.post(() -> showInitialsAvatar(sessionManager.getUsername()));
+            }
+        });
     }
 
     /** Load a remote image URL and set it as a circular avatar. */
@@ -118,21 +147,20 @@ public class ProfileFragment extends Fragment {
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setDoInput(true);
                 conn.connect();
-                InputStream inputStream = conn.getInputStream();
-                Bitmap raw = BitmapFactory.decodeStream(inputStream);
+                Bitmap raw = BitmapFactory.decodeStream(conn.getInputStream());
                 Bitmap circular = toCircleBitmap(raw);
-                mainHandler.post(() -> {
-                    if (isAdded() && ivAvatar != null) {
-                        ivAvatar.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                        ivAvatar.setImageDrawable(
-                                new BitmapDrawable(getResources(), circular));
-                    }
-                });
+                mainHandler.post(() -> setAvatarBitmap(circular));
             } catch (Exception e) {
-                // Fallback to initials on error
                 mainHandler.post(() -> showInitialsAvatar(sessionManager.getUsername()));
             }
         });
+    }
+
+    private void setAvatarBitmap(Bitmap bitmap) {
+        if (isAdded() && ivAvatar != null) {
+            ivAvatar.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            ivAvatar.setImageDrawable(new BitmapDrawable(getResources(), bitmap));
+        }
     }
 
     /** Crop a bitmap into a circle. */
@@ -144,8 +172,7 @@ public class ProfileFragment extends Fragment {
         Bitmap scaled = Bitmap.createScaledBitmap(src, size, size, true);
         BitmapShader shader = new BitmapShader(scaled, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
         paint.setShader(shader);
-        float radius = size / 2f;
-        canvas.drawCircle(radius, radius, radius, paint);
+        canvas.drawCircle(size / 2f, size / 2f, size / 2f, paint);
         return output;
     }
 
@@ -155,32 +182,22 @@ public class ProfileFragment extends Fragment {
         int size = 200;
         Bitmap bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
-
-        // Background circle
         Paint bgPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        bgPaint.setColor(0xFF1152D4); // primary color
+        bgPaint.setColor(0xFF1152D4);
         canvas.drawCircle(size / 2f, size / 2f, size / 2f, bgPaint);
-
-        // Initials text
         Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         textPaint.setColor(Color.WHITE);
         textPaint.setTextSize(size * 0.38f);
         textPaint.setTextAlign(Paint.Align.CENTER);
         float yPos = (size / 2f) - ((textPaint.descent() + textPaint.ascent()) / 2f);
         canvas.drawText(initials, size / 2f, yPos, textPaint);
-
-        if (isAdded() && ivAvatar != null) {
-            ivAvatar.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            ivAvatar.setImageDrawable(new BitmapDrawable(getResources(), bitmap));
-        }
+        setAvatarBitmap(bitmap);
     }
 
     private String getInitials(String name) {
         if (name == null || name.trim().isEmpty()) return "?";
         String[] parts = name.trim().split("\\s+");
-        if (parts.length == 1) {
-            return parts[0].substring(0, Math.min(2, parts[0].length())).toUpperCase();
-        }
+        if (parts.length == 1) return parts[0].substring(0, Math.min(2, parts[0].length())).toUpperCase();
         return (parts[0].charAt(0) + "" + parts[1].charAt(0)).toUpperCase();
     }
 

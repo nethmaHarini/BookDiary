@@ -31,6 +31,18 @@ public interface UserDao {
     // Google Sign-In: insert with IGNORE so existing account is not overwritten
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     long insertGoogleUser(User user);
+
+    // Edit Profile: update username for a given user id
+    @Query("UPDATE users SET username = :username WHERE id = :userId")
+    void updateUsername(int userId, String username);
+
+    // Edit Profile: update password for a given user id
+    @Query("UPDATE users SET password = :newPassword WHERE id = :userId")
+    void updatePasswordById(int userId, String newPassword);
+
+    // Get user by id
+    @Query("SELECT * FROM users WHERE id = :userId LIMIT 1")
+    User findById(int userId);
 }
 
 
