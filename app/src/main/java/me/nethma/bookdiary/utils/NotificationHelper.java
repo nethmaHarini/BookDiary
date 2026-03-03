@@ -1,4 +1,4 @@
-package me.nethma.bookdiary;
+package me.nethma.bookdiary.utils;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -9,6 +9,9 @@ import android.os.Build;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+
+import me.nethma.bookdiary.MainActivity;
+import me.nethma.bookdiary.R;
 
 /**
  * Centralised helper for creating notification channels and posting notifications.
@@ -182,5 +185,4 @@ public class NotificationHelper {
         }
     }
 }
-
 

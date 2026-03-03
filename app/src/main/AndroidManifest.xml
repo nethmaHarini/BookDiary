@@ -74,7 +74,7 @@
 
         <!-- Boot Receiver to reschedule notifications after reboot -->
         <receiver
-            android:name=".BootReceiver"
+            android:name=".utils.BootReceiver"
             android:exported="true">
             <intent-filter android:priority="100">
                 <action android:name="android.intent.action.BOOT_COMPLETED" />

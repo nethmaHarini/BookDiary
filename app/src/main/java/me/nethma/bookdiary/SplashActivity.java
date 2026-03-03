@@ -22,6 +22,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import me.nethma.bookdiary.utils.SessionManager;
+
 @SuppressWarnings("CustomSplashScreen")
 public class SplashActivity extends AppCompatActivity {
 

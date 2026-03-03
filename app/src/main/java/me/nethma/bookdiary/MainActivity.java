@@ -16,6 +16,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentContainerView;
 import androidx.fragment.app.FragmentTransaction;
 
+import me.nethma.bookdiary.utils.NotificationHelper;
+import me.nethma.bookdiary.utils.NotificationScheduler;
+import me.nethma.bookdiary.utils.SessionManager;
+
 public class MainActivity extends AppCompatActivity {
 
     private static final int COLOR_ACTIVE   = 0xFF1152D4;

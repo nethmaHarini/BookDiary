@@ -1,4 +1,4 @@
-package me.nethma.bookdiary;
+package me.nethma.bookdiary.utils;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
