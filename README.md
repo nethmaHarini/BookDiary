@@ -1,7 +1,9 @@
 <div align="center">
 
-<img src="app/src/main/res/drawable/logo.png" width="110" alt="BookDiary Logo"/>
-<h1 style="margin-top:4px;margin-bottom:0">BookDiary</h1>
+<p>
+<img src="app/src/main/res/drawable/logo.png" width="110" alt="BookDiary Logo"/><br>
+<strong><font size="7">BookDiary</font></strong>
+</p>
 
 ### *Read. Review. Remember.*
 
