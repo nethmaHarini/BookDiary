@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_dark"
+    android:background="@color/app_background"
     android:fillViewport="true"
     android:overScrollMode="never"
     android:scrollbars="none">
@@ -40,7 +40,7 @@
                     android:layout_gravity="center"
                     android:contentDescription="@null"
                     android:src="@drawable/ic_arrow_back"
-                    app:tint="@color/text_primary_dark" />
+                    app:tint="@color/text_primary" />
             </FrameLayout>
 
             <TextView
@@ -49,7 +49,7 @@
                 android:layout_centerInParent="true"
                 android:fontFamily="sans-serif-medium"
                 android:text="Profile"
-                android:textColor="@color/text_primary_dark"
+                android:textColor="@color/text_primary"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -70,7 +70,7 @@
                     android:layout_gravity="center"
                     android:contentDescription="@null"
                     android:src="@drawable/ic_settings"
-                    app:tint="@color/text_primary_dark" />
+                    app:tint="@color/text_primary" />
             </FrameLayout>
         </RelativeLayout>
 
@@ -143,7 +143,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="Alex Manrope"
-                android:textColor="@color/text_primary_dark"
+                android:textColor="@color/text_primary"
                 android:textSize="22sp"
                 android:textStyle="bold" />
 
@@ -154,7 +154,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:text="alex@example.com"
-                android:textColor="@color/text_secondary_dark"
+                android:textColor="@color/text_secondary"
                 android:textSize="14sp"
                 android:fontFamily="sans-serif-medium" />
         </LinearLayout>
@@ -348,7 +348,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Edit Profile"
-                    android:textColor="@color/text_primary_dark"
+                    android:textColor="@color/text_primary"
                     android:textSize="15sp"
                     android:textStyle="bold" />
 
@@ -357,7 +357,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
                     android:text="Personal details &amp; password"
-                    android:textColor="@color/text_secondary_dark"
+                    android:textColor="@color/text_secondary"
                     android:textSize="12sp" />
             </LinearLayout>
 
@@ -410,7 +410,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Notification Settings"
-                    android:textColor="@color/text_primary_dark"
+                    android:textColor="@color/text_primary"
                     android:textSize="15sp"
                     android:textStyle="bold" />
 
@@ -419,7 +419,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
                     android:text="Manage alerts and news"
-                    android:textColor="@color/text_secondary_dark"
+                    android:textColor="@color/text_secondary"
                     android:textSize="12sp" />
             </LinearLayout>
 
@@ -470,7 +470,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Theme Preferences"
-                    android:textColor="@color/text_primary_dark"
+                    android:textColor="@color/text_primary"
                     android:textSize="15sp"
                     android:textStyle="bold" />
 
@@ -479,7 +479,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
                     android:text="Customize your reading app"
-                    android:textColor="@color/text_secondary_dark"
+                    android:textColor="@color/text_secondary"
                     android:textSize="12sp" />
             </LinearLayout>
 

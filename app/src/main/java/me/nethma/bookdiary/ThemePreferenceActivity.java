@@ -48,6 +48,8 @@ public class ThemePreferenceActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Apply saved theme before inflation
+        ThemePrefsManager.applyTheme(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_theme_preference);
 
@@ -235,16 +237,16 @@ public class ThemePreferenceActivity extends AppCompatActivity {
         themePrefs.setThemeMode(selectedMode);
         themePrefs.setAccentColor(selectedAccent);
 
-        // Apply night mode immediately
+        // Apply night mode globally — affects all future activity creations
         AppCompatDelegate.setDefaultNightMode(selectedMode);
 
-        Toast.makeText(this, "Theme saved! Restarting…", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Theme saved!", Toast.LENGTH_SHORT).show();
 
-        // Recreate the entire back stack so the new theme takes effect everywhere
-        finishAffinity();
-        startActivity(new android.content.Intent(this, SplashActivity.class)
-                .addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK
-                        | android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK));
+        // Recreate so this screen and the entire task back-stack apply the new theme
+        finish();
+        startActivity(new android.content.Intent(this, MainActivity.class)
+                .addFlags(android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP
+                        | android.content.Intent.FLAG_ACTIVITY_NEW_TASK));
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────────
@@ -260,5 +262,7 @@ public class ThemePreferenceActivity extends AppCompatActivity {
         return Math.round(dp * getResources().getDisplayMetrics().density);
     }
 }
+
+
 
 

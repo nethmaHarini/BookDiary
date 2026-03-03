@@ -38,4 +38,30 @@
     <color name="divider_or_dark">#334155</color>
     <color name="social_btn_bg_dark">#0F172A</color>
     <color name="social_btn_border_dark">#1E293B</color>
+
+    <!-- ── Semantic aliases (LIGHT = default) ──
+         Android uses values/ for Light mode.
+         values-night/colors.xml overrides these for Dark mode. -->
+
+    <!-- Backgrounds -->
+    <color name="app_background">#F6F6F8</color>
+    <color name="app_surface">#FFFFFF</color>
+    <color name="app_surface2">#F1F5F9</color>
+
+    <!-- Text -->
+    <color name="text_primary">#0F172A</color>
+    <color name="text_secondary">#64748B</color>
+    <color name="text_hint">#94A3B8</color>
+
+    <!-- Dividers / borders -->
+    <color name="app_divider">#E2E8F0</color>
+
+    <!-- Input / card backgrounds -->
+    <color name="input_bg">#FFFFFF</color>
+    <color name="input_border">#CBD5E1</color>
+    <color name="card_bg">#FFFFFFFF</color>
+    <color name="card_border">#1A000000</color>
+
+    <!-- Nav bar -->
+    <color name="nav_bar_bg">#FFFFFF</color>
 </resources>

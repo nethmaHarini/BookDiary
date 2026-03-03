@@ -5,7 +5,7 @@
     android:id="@+id/splash_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_dark">
+    android:background="@color/app_background">
 
     <!-- Radial gradient glow: radial-gradient(circle at center, rgba(17,82,212,0.15) 0%, transparent 70%) -->
     <View
@@ -61,7 +61,7 @@
             android:gravity="center"
             android:letterSpacing="-0.02"
             android:text="@string/splash_title"
-            android:textColor="@color/text_primary_dark"
+            android:textColor="@color/text_primary"
             android:textSize="30sp"
             android:textStyle="bold"
             android:translationY="24dp" />
@@ -78,7 +78,7 @@
             android:letterSpacing="0.18"
             android:text="@string/splash_tagline"
             android:textAllCaps="true"
-            android:textColor="@color/text_secondary_dark"
+            android:textColor="@color/text_secondary"
             android:textSize="11sp"
             android:translationY="16dp" />
 

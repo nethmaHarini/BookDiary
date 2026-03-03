@@ -32,9 +32,9 @@ public class ThemePrefsManager {
                 .getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
     }
 
-    /** Returns saved AppCompatDelegate night mode (default: MODE_DARK). */
+    /** Returns saved AppCompatDelegate night mode (default: MODE_SYSTEM = follow device). */
     public int getThemeMode() {
-        return prefs.getInt(KEY_THEME_MODE, MODE_DARK);
+        return prefs.getInt(KEY_THEME_MODE, MODE_SYSTEM);
     }
 
     public void setThemeMode(int mode) {
@@ -63,4 +63,5 @@ public class ThemePrefsManager {
         return "System Default";
     }
 }
+
 

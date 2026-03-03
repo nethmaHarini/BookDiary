@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    DARK MODE overrides.
+    Android picks this folder when the device/app is in Dark mode.
+    The semantic aliases defined in values/colors.xml (light defaults) are
+    overridden here with dark equivalents.
+-->
+<resources>
+    <!-- Backgrounds -->
+    <color name="app_background">#101622</color>
+    <color name="app_surface">#1A2236</color>
+    <color name="app_surface2">#0D1829</color>
+
+    <!-- Text -->
+    <color name="text_primary">#F1F5F9</color>
+    <color name="text_secondary">#94A3B8</color>
+    <color name="text_hint">#64748B</color>
+
+    <!-- Dividers / borders -->
+    <color name="app_divider">#1E293B</color>
+
+    <!-- Input / card backgrounds -->
+    <color name="input_bg">#0F172A</color>
+    <color name="input_border">#334155</color>
+    <color name="card_bg">#4D0A1628</color>
+    <color name="card_border">#1AFFFFFF</color>
+
+    <!-- Nav bar -->
+    <color name="nav_bar_bg">#101622</color>
+</resources>
