@@ -1,7 +1,6 @@
 <div align="center">
 
 <img src="app/src/main/res/drawable/logo.png" width="110" alt="BookDiary Logo"/>
-
 # BookDiary
 
 ### *Read. Review. Remember.*
@@ -604,5 +603,6 @@ This project is submitted as academic coursework for ICT3214 — Mobile Applicat
   <i>"Read. Review. Remember."</i><br><br>
   Built with ❤️ for ICT3214 — Mobile Application Development
 </div>
+
 
 
