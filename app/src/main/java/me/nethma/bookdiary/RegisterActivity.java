@@ -11,7 +11,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -22,6 +21,7 @@ import java.util.concurrent.Executors;
 import me.nethma.bookdiary.database.AppDatabase;
 import me.nethma.bookdiary.database.User;
 import me.nethma.bookdiary.database.UserDao;
+import me.nethma.bookdiary.utils.PasswordUtils;
 
 public class RegisterActivity extends BaseActivity {
 
@@ -126,7 +126,8 @@ public class RegisterActivity extends BaseActivity {
                 }
 
                 try {
-                    userDao.insertUser(new User(username, email, password));
+                    String hashedPassword = PasswordUtils.hash(password);
+                    userDao.insertUser(new User(username, email, hashedPassword));
                     runOnUiThread(() -> {
                         Toast.makeText(this,
                                 "Account created! Please log in.", Toast.LENGTH_SHORT).show();

@@ -24,6 +24,7 @@ import me.nethma.bookdiary.database.AppDatabase;
 import me.nethma.bookdiary.database.User;
 import me.nethma.bookdiary.database.UserDao;
 import me.nethma.bookdiary.utils.GoogleSignInHelper;
+import me.nethma.bookdiary.utils.PasswordUtils;
 import me.nethma.bookdiary.utils.SessionManager;
 
 public class LoginActivity extends BaseActivity {
@@ -105,13 +106,24 @@ public class LoginActivity extends BaseActivity {
 
             btnLogin.setEnabled(false);
             executor.execute(() -> {
-                User user = userDao.login(email, password);
+                User user = userDao.findByEmailForLogin(email);
+                boolean matched = false;
+                if (user != null && user.password != null) {
+                    matched = PasswordUtils.verify(password, user.password);
+                    // Auto-upgrade legacy plain-text passwords on successful login
+                    if (matched && !user.password.contains("$")) {
+                        String rehashed = PasswordUtils.hash(password);
+                        userDao.updatePasswordById(user.id, rehashed);
+                    }
+                }
+                final boolean success = matched;
+                final User loggedInUser = user;
                 runOnUiThread(() -> {
                     btnLogin.setEnabled(true);
-                    if (user != null) {
-                        sessionManager.saveSession(user.id, user.username, user.email, user.photoUrl);
+                    if (success) {
+                        sessionManager.saveSession(loggedInUser.id, loggedInUser.username, loggedInUser.email, loggedInUser.photoUrl);
                         Toast.makeText(this,
-                                "Welcome back, " + user.username + "!", Toast.LENGTH_SHORT).show();
+                                "Welcome back, " + loggedInUser.username + "!", Toast.LENGTH_SHORT).show();
                         goToMain();
                     } else {
                         Toast.makeText(this,

@@ -11,7 +11,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -21,6 +20,7 @@ import java.util.concurrent.Executors;
 
 import me.nethma.bookdiary.database.AppDatabase;
 import me.nethma.bookdiary.database.UserDao;
+import me.nethma.bookdiary.utils.PasswordUtils;
 
 public class ResetPasswordActivity extends BaseActivity {
 
@@ -117,7 +117,8 @@ public class ResetPasswordActivity extends BaseActivity {
 
             btnReset.setEnabled(false);
             executor.execute(() -> {
-                userDao.updatePassword(email, newPassword);
+                String hashedPassword = PasswordUtils.hash(newPassword);
+                userDao.updatePassword(email, hashedPassword);
                 runOnUiThread(() -> {
                     Toast.makeText(this,
                             "Password reset successfully! Please log in.",

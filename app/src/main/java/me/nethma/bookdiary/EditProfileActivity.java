@@ -34,6 +34,7 @@ import java.util.concurrent.Executors;
 import me.nethma.bookdiary.database.AppDatabase;
 import me.nethma.bookdiary.database.User;
 import me.nethma.bookdiary.database.UserDao;
+import me.nethma.bookdiary.utils.PasswordUtils;
 import me.nethma.bookdiary.utils.SessionManager;
 
 public class EditProfileActivity extends BaseActivity {
@@ -257,14 +258,12 @@ public class EditProfileActivity extends BaseActivity {
         int userId = sessionManager.getUserId();
         String email = sessionManager.getEmail();
         String finalNewName = newName;
-        String hashedCurrent = changingPassword ? hashPassword(currentPwd) : null;
-        String hashedNew     = changingPassword ? hashPassword(newPwd)     : null;
 
         executor.execute(() -> {
             // Verify current password if changing
             if (changingPassword) {
                 User user = userDao.findById(userId);
-                if (user == null || user.password == null || !user.password.equals(hashedCurrent)) {
+                if (user == null || !PasswordUtils.verify(currentPwd, user.password)) {
                     mainHandler.post(() -> {
                         etCurrentPassword.setError("Current password is incorrect");
                         etCurrentPassword.requestFocus();
@@ -276,9 +275,9 @@ public class EditProfileActivity extends BaseActivity {
             // Save username
             userDao.updateUsername(userId, finalNewName);
 
-            // Save password if changed
+            // Save password if changed — store as a salted hash
             if (changingPassword) {
-                userDao.updatePasswordById(userId, hashedNew);
+                userDao.updatePasswordById(userId, PasswordUtils.hash(newPwd));
             }
 
             // Determine final photo URL:
@@ -322,17 +321,6 @@ public class EditProfileActivity extends BaseActivity {
         }
     }
 
-    private String hashPassword(String password) {
-        try {
-            java.security.MessageDigest digest = java.security.MessageDigest.getInstance("SHA-256");
-            byte[] bytes = digest.digest(password.getBytes("UTF-8"));
-            StringBuilder sb = new StringBuilder();
-            for (byte b : bytes) sb.append(String.format("%02x", b));
-            return sb.toString();
-        } catch (Exception e) {
-            return password;
-        }
-    }
 
     // ── Avatar loading helpers ──
 
