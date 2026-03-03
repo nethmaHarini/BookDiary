@@ -1,17 +1,526 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_dark">
+    android:background="@color/background_dark"
+    android:fillViewport="true"
+    android:overScrollMode="never"
+    android:scrollbars="none">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Profile"
-        android:textColor="@color/text_primary_dark"
-        android:textSize="20sp"
-        android:textStyle="bold" />
+        android:orientation="vertical"
+        android:paddingBottom="32dp">
 
-</FrameLayout>
+        <!-- Header -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="20dp"
+            android:paddingTop="16dp"
+            android:paddingEnd="20dp"
+            android:paddingBottom="8dp">
+
+            <ImageView
+                android:id="@+id/btn_back"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/bg_profile_menu_row"
+                android:contentDescription="@null"
+                android:padding="8dp"
+                android:src="@drawable/ic_arrow_back"
+                app:tint="@color/text_primary_dark" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:fontFamily="sans-serif-medium"
+                android:text="Profile"
+                android:textColor="@color/text_primary_dark"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/btn_settings"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/bg_profile_menu_row"
+                android:contentDescription="@null"
+                android:padding="8dp"
+                android:src="@drawable/ic_palette"
+                app:tint="@color/text_primary_dark" />
+        </RelativeLayout>
+
+        <!-- Avatar section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingTop="16dp"
+            android:paddingBottom="8dp">
+
+            <!-- Avatar frame with ring border -->
+            <FrameLayout
+                android:layout_width="130dp"
+                android:layout_height="130dp"
+                android:padding="4dp">
+
+                <!-- Outer ring -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/bg_profile_avatar_ring" />
+
+                <!-- Avatar image (circle) -->
+                <ImageView
+                    android:id="@+id/iv_avatar"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="4dp"
+                    android:background="@drawable/bg_profile_edit_badge"
+                    android:contentDescription="@null"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_person" />
+
+                <!-- Edit badge (bottom-right) -->
+                <FrameLayout
+                    android:id="@+id/btn_edit_avatar"
+                    android:layout_width="34dp"
+                    android:layout_height="34dp"
+                    android:layout_gravity="bottom|end"
+                    android:background="@drawable/bg_profile_edit_badge"
+                    android:clickable="true"
+                    android:elevation="4dp"
+                    android:focusable="true"
+                    android:padding="6dp">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_edit"
+                        app:tint="@color/white" />
+                </FrameLayout>
+            </FrameLayout>
+
+            <!-- Name & email -->
+            <TextView
+                android:id="@+id/tv_username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:fontFamily="sans-serif-medium"
+                android:text="Book Reader"
+                android:textColor="@color/text_primary_dark"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="reader@example.com"
+                android:textColor="@color/text_secondary_dark"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+        <!-- Reading Stats -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="12dp"
+            android:fontFamily="sans-serif-medium"
+            android:letterSpacing="0.12"
+            android:text="READING STATS"
+            android:textAllCaps="true"
+            android:textColor="@color/text_secondary_dark"
+            android:textSize="11sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:weightSum="3">
+
+            <!-- Total Books -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="6dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_profile_stat_card"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp">
+
+                <TextView
+                    android:id="@+id/tv_total_books"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textColor="@color/primary"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:gravity="center"
+                    android:letterSpacing="0.06"
+                    android:text="TOTAL&#10;BOOKS"
+                    android:textAllCaps="true"
+                    android:textColor="@color/text_secondary_dark"
+                    android:textSize="9sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- Favourites -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:layout_marginEnd="6dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_profile_stat_card"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp">
+
+                <TextView
+                    android:id="@+id/tv_favourites"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textColor="@color/primary"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:gravity="center"
+                    android:letterSpacing="0.06"
+                    android:text="FAVOUR-&#10;ITES"
+                    android:textAllCaps="true"
+                    android:textColor="@color/text_secondary_dark"
+                    android:textSize="9sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- Reviews -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_profile_stat_card"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp">
+
+                <TextView
+                    android:id="@+id/tv_reviews"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textColor="@color/primary"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:gravity="center"
+                    android:letterSpacing="0.06"
+                    android:text="RE-&#10;VIEWS"
+                    android:textAllCaps="true"
+                    android:textColor="@color/text_secondary_dark"
+                    android:textSize="9sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Account Settings header -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="12dp"
+            android:fontFamily="sans-serif-medium"
+            android:letterSpacing="0.12"
+            android:text="ACCOUNT SETTINGS"
+            android:textAllCaps="true"
+            android:textColor="@color/text_secondary_dark"
+            android:textSize="11sp"
+            android:textStyle="bold" />
+
+        <!-- Edit Profile row -->
+        <LinearLayout
+            android:id="@+id/row_edit_profile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/bg_profile_menu_row"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="16dp">
+
+            <FrameLayout
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/bg_profile_icon_box">
+
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_person"
+                    app:tint="@color/primary" />
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="14dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="Edit Profile"
+                    android:textColor="@color/text_primary_dark"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="Personal details &amp; password"
+                    android:textColor="@color/text_secondary_dark"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:contentDescription="@null"
+                android:src="@drawable/ic_arrow_right"
+                app:tint="@color/text_secondary_dark" />
+        </LinearLayout>
+
+        <!-- Notification Settings row -->
+        <LinearLayout
+            android:id="@+id/row_notifications"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/bg_profile_menu_row"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="16dp">
+
+            <FrameLayout
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/bg_profile_icon_box">
+
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_notification"
+                    app:tint="@color/primary" />
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="14dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="Notification Settings"
+                    android:textColor="@color/text_primary_dark"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="Manage alerts and news"
+                    android:textColor="@color/text_secondary_dark"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:contentDescription="@null"
+                android:src="@drawable/ic_arrow_right"
+                app:tint="@color/text_secondary_dark" />
+        </LinearLayout>
+
+        <!-- Theme Preferences row -->
+        <LinearLayout
+            android:id="@+id/row_theme"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/bg_profile_menu_row"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="16dp">
+
+            <FrameLayout
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/bg_profile_icon_box">
+
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_palette"
+                    app:tint="@color/primary" />
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="14dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="Theme Preferences"
+                    android:textColor="@color/text_primary_dark"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="Customize your reading app"
+                    android:textColor="@color/text_secondary_dark"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <!-- Dark badge + arrow -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/bg_profile_icon_box"
+                android:fontFamily="sans-serif-medium"
+                android:letterSpacing="0.06"
+                android:paddingStart="8dp"
+                android:paddingTop="4dp"
+                android:paddingEnd="8dp"
+                android:paddingBottom="4dp"
+                android:text="DARK"
+                android:textAllCaps="true"
+                android:textColor="@color/primary"
+                android:textSize="10sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:contentDescription="@null"
+                android:src="@drawable/ic_arrow_right"
+                app:tint="@color/text_secondary_dark" />
+        </LinearLayout>
+
+        <!-- Logout button -->
+        <LinearLayout
+            android:id="@+id/btn_logout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/bg_profile_logout_btn"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="16dp">
+
+            <FrameLayout
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/bg_profile_logout_icon_box">
+
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_logout"
+                    app:tint="@color/white" />
+            </FrameLayout>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="14dp"
+                android:layout_weight="1"
+                android:fontFamily="sans-serif-medium"
+                android:text="Logout"
+                android:textColor="#E63946"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>
 
