@@ -81,8 +81,10 @@ public class ProfileFragment extends Fragment {
         // Edit Profile row — opens EditProfileActivity
         view.findViewById(R.id.row_edit_profile).setOnClickListener(v -> openEditProfile());
 
-        view.findViewById(R.id.row_notifications).setOnClickListener(v ->
-                Toast.makeText(requireContext(), "Notification settings coming soon", Toast.LENGTH_SHORT).show());
+        view.findViewById(R.id.row_notifications).setOnClickListener(v -> {
+            Intent intent = new Intent(requireContext(), NotificationSettingsActivity.class);
+            startActivity(intent);
+        });
 
         view.findViewById(R.id.row_theme).setOnClickListener(v ->
                 Toast.makeText(requireContext(), "Theme preferences coming soon", Toast.LENGTH_SHORT).show());

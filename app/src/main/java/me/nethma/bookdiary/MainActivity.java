@@ -64,6 +64,10 @@ public class MainActivity extends AppCompatActivity {
 
         bindNavViews();
 
+        // Create notification channels and schedule background workers
+        NotificationHelper.createNotificationChannels(this);
+        NotificationScheduler.scheduleAll(this);
+
         if (savedInstanceState == null) {
             loadFragment(new HomeFragment(), false);
         }
