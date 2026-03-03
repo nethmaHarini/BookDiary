@@ -52,6 +52,7 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     // Firebase Authentication (required for Google Sign-In token verification)
     implementation(libs.firebase.auth)
+    implementation(libs.androidx.work.runtime)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
