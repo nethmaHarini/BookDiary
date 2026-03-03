@@ -19,10 +19,12 @@ import androidx.fragment.app.FragmentTransaction;
 import me.nethma.bookdiary.utils.NotificationHelper;
 import me.nethma.bookdiary.utils.NotificationScheduler;
 import me.nethma.bookdiary.utils.SessionManager;
+import me.nethma.bookdiary.utils.ThemePrefsManager;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
-    private static final int COLOR_ACTIVE   = 0xFF1152D4;
+    // COLOR_ACTIVE is loaded from ThemePrefsManager at runtime
+    private int COLOR_ACTIVE;
     private static final int COLOR_INACTIVE = 0xFF64748B;
 
     private FragmentContainerView fragmentContainer;
@@ -41,6 +43,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
+
+        // Load accent colour from prefs
+        COLOR_ACTIVE = ThemePrefsManager.getAccentColor(this);
 
         fragmentContainer = findViewById(R.id.fragment_container);
         bottomNav         = findViewById(R.id.bottom_nav);
@@ -82,6 +87,14 @@ public class MainActivity extends AppCompatActivity {
         navAdd.setOnClickListener(v     -> selectTab(R.id.nav_add,     new AddFragment()));
         navDiary.setOnClickListener(v   -> selectTab(R.id.nav_diary,   new DiaryFragment()));
         navProfile.setOnClickListener(v -> selectTab(R.id.nav_profile, new ProfileFragment()));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume(); // BaseActivity scans the full view tree
+        // Also refresh nav bar active colour (set programmatically, not via XML)
+        COLOR_ACTIVE = ThemePrefsManager.getAccentColor(this);
+        setNavSelected(selectedNavId);
     }
 
     private void bindNavViews() {

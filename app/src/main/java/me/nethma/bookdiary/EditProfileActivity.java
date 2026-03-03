@@ -39,7 +39,7 @@ import me.nethma.bookdiary.database.User;
 import me.nethma.bookdiary.database.UserDao;
 import me.nethma.bookdiary.utils.SessionManager;
 
-public class EditProfileActivity extends AppCompatActivity {
+public class EditProfileActivity extends BaseActivity {
 
     private SessionManager sessionManager;
     private UserDao userDao;

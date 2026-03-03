@@ -34,7 +34,7 @@ import java.util.concurrent.Executors;
 import me.nethma.bookdiary.utils.SessionManager;
 import me.nethma.bookdiary.utils.ThemePrefsManager;
 
-public class ProfileFragment extends Fragment {
+public class ProfileFragment extends BaseFragment {
 
     private SessionManager sessionManager;
     private ImageView ivAvatar;

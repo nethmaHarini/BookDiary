@@ -23,7 +23,7 @@ import me.nethma.bookdiary.database.AppDatabase;
 import me.nethma.bookdiary.database.User;
 import me.nethma.bookdiary.database.UserDao;
 
-public class RegisterActivity extends AppCompatActivity {
+public class RegisterActivity extends BaseActivity {
 
     private EditText etUsername, etEmail, etPassword, etConfirmPassword;
     private ImageButton btnTogglePassword, btnBack;

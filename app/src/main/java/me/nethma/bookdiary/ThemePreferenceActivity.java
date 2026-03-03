@@ -14,7 +14,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 
 import me.nethma.bookdiary.utils.ThemePrefsManager;
 
-public class ThemePreferenceActivity extends AppCompatActivity {
+public class ThemePreferenceActivity extends BaseActivity {
 
     private ThemePrefsManager themePrefs;
 
@@ -262,6 +262,7 @@ public class ThemePreferenceActivity extends AppCompatActivity {
         return Math.round(dp * getResources().getDisplayMetrics().density);
     }
 }
+
 
 
 
