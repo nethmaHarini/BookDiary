@@ -61,9 +61,9 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        // Settings / Theme — show coming-soon toast
+        // Settings button
         view.findViewById(R.id.btn_settings).setOnClickListener(v ->
-                Toast.makeText(requireContext(), "Theme preferences coming soon", Toast.LENGTH_SHORT).show());
+                Toast.makeText(requireContext(), "Settings coming soon", Toast.LENGTH_SHORT).show());
 
         // Edit avatar — placeholder
         view.findViewById(R.id.btn_edit_avatar).setOnClickListener(v ->

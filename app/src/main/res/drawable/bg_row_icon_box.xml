@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Row icon box: size-10 rounded-lg bg-primary/10
+    primary/10 = #1152D4 at 10% → #1A1152D4
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="#1A1152D4" />
+    <corners android:radius="10dp" />
+</shape>
+

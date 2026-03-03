@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Edit badge: bg-primary rounded-full, with border-4 border-background-dark
+    Achieved by a layered drawable: outer dark ring then inner primary circle
+-->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- border-4 border-background-dark (#101622) as outer ring -->
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="#101622" />
+        </shape>
+    </item>
+    <!-- bg-primary solid fill inset by 4dp to create the border effect -->
+    <item
+        android:bottom="3dp"
+        android:left="3dp"
+        android:right="3dp"
+        android:top="3dp">
+        <shape android:shape="oval">
+            <solid android:color="#1152D4" />
+        </shape>
+    </item>
+</layer-list>
+

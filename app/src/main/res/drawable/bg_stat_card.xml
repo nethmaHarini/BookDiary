@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Stats card: bg-slate-800/40 border border-slate-700/50 rounded-xl
+    slate-800 = #1E293B at 40% → #661E293B
+    slate-700 = #334155 at 50% → #80334155
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="#661E293B" />
+    <stroke
+        android:width="1dp"
+        android:color="#80334155" />
+    <corners android:radius="16dp" />
+</shape>
+
