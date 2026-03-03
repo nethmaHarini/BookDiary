@@ -23,3 +23,5 @@ $notesPath = "release_notes.md"
 
 $releaseResult = & $ghPath release create v1.0.0 $apkPath --repo "nethmaHarini/BookDiary" --title "BookDiary v1.0.0" --notes-file $notesPath 2>&1
 Write-Host "Release: $releaseResult"
+
+
