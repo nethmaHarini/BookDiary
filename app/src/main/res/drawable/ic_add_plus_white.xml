@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- White plus sign only — used over an accent-colored oval background -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="34dp"
+    android:height="34dp"
+    android:viewportWidth="960"
+    android:viewportHeight="960">
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M440,680L440,520L280,520L280,440L440,440L440,280L520,280L520,440L680,440L680,520L520,520L520,680Z"/>
+</vector>
+
