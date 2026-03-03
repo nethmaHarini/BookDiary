@@ -57,11 +57,13 @@ public class EditProfileActivity extends AppCompatActivity {
     // selected local photo URI (if user picks from gallery / camera)
     private Uri selectedPhotoUri = null;
     private Bitmap selectedPhotoBitmap = null;
+    private boolean photoRemoved = false; // true when user explicitly taps "Remove Photo"
 
     private final ActivityResultLauncher<String> galleryLauncher =
             registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
                 if (uri != null) {
                     selectedPhotoUri = uri;
+                    photoRemoved     = false; // picking a new photo cancels any pending removal
                     loadBitmapFromUri(uri);
                 }
             });
@@ -103,9 +105,13 @@ public class EditProfileActivity extends AppCompatActivity {
         // Move cursor to end of name field
         if (username != null) etFullName.setSelection(username.length());
 
-        // Load avatar
+        // Load avatar — local file path OR remote URL
         if (photoUrl != null && !photoUrl.isEmpty()) {
-            loadNetworkImage(photoUrl);
+            if (photoUrl.startsWith("/") || photoUrl.startsWith("file://")) {
+                loadLocalImage(photoUrl);
+            } else {
+                loadNetworkImage(photoUrl);
+            }
         } else {
             showInitialsAvatar(username);
         }
@@ -134,8 +140,9 @@ public class EditProfileActivity extends AppCompatActivity {
         });
 
         findViewById(R.id.btn_remove_photo).setOnClickListener(v -> {
-            selectedPhotoUri   = null;
+            selectedPhotoUri    = null;
             selectedPhotoBitmap = null;
+            photoRemoved        = true;   // flag so save knows to wipe the path
             showInitialsAvatar(sessionManager.getUsername());
             hidePhotoActions();
         });
@@ -249,14 +256,24 @@ public class EditProfileActivity extends AppCompatActivity {
                 userDao.updatePasswordById(userId, hashedNew);
             }
 
-            // Save photo to local storage if a new one was selected
-            if (selectedPhotoBitmap != null) {
-                savePhotoLocally(selectedPhotoBitmap, email);
+            // Determine final photo URL:
+            //   1. user removed photo  → clear it (empty string)
+            //   2. user picked a new photo → save it and use the new path
+            //   3. no change → keep existing
+            String finalPhotoUrl;
+            if (photoRemoved) {
+                finalPhotoUrl = "";
+            } else if (selectedPhotoBitmap != null) {
+                String savedPath = savePhotoLocally(selectedPhotoBitmap);
+                finalPhotoUrl = savedPath != null ? savedPath : sessionManager.getPhotoUrl();
+            } else {
+                finalPhotoUrl = sessionManager.getPhotoUrl();
             }
 
+            // Persist session with (possibly updated) photo path
+            final String photoUrlForSession = finalPhotoUrl;
             mainHandler.post(() -> {
-                // Update session
-                sessionManager.saveSession(userId, finalNewName, email, sessionManager.getPhotoUrl());
+                sessionManager.saveSession(userId, finalNewName, email, photoUrlForSession);
                 Toast.makeText(this, "Profile updated successfully", Toast.LENGTH_SHORT).show();
                 setResult(RESULT_OK);
                 finish();
@@ -264,7 +281,8 @@ public class EditProfileActivity extends AppCompatActivity {
         });
     }
 
-    private void savePhotoLocally(Bitmap bitmap, String email) {
+    /** Saves bitmap to app-private storage and returns the absolute file path, or null on failure. */
+    private String savePhotoLocally(Bitmap bitmap) {
         try {
             File dir = new File(getFilesDir(), "profile_photos");
             if (!dir.exists()) dir.mkdirs();
@@ -272,15 +290,10 @@ public class EditProfileActivity extends AppCompatActivity {
             FileOutputStream fos = new FileOutputStream(file);
             bitmap.compress(Bitmap.CompressFormat.JPEG, 90, fos);
             fos.close();
-            // Store local path in session
-            sessionManager.saveSession(
-                    sessionManager.getUserId(),
-                    sessionManager.getUsername(),
-                    sessionManager.getEmail(),
-                    file.getAbsolutePath()
-            );
+            return file.getAbsolutePath();
         } catch (Exception e) {
             e.printStackTrace();
+            return null;
         }
     }
 
@@ -308,6 +321,22 @@ public class EditProfileActivity extends AppCompatActivity {
                 mainHandler.post(() -> setAvatarBitmap(circular));
             } catch (Exception e) {
                 mainHandler.post(() -> Toast.makeText(this, "Could not load image", Toast.LENGTH_SHORT).show());
+            }
+        });
+    }
+
+    private void loadLocalImage(String path) {
+        executor.execute(() -> {
+            try {
+                Bitmap raw = BitmapFactory.decodeFile(path.replace("file://", ""));
+                if (raw != null) {
+                    Bitmap circular = toCircleBitmap(raw);
+                    mainHandler.post(() -> setAvatarBitmap(circular));
+                } else {
+                    mainHandler.post(() -> showInitialsAvatar(sessionManager.getUsername()));
+                }
+            } catch (Exception e) {
+                mainHandler.post(() -> showInitialsAvatar(sessionManager.getUsername()));
             }
         });
     }
@@ -375,4 +404,12 @@ public class EditProfileActivity extends AppCompatActivity {
         executor.shutdown();
     }
 }
+
+
+
+
+
+
+
+
 
