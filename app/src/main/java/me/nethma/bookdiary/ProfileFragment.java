@@ -26,13 +26,13 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
-import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import me.nethma.bookdiary.utils.SessionManager;
+import me.nethma.bookdiary.utils.ThemePrefsManager;
 
 public class ProfileFragment extends Fragment {
 
@@ -68,6 +68,13 @@ public class ProfileFragment extends Fragment {
         tvFavourites = view.findViewById(R.id.tv_favourites);
         tvReviews    = view.findViewById(R.id.tv_reviews);
 
+        // Update theme badge with current saved mode
+        TextView tvThemeBadge = view.findViewById(R.id.tv_theme_badge);
+        if (tvThemeBadge != null) {
+            int mode = new ThemePrefsManager(requireContext()).getThemeMode();
+            tvThemeBadge.setText(ThemePrefsManager.modeLabel(mode));
+        }
+
         // Back button
         view.findViewById(R.id.btn_back).setOnClickListener(v -> {
             if (getActivity() != null) getActivity().getSupportFragmentManager().popBackStack();
@@ -88,8 +95,10 @@ public class ProfileFragment extends Fragment {
             startActivity(intent);
         });
 
-        view.findViewById(R.id.row_theme).setOnClickListener(v ->
-                Toast.makeText(requireContext(), "Theme preferences coming soon", Toast.LENGTH_SHORT).show());
+        view.findViewById(R.id.row_theme).setOnClickListener(v -> {
+            Intent intent = new Intent(requireContext(), ThemePreferenceActivity.class);
+            startActivity(intent);
+        });
 
         // Logout
         view.findViewById(R.id.btn_logout).setOnClickListener(v -> showLogoutDialog());
