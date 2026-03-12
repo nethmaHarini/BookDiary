@@ -27,6 +27,12 @@
         <item name="android:letterSpacing">0.08</item>
     </style>
 
+    <!-- Book cover image rounded corners (used with ShapeableImageView) -->
+    <style name="BookCoverShape">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">12dp</item>
+    </style>
+
     <!-- Splash screen theme -->
     <style name="Theme.BookDiary.Splash" parent="Theme.BookDiary">
         <item name="android:windowBackground">@color/app_background</item>
