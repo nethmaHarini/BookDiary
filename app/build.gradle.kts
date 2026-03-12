@@ -5,11 +5,7 @@ plugins {
 
 android {
     namespace = "me.nethma.bookdiary"
-    compileSdk {
-        version = release(36) {
-            minorApiLevel = 1
-        }
-    }
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "me.nethma.bookdiary"
