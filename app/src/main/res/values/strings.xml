@@ -142,6 +142,17 @@
     <string name="msg_marked_favourite">Added to Favourites ❤</string>
     <string name="msg_removed_favourite">Removed from Favourites</string>
 
+    <!-- Favourites Screen -->
+    <string name="favs_title">Favourites</string>
+    <string name="favs_search_hint">Search favourites…</string>
+    <string name="favs_count">%d favourite books</string>
+    <string name="favs_empty_title">No favourites yet</string>
+    <string name="favs_empty_sub">Tap the ❤ on any book to add it here</string>
+    <string name="favs_filter_all">All Books</string>
+    <string name="favs_filter_reading">Reading</string>
+    <string name="profile_my_favourites">My Favourites</string>
+    <string name="profile_my_favourites_sub">Browse your starred books</string>
+
     <!-- Diary Screen -->
     <string name="diary_title">My Reading Diary</string>
     <string name="diary_subtitle">Your personal book reflections</string>

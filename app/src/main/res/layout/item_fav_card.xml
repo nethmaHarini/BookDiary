@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Full-card book item for the Favourites vertical list -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@drawable/bg_book_list_card"
+    android:padding="16dp"
+    android:layout_marginBottom="12dp"
+    android:clickable="true"
+    android:focusable="true">
+
+    <!-- Book cover 96 × 144 dp -->
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/iv_cover"
+        android:layout_width="96dp"
+        android:layout_height="144dp"
+        android:scaleType="centerCrop"
+        android:contentDescription="@null"
+        app:shapeAppearanceOverlay="@style/BookCoverShape" />
+
+    <!-- Right content -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_marginStart="16dp"
+        android:paddingTop="2dp">
+
+        <!-- Row 1: Title + Edit button + Unfavourite heart -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@color/text_primary"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:maxLines="2"
+                android:ellipsize="end"
+                android:lineSpacingMultiplier="1.15" />
+
+            <!-- Edit button -->
+            <ImageView
+                android:id="@+id/btn_edit"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:padding="6dp"
+                android:src="@drawable/ic_edit"
+                android:contentDescription="Edit book"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"
+                app:tint="@color/text_hint" />
+
+            <!-- Tappable heart — touch target 40×40dp, icon 22×22dp -->
+            <FrameLayout
+                android:id="@+id/btn_unfav"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="2dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"
+                android:contentDescription="Remove from Favourites">
+
+                <ImageView
+                    android:id="@+id/iv_fav_star"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_heart_filled"
+                    android:contentDescription="@null" />
+
+            </FrameLayout>
+
+        </LinearLayout>
+
+        <!-- Row 2: Author -->
+        <TextView
+            android:id="@+id/tv_author"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/text_hint"
+            android:textSize="13sp" />
+
+        <!-- Spacer — pushes rating + category to bottom -->
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <!-- Row 3: 5 stars + numeric rating -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="8dp">
+
+            <ImageView android:id="@+id/star_1" android:layout_width="16dp" android:layout_height="16dp" android:src="@drawable/ic_star_filled" android:layout_marginEnd="1dp" android:contentDescription="@null" />
+            <ImageView android:id="@+id/star_2" android:layout_width="16dp" android:layout_height="16dp" android:src="@drawable/ic_star_filled" android:layout_marginEnd="1dp" android:contentDescription="@null" />
+            <ImageView android:id="@+id/star_3" android:layout_width="16dp" android:layout_height="16dp" android:src="@drawable/ic_star_filled" android:layout_marginEnd="1dp" android:contentDescription="@null" />
+            <ImageView android:id="@+id/star_4" android:layout_width="16dp" android:layout_height="16dp" android:src="@drawable/ic_star_filled" android:layout_marginEnd="1dp" android:contentDescription="@null" />
+            <ImageView android:id="@+id/star_5" android:layout_width="16dp" android:layout_height="16dp" android:src="@drawable/ic_star_filled" android:contentDescription="@null" />
+
+            <TextView
+                android:id="@+id/tv_rating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:textColor="@color/text_primary"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <!-- Row 4: Status badge + Category badge -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="8dp">
+
+            <TextView
+                android:id="@+id/tv_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp"
+                android:textSize="9sp"
+                android:textStyle="bold"
+                android:textAllCaps="true"
+                android:letterSpacing="0.06"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/tv_category"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:paddingTop="3dp"
+                android:paddingBottom="3dp"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:textAllCaps="true"
+                android:letterSpacing="0.06"
+                android:textColor="@color/primary"
+                android:background="@drawable/bg_category_tag" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>

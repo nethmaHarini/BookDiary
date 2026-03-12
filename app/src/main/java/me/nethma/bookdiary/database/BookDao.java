@@ -73,5 +73,15 @@ public interface BookDao {
            "AND (:status = 'All' OR readingStatus = :status) " +
            "ORDER BY dateAdded DESC")
     List<Book> searchAndFilterByStatus(int userId, String query, String status);
+
+    /**
+     * Favourites screen: only favourite books, optionally filtered by status.
+     * Pass status = "All Books" to skip status filtering.
+     */
+    @Query("SELECT * FROM books WHERE userId = :userId AND isFavorite = 1 " +
+           "AND (title LIKE '%' || :query || '%' OR author LIKE '%' || :query || '%') " +
+           "AND (:status = 'All Books' OR readingStatus = :status) " +
+           "ORDER BY dateAdded DESC")
+    List<Book> searchFavourites(int userId, String query, String status);
 }
 

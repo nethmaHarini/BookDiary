@@ -80,6 +80,12 @@
             android:exported="false"
             android:theme="@style/Theme.BookDiary" />
 
+        <!-- Favourites Activity -->
+        <activity
+            android:name=".FavouritesActivity"
+            android:exported="false"
+            android:theme="@style/Theme.BookDiary" />
+
         <!-- Notification Settings Activity -->
         <activity
             android:name=".NotificationSettingsActivity"

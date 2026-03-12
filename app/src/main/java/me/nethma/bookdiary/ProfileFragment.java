@@ -29,12 +29,14 @@ import java.net.URL;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import me.nethma.bookdiary.database.AppDatabase;
 import me.nethma.bookdiary.utils.SessionManager;
 import me.nethma.bookdiary.utils.ThemePrefsManager;
 
 public class ProfileFragment extends BaseFragment {
 
     private SessionManager sessionManager;
+    private AppDatabase    db;
     private ImageView ivAvatar;
     private TextView tvUsername, tvEmail, tvTotalBooks, tvFavourites, tvReviews;
     private View btnEditAvatar;  // keep reference for accent re-apply
@@ -46,9 +48,14 @@ public class ProfileFragment extends BaseFragment {
     private final ActivityResultLauncher<Intent> editProfileLauncher =
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
                 if (result.getResultCode() == android.app.Activity.RESULT_OK) {
-                    // Refresh displayed data after save
                     populateUserInfo();
                 }
+            });
+
+    // Launch FavouritesActivity and refresh stats on return
+    private final ActivityResultLauncher<Intent> favsLauncher =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                loadStats(); // refresh counts after possible fav toggle
             });
 
     @Nullable
@@ -59,6 +66,7 @@ public class ProfileFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
         sessionManager = new SessionManager(requireContext());
+        db             = AppDatabase.getInstance(requireContext());
 
         ivAvatar     = view.findViewById(R.id.iv_avatar);
         tvUsername   = view.findViewById(R.id.tv_username);
@@ -96,6 +104,12 @@ public class ProfileFragment extends BaseFragment {
             startActivity(intent);
         });
 
+        // My Favourites row
+        view.findViewById(R.id.row_favourites).setOnClickListener(v -> {
+            Intent intent = new Intent(requireContext(), FavouritesActivity.class);
+            favsLauncher.launch(intent);
+        });
+
         // Logout
         view.findViewById(R.id.btn_logout).setOnClickListener(v -> showLogoutDialog());
 
@@ -107,6 +121,7 @@ public class ProfileFragment extends BaseFragment {
     public void onResume() {
         super.onResume(); // BaseFragment handles generic tree scan (textColor/imageTint)
         applyAccentToBadge();
+        loadStats();       // refresh counts every time the tab is shown
     }
 
     /** Apply accent to the edit-avatar pencil badge (bg_edit_badge LayerDrawable). */
@@ -133,7 +148,6 @@ public class ProfileFragment extends BaseFragment {
         tvEmail.setText(email != null && !email.isEmpty() ? email : "");
 
         if (photoUrl != null && !photoUrl.isEmpty()) {
-            // Check if it's a local file path or a remote URL
             if (photoUrl.startsWith("/") || photoUrl.startsWith("file://")) {
                 loadLocalImage(photoUrl);
             } else {
@@ -143,9 +157,24 @@ public class ProfileFragment extends BaseFragment {
             showInitialsAvatar(username);
         }
 
-        tvTotalBooks.setText("0");
-        tvFavourites.setText("0");
-        tvReviews.setText("0");
+        loadStats();
+    }
+
+    /** Load real book stats from Room DB on a background thread. */
+    private void loadStats() {
+        if (!isAdded()) return;
+        int userId = sessionManager.getUserId();
+        executor.execute(() -> {
+            int total    = db.bookDao().getBookCount(userId);
+            int favs     = db.bookDao().getFavoriteCount(userId);
+            int reviewed = db.bookDao().getReviewCount(userId);
+            mainHandler.post(() -> {
+                if (!isAdded()) return;
+                tvTotalBooks.setText(String.valueOf(total));
+                tvFavourites.setText(String.valueOf(favs));
+                tvReviews.setText(String.valueOf(reviewed));
+            });
+        });
     }
 
     private void loadLocalImage(String path) {
