@@ -81,9 +81,15 @@
             android:windowSoftInputMode="adjustResize"
             android:theme="@style/Theme.BookDiary" />
 
-        <!-- Book Detail Activity -->
+        <!-- Book Detail Activity (local DB) -->
         <activity
             android:name=".BookDetailActivity"
+            android:exported="false"
+            android:theme="@style/Theme.BookDiary" />
+
+        <!-- API Book Detail Activity (Open Library discovered books) -->
+        <activity
+            android:name=".ApiBookDetailActivity"
             android:exported="false"
             android:theme="@style/Theme.BookDiary" />
 

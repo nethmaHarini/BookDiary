@@ -21,9 +21,9 @@ import retrofit2.Response;
  */
 public class DiscoverBooksRepository {
 
-    private static final String TAG = "DiscoverBooksRepo";
-    private static final String FIELDS = "key,title,author_name,cover_i,first_publish_year";
-    private static final int LIMIT_PER_TOPIC = 15;
+    private static final String TAG    = "DiscoverBooksRepo";
+    private static final String FIELDS = "key,title,author_name,cover_i,first_publish_year,ratings_average,ratings_count";
+    private static final int    LIMIT_PER_TOPIC = 20;
 
     // Maps user-facing topic name → Open Library subject query string
     private static final Map<String, String> TOPIC_TO_SUBJECT = new HashMap<>();
@@ -74,7 +74,7 @@ public class DiscoverBooksRepository {
 
         for (String topic : topics) {
             String subject = TOPIC_TO_SUBJECT.getOrDefault(topic, topic.toLowerCase().replace(" ", "_"));
-            service.searchBySubject(subject, LIMIT_PER_TOPIC, FIELDS)
+            service.searchBySubject(subject, LIMIT_PER_TOPIC, FIELDS, "rating", "eng")
                     .enqueue(new Callback<OpenLibraryResponse>() {
                         @Override
                         public void onResponse(Call<OpenLibraryResponse> call,
@@ -110,4 +110,6 @@ public class DiscoverBooksRepository {
         }
     }
 }
+
+
 

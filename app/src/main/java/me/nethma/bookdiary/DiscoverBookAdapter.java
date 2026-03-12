@@ -1,5 +1,6 @@
 package me.nethma.bookdiary;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,16 +22,9 @@ import me.nethma.bookdiary.api.OpenLibraryBook;
 /** Adapter for displaying API-discovered books in HomeFragment */
 public class DiscoverBookAdapter extends RecyclerView.Adapter<DiscoverBookAdapter.ViewHolder> {
 
-    public interface OnDiscoverBookClickListener {
-        void onBookClick(OpenLibraryBook book);
-    }
-
     private List<OpenLibraryBook> books = new ArrayList<>();
-    private final OnDiscoverBookClickListener listener;
 
-    public DiscoverBookAdapter(OnDiscoverBookClickListener listener) {
-        this.listener = listener;
-    }
+    public DiscoverBookAdapter() {}
 
     public void setBooks(List<OpenLibraryBook> books) {
         this.books = books != null ? books : new ArrayList<>();
@@ -47,8 +41,7 @@ public class DiscoverBookAdapter extends RecyclerView.Adapter<DiscoverBookAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        OpenLibraryBook book = books.get(position);
-        holder.bind(book, listener);
+        holder.bind(books.get(position));
     }
 
     @Override
@@ -66,7 +59,7 @@ public class DiscoverBookAdapter extends RecyclerView.Adapter<DiscoverBookAdapte
             tvYear   = itemView.findViewById(R.id.tv_discover_year);
         }
 
-        void bind(OpenLibraryBook book, OnDiscoverBookClickListener listener) {
+        void bind(OpenLibraryBook book) {
             tvTitle.setText(book.title);
             tvAuthor.setText(book.getAuthor());
             tvYear.setText(book.firstPublishYear > 0 ? String.valueOf(book.firstPublishYear) : "");
@@ -84,10 +77,20 @@ public class DiscoverBookAdapter extends RecyclerView.Adapter<DiscoverBookAdapte
                 imgCover.setImageResource(R.drawable.ic_book_logo);
             }
 
+            // On click: open ApiBookDetailActivity with full book data
             itemView.setOnClickListener(v -> {
-                if (listener != null) listener.onBookClick(book);
+                Intent intent = new Intent(v.getContext(), ApiBookDetailActivity.class);
+                intent.putExtra(ApiBookDetailActivity.EXTRA_WORK_KEY,  book.key);
+                intent.putExtra(ApiBookDetailActivity.EXTRA_TITLE,     book.title);
+                intent.putExtra(ApiBookDetailActivity.EXTRA_AUTHOR,    book.getAuthor());
+                intent.putExtra(ApiBookDetailActivity.EXTRA_COVER_URL, coverUrl);
+                intent.putExtra(ApiBookDetailActivity.EXTRA_YEAR,      book.firstPublishYear);
+                intent.putExtra(ApiBookDetailActivity.EXTRA_RATING,    book.ratingsAverage);
+                v.getContext().startActivity(intent);
             });
         }
     }
 }
+
+
 

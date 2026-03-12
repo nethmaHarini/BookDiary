@@ -147,10 +147,7 @@ public class HomeFragment extends BaseFragment {
         rvAllBooks.setNestedScrollingEnabled(false);
 
         // Discover RecyclerView (horizontal)
-        discoverAdapter = new DiscoverBookAdapter(book ->
-                Toast.makeText(requireContext(),
-                        "\"" + book.title + "\" — tap Add to add it to your library",
-                        Toast.LENGTH_SHORT).show());
+        discoverAdapter = new DiscoverBookAdapter();
         rvDiscover.setLayoutManager(
                 new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
         rvDiscover.setAdapter(discoverAdapter);
