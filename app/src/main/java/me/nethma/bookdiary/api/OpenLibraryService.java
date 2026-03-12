@@ -9,12 +9,12 @@ import retrofit2.http.Query;
 public interface OpenLibraryService {
 
     /**
-     * Search books by subject/genre.
-     * Example: /search.json?subject=fiction&limit=20&fields=key,title,author_name,cover_i,first_publish_year
+     * General search — used to find recent books by topic + year range.
+     * Example: /search.json?q=fiction&sort=new&limit=30
      */
     @GET("search.json")
-    Call<OpenLibraryResponse> searchBySubject(
-            @Query("subject") String subject,
+    Call<OpenLibraryResponse> search(
+            @Query("q") String query,
             @Query("limit") int limit,
             @Query("fields") String fields,
             @Query("sort") String sort,
@@ -24,11 +24,8 @@ public interface OpenLibraryService {
     /**
      * Fetch full works detail by Open Library works key.
      * key format: "/works/OL12345W" — pass just "OL12345W"
-     * Example: /works/OL12345W.json
      */
     @GET("works/{workId}.json")
     Call<OpenLibraryWorkDetail> getWorkDetail(@Path("workId") String workId);
 }
-
-
 
