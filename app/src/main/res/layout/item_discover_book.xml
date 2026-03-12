@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Item for the Discover Books horizontal RecyclerView (API books) -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="150dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_marginEnd="12dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:background="?attr/selectableItemBackground">
+
+    <!-- Cover image -->
+    <ImageView
+        android:id="@+id/img_discover_cover"
+        android:layout_width="150dp"
+        android:layout_height="210dp"
+        android:scaleType="centerCrop"
+        android:contentDescription="@null"
+        android:background="@color/app_surface"
+        android:src="@drawable/ic_book_logo" />
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/tv_discover_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/text_primary"
+        android:textSize="13sp"
+        android:textStyle="bold"
+        android:maxLines="2"
+        android:ellipsize="end" />
+
+    <!-- Author -->
+    <TextView
+        android:id="@+id/tv_discover_author"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:textColor="@color/text_secondary"
+        android:textSize="11sp"
+        android:maxLines="1"
+        android:ellipsize="end" />
+
+    <!-- Year -->
+    <TextView
+        android:id="@+id/tv_discover_year"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:textColor="@color/text_hint"
+        android:textSize="10sp" />
+
+</LinearLayout>
+
+

@@ -46,6 +46,13 @@
             android:windowSoftInputMode="adjustResize"
             android:theme="@style/Theme.BookDiary" />
 
+        <!-- Topic Selection Activity (shown once after registration) -->
+        <activity
+            android:name=".TopicSelectionActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/Theme.BookDiary" />
+
         <!-- Forgot Password Activity -->
         <activity
             android:name=".ForgotPasswordActivity"

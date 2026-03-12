@@ -49,6 +49,12 @@ dependencies {
     // Firebase Authentication (required for Google Sign-In token verification)
     implementation(libs.firebase.auth)
     implementation(libs.androidx.work.runtime)
+    // Retrofit + Gson for Open Library API
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.gson)
+    // Glide for cover images
+    implementation(libs.glide)
+    annotationProcessor(libs.glide.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
