@@ -121,6 +121,42 @@
     <string name="err_author_empty">Please enter the author name.</string>
     <string name="reading_status_default">Want to Read</string>
 
+    <!-- Book Detail screen -->
+    <string name="detail_title">Book Details</string>
+    <string name="detail_share">Share</string>
+    <string name="detail_more">More options</string>
+    <string name="detail_edit">Edit book</string>
+    <string name="detail_read_now">Read Now</string>
+    <string name="detail_reviews">My Review</string>
+    <string name="detail_edit_review">Edit</string>
+    <string name="detail_no_review">No review yet. Tap Edit to add your thoughts.</string>
+    <string name="detail_stat_rating">Rating</string>
+    <string name="detail_stat_category">Category</string>
+    <string name="detail_stat_status">Status</string>
+    <string name="detail_fav_add">Add to Favourites</string>
+    <string name="detail_fav_remove">Remove from Favourites</string>
+    <string name="detail_menu_fav">Mark as Favourite</string>
+    <string name="detail_menu_unfav">Remove from Favourites</string>
+    <string name="detail_menu_delete">Delete Book</string>
+    <string name="msg_status_updated">Status updated to: %s</string>
+    <string name="msg_marked_favourite">Added to Favourites ❤</string>
+    <string name="msg_removed_favourite">Removed from Favourites</string>
+
+    <!-- Diary Screen -->
+    <string name="diary_title">My Reading Diary</string>
+    <string name="diary_subtitle">Your personal book reflections</string>
+    <string name="diary_stat_total">Total Books</string>
+    <string name="diary_stat_reviewed">Reviewed</string>
+    <string name="diary_stat_favorites">Favourites</string>
+    <string name="diary_search_hint">Search your diary…</string>
+    <string name="diary_books_count">%d books</string>
+    <string name="diary_empty_title">No books yet</string>
+    <string name="diary_empty_sub">Tap + to add your first book and start your diary</string>
+    <string name="diary_filter_all">All</string>
+    <string name="diary_filter_want">Want to Read</string>
+    <string name="diary_filter_reading">Reading</string>
+    <string name="diary_filter_finished">Finished</string>
+
     <!-- Category list (also used as spinner items) -->
     <string-array name="book_categories">
         <item>Fiction</item>

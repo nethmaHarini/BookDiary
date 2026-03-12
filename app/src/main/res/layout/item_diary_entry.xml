@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Diary screen book card (cover + info + action buttons) -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@drawable/bg_book_list_card"
+    android:padding="12dp"
+    android:layout_marginBottom="12dp"
+    android:clickable="true"
+    android:focusable="true">
+
+    <!-- Book cover -->
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/iv_cover"
+        android:layout_width="72dp"
+        android:layout_height="104dp"
+        android:scaleType="centerCrop"
+        android:contentDescription="@null"
+        app:shapeAppearanceOverlay="@style/BookCoverShape" />
+
+    <!-- Content section -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_marginStart="12dp"
+        android:paddingTop="2dp">
+
+        <!-- Row 1: Title + Action buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@color/text_primary"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:maxLines="2"
+                android:ellipsize="end"
+                android:lineSpacingMultiplier="1.1" />
+
+            <!-- View detail button -->
+            <ImageView
+                android:id="@+id/btn_view"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:padding="6dp"
+                android:src="@drawable/ic_nav_diary"
+                android:contentDescription="@null"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"
+                app:tint="@color/text_hint" />
+
+            <!-- Favourite button -->
+            <ImageView
+                android:id="@+id/btn_fav"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:padding="6dp"
+                android:src="@drawable/ic_heart"
+                android:contentDescription="@null"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <!-- Edit button -->
+            <ImageView
+                android:id="@+id/btn_edit"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:padding="6dp"
+                android:src="@drawable/ic_edit"
+                android:contentDescription="@null"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"
+                app:tint="@color/text_hint" />
+
+        </LinearLayout>
+
+        <!-- Row 2: Author -->
+        <TextView
+            android:id="@+id/tv_author"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:textColor="@color/text_hint"
+            android:textSize="12sp" />
+
+        <!-- Row 3: 5 mini stars -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="6dp">
+
+            <ImageView android:id="@+id/star_1" android:layout_width="14dp" android:layout_height="14dp" android:src="@drawable/ic_star_filled" android:layout_marginEnd="1dp" android:contentDescription="@null" />
+            <ImageView android:id="@+id/star_2" android:layout_width="14dp" android:layout_height="14dp" android:src="@drawable/ic_star_filled" android:layout_marginEnd="1dp" android:contentDescription="@null" />
+            <ImageView android:id="@+id/star_3" android:layout_width="14dp" android:layout_height="14dp" android:src="@drawable/ic_star_filled" android:layout_marginEnd="1dp" android:contentDescription="@null" />
+            <ImageView android:id="@+id/star_4" android:layout_width="14dp" android:layout_height="14dp" android:src="@drawable/ic_star_filled" android:layout_marginEnd="1dp" android:contentDescription="@null" />
+            <ImageView android:id="@+id/star_5" android:layout_width="14dp" android:layout_height="14dp" android:src="@drawable/ic_star_filled" android:contentDescription="@null" />
+
+        </LinearLayout>
+
+        <!-- Row 4: Status badge + date (pushed to bottom) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:gravity="center_vertical|bottom"
+            android:layout_marginTop="6dp">
+
+            <TextView
+                android:id="@+id/tv_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp"
+                android:textSize="9sp"
+                android:textStyle="bold"
+                android:textAllCaps="true"
+                android:letterSpacing="0.06" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/tv_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_hint"
+                android:textSize="10sp"
+                android:textStyle="italic" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>
+
