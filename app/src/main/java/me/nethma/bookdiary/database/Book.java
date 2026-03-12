@@ -22,7 +22,10 @@ public class Book {
     public String coverUrl;   // local file path or remote URL
 
     @Nullable
-    public String notes;      // diary/review notes
+    public String notes;      // user's personal review/diary notes
+
+    @Nullable
+    public String description; // book description from API (read-only, not user-entered)
 
     public long dateAdded;    // epoch milliseconds
 

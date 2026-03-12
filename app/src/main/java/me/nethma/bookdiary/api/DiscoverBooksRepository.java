@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -16,34 +17,42 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * Fetches books from Open Library API based on user-selected topics.
- * Maps display topic names to Open Library subject query slugs.
+ * Fetches recent, popular books from the Open Library API based on user-selected topics.
+ *
+ * Strategy:
+ *  - Search using q="<topic> <year_range>" to bias results toward recent publications
+ *  - Sort by "new" to get recently added/published books first
+ *  - Filter client-side: must have a cover image, publish year >= MIN_YEAR
+ *  - Fetch enough candidates (FETCH_LIMIT) to still get DESIRED_PER_TOPIC after filtering
  */
 public class DiscoverBooksRepository {
 
-    private static final String TAG    = "DiscoverBooksRepo";
-    private static final String FIELDS = "key,title,author_name,cover_i,first_publish_year,ratings_average,ratings_count";
-    private static final int    LIMIT_PER_TOPIC = 20;
+    private static final String TAG              = "DiscoverBooksRepo";
+    private static final int    MIN_YEAR         = 2010;   // only books from 2010 onward
+    private static final int    FETCH_LIMIT      = 50;     // fetch more to survive filtering
+    private static final int    DESIRED_PER_TOPIC = 15;    // keep up to 15 per topic
+    private static final String FIELDS           =
+            "key,title,author_name,cover_i,first_publish_year,ratings_average,ratings_count";
 
-    // Maps user-facing topic name → Open Library subject query string
-    private static final Map<String, String> TOPIC_TO_SUBJECT = new HashMap<>();
+    // Maps user-facing topic → Open Library search term
+    private static final Map<String, String> TOPIC_TO_QUERY = new HashMap<>();
 
     static {
-        TOPIC_TO_SUBJECT.put("Fiction",      "fiction");
-        TOPIC_TO_SUBJECT.put("Mystery",      "mystery");
-        TOPIC_TO_SUBJECT.put("Romance",      "romance");
-        TOPIC_TO_SUBJECT.put("Science",      "science");
-        TOPIC_TO_SUBJECT.put("History",      "history");
-        TOPIC_TO_SUBJECT.put("Fantasy",      "fantasy");
-        TOPIC_TO_SUBJECT.put("Biography",    "biography");
-        TOPIC_TO_SUBJECT.put("Thriller",     "thriller");
-        TOPIC_TO_SUBJECT.put("Self-Help",    "self_help");
-        TOPIC_TO_SUBJECT.put("Horror",       "horror");
-        TOPIC_TO_SUBJECT.put("Classic",      "classic_literature");
-        TOPIC_TO_SUBJECT.put("Poetry",       "poetry");
-        TOPIC_TO_SUBJECT.put("Science Fiction", "science_fiction");
-        TOPIC_TO_SUBJECT.put("Adventure",    "adventure");
-        TOPIC_TO_SUBJECT.put("Children",     "children");
+        TOPIC_TO_QUERY.put("Fiction",         "popular fiction novel");
+        TOPIC_TO_QUERY.put("Mystery",         "mystery thriller detective");
+        TOPIC_TO_QUERY.put("Romance",         "romance love story novel");
+        TOPIC_TO_QUERY.put("Science",         "popular science nonfiction");
+        TOPIC_TO_QUERY.put("History",         "history historical nonfiction");
+        TOPIC_TO_QUERY.put("Fantasy",         "fantasy magic novel");
+        TOPIC_TO_QUERY.put("Biography",       "biography memoir");
+        TOPIC_TO_QUERY.put("Thriller",        "thriller suspense novel");
+        TOPIC_TO_QUERY.put("Self-Help",       "self help personal development");
+        TOPIC_TO_QUERY.put("Horror",          "horror scary novel");
+        TOPIC_TO_QUERY.put("Classic",         "classic literature bestseller");
+        TOPIC_TO_QUERY.put("Poetry",          "poetry poems collection");
+        TOPIC_TO_QUERY.put("Science Fiction", "science fiction space adventure");
+        TOPIC_TO_QUERY.put("Adventure",       "adventure action novel");
+        TOPIC_TO_QUERY.put("Children",        "children picture book story");
     }
 
     public interface BooksCallback {
@@ -57,38 +66,32 @@ public class DiscoverBooksRepository {
         this.service = BookApiClient.getService(context);
     }
 
-    /**
-     * Fetches books for each topic in parallel, merges and deduplicates results,
-     * then calls the callback on the calling thread (use with Handler if needed).
-     */
     public void fetchBooksForTopics(List<String> topics, BooksCallback callback) {
         if (topics == null || topics.isEmpty()) {
             callback.onSuccess(new ArrayList<>());
             return;
         }
 
-        List<OpenLibraryBook> merged = new ArrayList<>();
-        Set<String> seenKeys = new HashSet<>();
-        AtomicInteger pending = new AtomicInteger(topics.size());
-        List<String> errors = new ArrayList<>();
+        List<OpenLibraryBook> merged   = new ArrayList<>();
+        Set<String>           seenKeys = new HashSet<>();
+        AtomicInteger         pending  = new AtomicInteger(topics.size());
 
         for (String topic : topics) {
-            String subject = TOPIC_TO_SUBJECT.getOrDefault(topic, topic.toLowerCase().replace(" ", "_"));
-            service.searchBySubject(subject, LIMIT_PER_TOPIC, FIELDS, "rating", "eng")
+            String query = TOPIC_TO_QUERY.getOrDefault(topic, topic);
+
+            service.search(query, FETCH_LIMIT, FIELDS, "new", "eng")
                     .enqueue(new Callback<OpenLibraryResponse>() {
                         @Override
                         public void onResponse(Call<OpenLibraryResponse> call,
                                                Response<OpenLibraryResponse> response) {
                             if (response.isSuccessful() && response.body() != null
                                     && response.body().docs != null) {
+
+                                List<OpenLibraryBook> filtered = filterAndLimit(
+                                        response.body().docs, seenKeys);
+
                                 synchronized (merged) {
-                                    for (OpenLibraryBook book : response.body().docs) {
-                                        if (book.key != null && !seenKeys.contains(book.key)
-                                                && book.title != null && !book.title.isEmpty()) {
-                                            seenKeys.add(book.key);
-                                            merged.add(book);
-                                        }
-                                    }
+                                    merged.addAll(filtered);
                                 }
                             }
                             checkDone();
@@ -97,19 +100,53 @@ public class DiscoverBooksRepository {
                         @Override
                         public void onFailure(Call<OpenLibraryResponse> call, Throwable t) {
                             Log.e(TAG, "Failed to fetch topic: " + topic, t);
-                            synchronized (errors) { errors.add(topic); }
                             checkDone();
                         }
 
                         private void checkDone() {
                             if (pending.decrementAndGet() == 0) {
+                                // Shuffle so books from different topics are interleaved
+                                synchronized (merged) {
+                                    Collections.shuffle(merged);
+                                }
                                 callback.onSuccess(new ArrayList<>(merged));
                             }
                         }
                     });
         }
     }
+
+    /**
+     * Keep only books that:
+     *  1. Have a valid key and title
+     *  2. Have a cover image (cover_i > 0)
+     *  3. Were first published in MIN_YEAR or later
+     *  4. Haven't been seen yet (deduplication)
+     * Returns up to DESIRED_PER_TOPIC results.
+     */
+    private List<OpenLibraryBook> filterAndLimit(List<OpenLibraryBook> docs,
+                                                  Set<String> seenKeys) {
+        List<OpenLibraryBook> result = new ArrayList<>();
+        for (OpenLibraryBook book : docs) {
+            if (result.size() >= DESIRED_PER_TOPIC) break;
+
+            // Must have key + title
+            if (book.key == null || book.title == null || book.title.isEmpty()) continue;
+
+            // Must have a cover image
+            if (book.coverId <= 0) continue;
+
+            // Must be recent enough
+            if (book.firstPublishYear > 0 && book.firstPublishYear < MIN_YEAR) continue;
+
+            // Deduplicate
+            synchronized (seenKeys) {
+                if (seenKeys.contains(book.key)) continue;
+                seenKeys.add(book.key);
+            }
+
+            result.add(book);
+        }
+        return result;
+    }
 }
-
-
-

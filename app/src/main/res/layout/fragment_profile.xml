@@ -552,10 +552,69 @@
 
         </LinearLayout>
 
-        <!--
-            Logout button: mt-6 (24dp top margin), bg-rose-500/10, border border-rose-500/20, rounded-xl
-            Icon box: bg-rose-500 rounded-lg (no primary/10, it's solid rose)
-        -->
+        <!-- Manage Genres row -->
+        <LinearLayout
+            android:id="@+id/row_manage_genres"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/bg_menu_row"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="16dp">
+
+            <FrameLayout
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/bg_row_icon_box">
+
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_tune"
+                    app:tint="@color/primary" />
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Manage Genres"
+                    android:textColor="@color/text_primary"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="Add or remove your reading interests"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:contentDescription="@null"
+                android:src="@drawable/ic_arrow_right"
+                app:tint="@color/text_secondary" />
+
+        </LinearLayout>
+
+        <!-- Logout -->
         <LinearLayout
             android:id="@+id/btn_logout"
             android:layout_width="match_parent"
@@ -570,7 +629,6 @@
             android:orientation="horizontal"
             android:padding="16dp">
 
-            <!-- bg-rose-500 icon box (solid, not tinted) -->
             <FrameLayout
                 android:layout_width="40dp"
                 android:layout_height="40dp"

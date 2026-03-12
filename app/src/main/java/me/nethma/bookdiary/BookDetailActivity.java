@@ -39,6 +39,11 @@ public class BookDetailActivity extends AppCompatActivity {
     private TextView  tvReview, tvReviewEmpty;
     private ImageView ivFavIcon;
     private TextView  tvFavLabel;
+    private TextView  tvReadNowLabel;
+    private ImageView ivReadNowIcon;
+    private View      sectionAbout;
+    private View      dividerAbout;
+    private TextView  tvAboutDescription;
 
     // ── State ──────────────────────────────────────────────────────────────
     private int  bookId = -1;
@@ -83,6 +88,11 @@ public class BookDetailActivity extends AppCompatActivity {
         tvReviewEmpty = findViewById(R.id.tv_review_empty);
         ivFavIcon     = findViewById(R.id.iv_fav_icon);
         tvFavLabel    = findViewById(R.id.tv_fav_label);
+        tvReadNowLabel     = findViewById(R.id.tv_read_now_label);
+        ivReadNowIcon      = findViewById(R.id.iv_read_now_icon);
+        sectionAbout       = findViewById(R.id.section_about);
+        dividerAbout       = findViewById(R.id.divider_about);
+        tvAboutDescription = findViewById(R.id.tv_about_description);
 
         // Back
         findViewById(R.id.btn_back).setOnClickListener(v -> finish());
@@ -137,6 +147,9 @@ public class BookDetailActivity extends AppCompatActivity {
         tvCategory.setText(book.category != null ? book.category : "—");
         tvStatus.setText(shortStatus(book.readingStatus));
 
+        // Read Now button label/icon reflects current status
+        updateReadNowButton(book.readingStatus);
+
         // Review stars
         renderStars(Math.round(book.rating));
 
@@ -150,6 +163,14 @@ public class BookDetailActivity extends AppCompatActivity {
 
         // Favourite row
         updateFavouriteRow(book.isFavorite);
+
+        // About this Book — show only when description is set (API books)
+        boolean hasDescription = book.description != null && !book.description.trim().isEmpty();
+        sectionAbout.setVisibility(hasDescription ? View.VISIBLE : View.GONE);
+        dividerAbout.setVisibility(hasDescription ? View.VISIBLE : View.GONE);
+        if (hasDescription) {
+            tvAboutDescription.setText(book.description.trim());
+        }
 
         // Cover image (async)
         loadCover(book);
@@ -214,7 +235,7 @@ public class BookDetailActivity extends AppCompatActivity {
 
     /** Shortened reading status for the stats bar */
     private String shortStatus(String status) {
-        if (status == null) return "—";
+        if (status == null || status.isEmpty()) return "To Read";
         switch (status) {
             case "Currently Reading": return "Reading";
             case "Want to Read":      return "To Read";
@@ -296,22 +317,51 @@ public class BookDetailActivity extends AppCompatActivity {
 
     private void markAsReading() {
         if (currentBook == null) return;
-        String newStatus = "Currently Reading";
-        if (newStatus.equals(currentBook.readingStatus)) {
+
+        // Cycle: Want to Read → Currently Reading → Finished → Want to Read
+        String current = currentBook.readingStatus;
+        String newStatus;
+        if ("Currently Reading".equals(current)) {
             newStatus = "Finished";
+        } else if ("Finished".equals(current)) {
+            newStatus = "Want to Read";
+        } else {
+            // null, empty, or "Want to Read" → start reading
+            newStatus = "Currently Reading";
         }
+
         currentBook.readingStatus = newStatus;
         final String finalStatus = newStatus;
         executor.execute(() -> {
             AppDatabase.getInstance(this).bookDao().update(currentBook);
             mainHandler.post(() -> {
                 tvStatus.setText(shortStatus(finalStatus));
+                updateReadNowButton(finalStatus);
                 Toast.makeText(this,
                         String.format(getString(R.string.msg_status_updated), finalStatus),
                         Toast.LENGTH_SHORT).show();
                 setResult(RESULT_OK);
             });
         });
+    }
+
+    /**
+     * Updates the "Read Now" button label and icon to reflect the NEXT action
+     * (i.e., what will happen when the user taps it).
+     */
+    private void updateReadNowButton(String currentStatus) {
+        if (tvReadNowLabel == null || ivReadNowIcon == null) return;
+        if ("Currently Reading".equals(currentStatus)) {
+            tvReadNowLabel.setText("Mark as Finished");
+            ivReadNowIcon.setImageResource(R.drawable.ic_star_filled);
+        } else if ("Finished".equals(currentStatus)) {
+            tvReadNowLabel.setText("Read Again");
+            ivReadNowIcon.setImageResource(R.drawable.ic_nav_diary);
+        } else {
+            // null, empty, or "Want to Read"
+            tvReadNowLabel.setText(getString(R.string.detail_read_now));
+            ivReadNowIcon.setImageResource(R.drawable.ic_nav_diary);
+        }
     }
 
     private void confirmDelete() {

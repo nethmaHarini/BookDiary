@@ -58,6 +58,12 @@ public class ProfileFragment extends BaseFragment {
                 loadStats(); // refresh counts after possible fav toggle
             });
 
+    // Launch ManageGenresActivity — on OK, signal HomeFragment to reload
+    private final ActivityResultLauncher<Intent> genresLauncher =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                // Nothing needed here — HomeFragment will reload in onResume automatically
+            });
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -108,6 +114,12 @@ public class ProfileFragment extends BaseFragment {
         view.findViewById(R.id.row_favourites).setOnClickListener(v -> {
             Intent intent = new Intent(requireContext(), FavouritesActivity.class);
             favsLauncher.launch(intent);
+        });
+
+        // Manage Genres row
+        view.findViewById(R.id.row_manage_genres).setOnClickListener(v -> {
+            Intent intent = new Intent(requireContext(), ManageGenresActivity.class);
+            genresLauncher.launch(intent);
         });
 
         // Logout
