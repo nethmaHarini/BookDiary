@@ -25,7 +25,7 @@
 
 **BookDiary** is a personal book tracking and recommendation diary built for Android.
 
-It gives readers a beautiful, distraction-free space to **log the books they read**, **write reviews and ratings**, **track their reading diary**, and **discover recommendations** — all stored privately per user on the device using a local Room database.
+It gives readers a beautiful, distraction-free space to **log the books they read**, **write reviews and ratings**, **track their reading diary**, and **mark favourites** — all stored privately per user on the device using a local Room database.
 
 Unlike heavyweight reading apps, BookDiary is intentionally personal.
 It's about **your relationship with books** — the ones you loved, the ones you abandoned, and the ones you want to remember forever.
@@ -43,21 +43,20 @@ It's about **your relationship with books** — the ones you loved, the ones you
 | 🔓 **Forgot Password** | ✅ Done | Find account by registered email address |
 | 🔁 **Reset Password** | ✅ Done | Set new BCrypt-hashed password directly in Room DB — no email link required |
 | 📱 **Session Management** | ✅ Done | Persistent login via `SharedPreferences` — stay logged in across app restarts |
-| 👤 **Profile Screen** | ✅ Done | Avatar, username, email display, accent-coloured stats, edit & settings menu rows |
+| 👤 **Profile Screen** | ✅ Done | Avatar, username, email, accent-coloured stats, edit & settings menu rows |
 | ✏️ **Edit Profile** | ✅ Done | Update display name, change password with current-password verification |
 | 📸 **Change Profile Picture** | ✅ Done | Camera capture or gallery pick, saved to private app storage |
 | 🔔 **Notification Settings** | ✅ Done | Per-type toggles (Reading Reminders, Daily Quote, Recommendations), time picker, WorkManager scheduling, runtime permission (Android 13+) |
-| 🌙 **Theme Preference** | ✅ Done | Light / Dark / System (follow device) mode + 4 accent colours; entire app re-themes on save; device dark/light changes honoured automatically |
-| 🎨 **Accent Color System** | ✅ Done | Ocean Blue, Royal Purple, Emerald, Sunset — buttons, FAB, nav active icon, profile pencil, stat cards all update dynamically |
+| 🌙 **Theme Preference** | ✅ Done | Light / Dark / System mode + 4 accent colours; entire app re-themes on save |
+| 🎨 **Accent Color System** | ✅ Done | Ocean Blue, Royal Purple, Emerald, Sunset — dynamic accent applied app-wide |
 | 🔒 **Password Hashing** | ✅ Done | BCrypt hashing via `PasswordUtils` for all password store and verify operations |
-| 🏠 **Home Dashboard** | 🖼️ UI Only | Screen designed — logic & data not yet wired |
-| 🔍 **Search & Filter** | 🖼️ UI Only | Screen designed — logic & data not yet wired |
-| ➕ **Add Book** | 🖼️ UI Only | Screen designed — logic & data not yet wired |
-| ✏️ **Edit Book** | 🖼️ UI Only | Screen designed — logic & data not yet wired |
-| 📋 **Book Details** | 🖼️ UI Only | Screen designed — logic & data not yet wired |
-| 📓 **Reading Diary** | 🖼️ UI Only | Screen designed — logic & data not yet wired |
-| ⭐ **Ratings & Reviews** | 🖼️ UI Only | Screen designed — logic & data not yet wired |
-| ❤️ **Favourites** | 🖼️ UI Only | Screen designed — logic & data not yet wired |
+| 🏠 **Home Dashboard** | ✅ Done | Favourites horizontal strip, full books list, live search, category filter chips, empty states, sample data seed on first launch |
+| 🔍 **Search & Filter** | ✅ Done | Live text search (title/author), category chips, min-rating buttons, favourites-only toggle |
+| ➕ **Add Book** | ✅ Done | Title, author, category & status spinners, 1-5 star rating, cover photo picker, review notes — saves to Room DB |
+| ✏️ **Edit Book** | ✅ Done | Pre-filled form from DB, update all fields, cover re-pick, delete with confirmation dialog |
+| 📋 **Book Details** | ✅ Done | Hero cover, stats bar (rating/category/status), Read Now button, review card with stars, favourite toggle, Share intent, popup menu (favourite/delete), edit launcher with back-refresh |
+| 📓 **Reading Diary** | ✅ Done | Stats row (total/reviewed/favourites), live search, status filter chips, book cards with cover, star rating, coloured status badge, favourite/edit/view actions |
+| ❤️ **Favourites** | ✅ Done | Favourite flag on every book; surfaced as horizontal strip on Home and filtered via Diary |
 
 ---
 
@@ -67,9 +66,10 @@ It's about **your relationship with books** — the ones you loved, the ones you
 |---|---|---|
 | **Language** | Java | 11 |
 | **Platform** | Android | Min SDK 24 (Android 7.0+), Target SDK 36 |
-| **UI Framework** | XML Layouts, ConstraintLayout | — |
+| **UI Framework** | XML Layouts + Material Design 3 | — |
 | **Material Components** | Material Design 3 | `1.13.0` |
 | **AppCompat** | `androidx.appcompat` | `1.7.1` |
+| **Activity** | `androidx.activity` | `1.12.4` |
 | **ConstraintLayout** | `androidx.constraintlayout` | `2.2.1` |
 | **Local Database** | Room Persistence Library | `2.6.1` |
 | **Google Sign-In** | Credential Manager API | `1.3.0` |
@@ -82,9 +82,9 @@ It's about **your relationship with books** — the ones you loved, the ones you
 | **Password Security** | BCrypt via `PasswordUtils` | — |
 | **Session Handling** | `SharedPreferences` — `SessionManager` | — |
 | **Theme Handling** | `SharedPreferences` — `ThemePrefsManager` | — |
-| **Notification Handling** | `NotificationManager` + `WorkManager` — `NotificationHelper`, `NotificationPrefsManager`, `NotificationScheduler` | — |
+| **Notification Handling** | `NotificationManager` + `WorkManager` | — |
 | **Background Threading** | `ExecutorService` for all Room ops | — |
-| **Build Tool** | Android Gradle Plugin (Kotlin DSL) | `9.0.1` |
+| **Build Tool** | Android Gradle Plugin (Kotlin DSL) | `8.13.1` |
 | **IDE** | Android Studio | — |
 | **Version Control** | Git & GitHub | — |
 
@@ -97,94 +97,84 @@ It's about **your relationship with books** — the ones you loved, the ones you
 │  Splash Screen   │  Animated logo + progress bar
 └────────┬─────────┘
          │
-         ├─── [Session exists] ─────────────────────────────▶ MainActivity (Home Tab)
+         ├─── [Session exists] ───────────────────────────▶ MainActivity (Home Tab)
          │
-         └─── [No session] ────────────────────────────────▶ Login Screen
-                                                                  │
-                   ┌──────────────────────┬─────────────────────┤
-                   │                      │                      │
-          [Google Sign-In]         [Create account]     [Forgot password?]
-                   │                      │                      │
-     ┌─────────────▼──────────┐ ┌─────────▼────────┐ ┌──────────▼──────────┐
-     │  Google Account Picker │ │  Register Screen │ │  Forgot Password    │
-     │  (system bottom sheet) │ │  Full validation │ │  Find by email      │
-     │  Auto-register on      │ │  Duplicate check │ │         │           │
-     │  first Google sign-in  │ │  BCrypt hashed   │ │         ▼           │
-     └─────────────┬──────────┘ └─────────┬────────┘ │  Reset Password     │
-                   │                      │           │  BCrypt hashed PW   │
-                   └──────────────────────┘           │  Updates Room DB    │
-                                │                     └──────────┬──────────┘
-                                │                                │
-                                └────────────────────────────────┘
-                                                 │
-                                                 ▼
+         └─── [No session] ──────────────────────────────▶ Login Screen
+                                                                │
+                  ┌──────────────────────┬────────────────────┤
+                  │                      │                     │
+         [Google Sign-In]         [Create account]    [Forgot password?]
+                  │                      │                     │
+    ┌─────────────▼──────────┐ ┌─────────▼────────┐ ┌─────────▼───────────┐
+    │  Google Account Picker │ │  Register Screen │ │  Forgot Password    │
+    │  Auto-register on      │ │  Full validation │ │  Find by email      │
+    │  first Google sign-in  │ │  BCrypt hashed   │ │         │           │
+    └─────────────┬──────────┘ └─────────┬────────┘ │         ▼           │
+                  │                      │           │  Reset Password     │
+                  └──────────────────────┘           │  BCrypt hashed PW   │
+                               │                     └──────────┬──────────┘
+                               └────────────────────────────────┘
+                                                │
+                                                ▼
 ┌──────────────────────────────────────────────────────────────────────────────┐
-│                     MainActivity — Home Tab (UI Only)                        │
-│  • Reading stats cards (books read, in progress, favourites)                │
-│  • Daily inspiration / reading quote                                        │
-│  • Recent books feed — last added books, clickable → Book Details           │
-│  • "See All" → switches to Diary tab                                        │
+│                        MainActivity — Home Tab  ✅                           │
+│  • Favourites horizontal strip — tap card → Book Details                    │
+│  • All Books vertical list — tap card → Book Details                        │
+│  • Live search bar + category filter chips (All / Fiction / Science / …)    │
+│  • Empty states for no books / no favourites                                │
+│  • Filter button → Search tab · Notifications button (bell)                 │
 │  • Bottom nav: Home ● | Search | [+ Add] | Diary | Profile                  │
-└────────────┬────────────────────────┬────────────────────────────────────────┘
-             │  [nav Search]          │  [nav Add — floating button]
-             ▼                        ▼
-┌─────────────────────┐   ┌──────────────────────────────────────────────────┐
-│ Search (UI Only)    │   │            Add Book (UI Only)                    │
-│  Search by title    │   │  Title, Author, Genre (dropdown), Cover photo    │
-│  Filter by genre    │   │  Reading Status: Want to Read / Reading / Read   │
-│  Filter by status   │   │  Personal notes, Start/Finish date               │
-│  Filter by rating   │   │  Star rating (1–5), Review text                  │
-└─────────────────────┘   └──────────────────────────────────────────────────┘
-             │  [nav Diary]
-             ▼
+└───────┬──────────────────┬────────────────────┬──────────────────────────────┘
+        │ [nav Search]     │ [nav Add]           │ [book tap anywhere]
+        ▼                  ▼                     ▼
+┌──────────────────┐  ┌──────────────────────────────────┐
+│ Search & Filter  │  │         Add Book  ✅              │
+│  ✅  Done        │  │  Cover photo (gallery pick)       │
+│  Live text search│  │  Title, Author (validated)        │
+│  Category chips  │  │  Category & Status spinners       │
+│  Min-rating btns │  │  1–5 star tap rating             │
+│  Favourites only │  │  Review notes text field         │
+│  tap → Detail   │  │  Save → Room DB insert            │
+└──────────────────┘  └──────────────────────────────────┘
+        │ [nav Diary]
+        ▼
 ┌──────────────────────────────────────────────────────────────────────────────┐
-│                      Reading Diary Tab (UI Only)                             │
-│  • Chronological reading log entries                                        │
-│  • Filter: All / Reading / Completed / Want to Read                        │
-│  • Book cards — cover, title, author, status badge, star rating             │
-└────────────────────────────────────────────────────────────────────────────── ┘
-             │  [nav Profile]
-             ▼
+│                      Reading Diary Tab  ✅                                   │
+│  • Stats row: Total Books | Reviewed | Favourites (live from DB)            │
+│  • Live search bar (title / author)                                         │
+│  • Status filter chips: All | Want to Read | Reading | Finished             │
+│  • Book cards: cover thumbnail, title, author, 5 mini-stars, status badge, │
+│    date added — action buttons: 👁 view / ❤ favourite / ✏️ edit             │
+└──────────────────────────────────────────────────────────────────────────────┘
+        │ [book tap / 👁 button]
+        ▼
 ┌──────────────────────────────────────────────────────────────────────────────┐
-│                     Profile & Settings Screen  ✅ Done                       │
-│  • Avatar + username + email + accent-coloured reading stat cards            │
-│  • Change profile photo → camera or gallery → saves to private storage      │
+│                      Book Details Screen  ✅                                 │
+│  • Hero book cover (200×300 dp, rounded, gradient overlay)                 │
+│  • Title + Author (accent coloured)                                         │
+│  • Stats bar: ★ Rating | Category | Reading Status                          │
+│  • "Read Now" primary button + Edit (square icon button)                    │
+│  • My Review card: 5 stars + review text / empty-state hint                 │
+│  • Favourite toggle row (add/remove with icon + label)                      │
+│  • Share button → system share sheet                                        │
+│  • More (⋮) popup menu → Mark Favourite / Remove Favourite / Delete Book    │
+│  • Edit opens EditBookActivity — result refreshes Detail & propagates up    │
+└──────────────────────────────────────────────────────────────────────────────┘
+        │ [nav Profile]
+        ▼
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                     Profile & Settings Screen  ✅                            │
+│  • Avatar + username + email + accent-coloured reading stat cards           │
+│  • Change profile photo → camera or gallery → saves to private storage     │
 │  • Edit Profile → update name / change password (current PW verified)      │
-│  • Notification Settings → per-type toggles + time picker + WorkManager     │
+│  • Notification Settings → per-type toggles + time picker + WorkManager    │
 │  • Theme Preference → Light / Dark / System + 4 accent colours             │
 │  • Log Out button with confirmation dialog                                  │
-└─────────┬─────────────────────────┬────────────────────────────────────────── ┘
-          │  [Edit Profile]         │  [Notification Settings]
-          ▼                         ▼
-┌──────────────────────┐  ┌─────────────────────────────────────────────────┐
-│  EditProfileActivity │  │         NotificationSettingsActivity             │
-│  Update display name │  │  Toggles: Reading Reminder / Daily Quote /      │
-│  Change password     │  │          Recommendations                        │
-│  (BCrypt verified)   │  │  Time picker for reminder scheduling            │
-└──────────────────────┘  │  WorkManager schedules actual notifications     │
-                           │  Runtime permission for Android 13+             │
-                           └─────────────────────────────────────────────────┘
-          │  [Theme Preference]
-          ▼
-┌──────────────────────────────────────────────────────────────────────────────┐
-│                      ThemePreferenceActivity  ✅ Done                        │
-│  • Mode selector: Light / Dark / Follow Device (System)                     │
-│  • Accent colour picker: Ocean Blue / Royal Purple / Emerald / Sunset       │
-│  • Live colour preview on selection                                         │
-│  • Save Preferences → applies AppCompatDelegate night mode across whole app │
-│  • Device dark/light changes auto-applied when Follow Device is set         │
-└──────────────────────────────────────────────────────────────────────────────┘
+└─────────┬────────────────────┬──────────────────────────────────────────────┘
+          │ [Edit Profile]     │ [Notification Settings] / [Theme Preference]
+          ▼                    ▼
+  EditProfileActivity    NotificationSettingsActivity / ThemePreferenceActivity
 ```
-
-**Navigation rules:**
-- Splash → auto-routes based on session state (logged in → Home, not logged in → Login)
-- Google Sign-In → **auto-registers** new users on first sign-in
-- Login → back button **blocked** (must log out explicitly from Profile)
-- Register success → navigate to Login screen
-- Forgot Password → Find account by email → Reset Password → Login
-- Profile logout → confirmation dialog → clears session → Login
-- Theme change → applied immediately app-wide via `AppCompatDelegate`
-- Accent colour change → accent helper updates all tinted views via `AccentColorHelper`
 
 ---
 
@@ -194,29 +184,65 @@ BookDiary uses the **Room Persistence Library** backed by SQLite.
 
 **Database:** `bookdiary.db` — version `2`
 
+---
+
 ### `users` table — `User.java`
 
 | Column | Type | Constraints | Description |
 |---|---|---|---|
 | `id` | `INTEGER` | PK, autoGenerate | Auto-generated user ID |
 | `username` | `TEXT` | NOT NULL | Display name |
-| `email` | `TEXT` | NOT NULL, UNIQUE | Login identifier (unique index enforced) |
+| `email` | `TEXT` | NOT NULL, UNIQUE | Login identifier |
 | `password` | `TEXT` | NULLABLE | BCrypt-hashed password — `null` for Google-only accounts |
 | `googleId` | `TEXT` | NULLABLE | Firebase UID — `null` for email/password accounts |
 | `photoUrl` | `TEXT` | NULLABLE | Google profile photo URL or local file path |
 
-> 🔑 All book/diary queries will be filtered by the logged-in user's ID — complete data privacy between accounts.
-
-### DAO Methods — `UserDao.java`
+#### DAO Methods — `UserDao.java`
 
 | Method | Description |
 |---|---|
 | `insertUser(User)` | Register new user — aborts on duplicate email |
 | `login(email)` | Fetch user by email for BCrypt verification |
 | `findByEmail(email)` | Check if email is already registered |
-| `updatePassword(email, newHashedPassword)` | Reset BCrypt-hashed password in DB |
+| `updatePassword(email, newHash)` | Reset BCrypt-hashed password in DB |
 | `findByGoogleId(googleId)` | Lookup Google-authenticated user by Firebase UID |
 | `insertGoogleUser(User)` | Insert Google user — ignores conflict if already exists |
+
+---
+
+### `books` table — `Book.java`
+
+| Column | Type | Constraints | Description |
+|---|---|---|---|
+| `id` | `INTEGER` | PK, autoGenerate | Auto-generated book ID |
+| `title` | `TEXT` | NOT NULL | Book title |
+| `author` | `TEXT` | NOT NULL | Author name |
+| `category` | `TEXT` | — | Fiction / Non-Fiction / Science / Mystery / History / Sci-Fi & Fantasy / Biography |
+| `rating` | `FLOAT` | — | Star rating 0.0–5.0 |
+| `isFavorite` | `BOOLEAN` | — | Whether marked as favourite |
+| `coverUrl` | `TEXT` | NULLABLE | Local file path for picked cover image |
+| `notes` | `TEXT` | NULLABLE | Personal diary / review notes |
+| `dateAdded` | `LONG` | — | Epoch milliseconds — used for default sort order |
+| `userId` | `INTEGER` | FK (logical) | Scopes all queries to the logged-in user |
+| `readingStatus` | `TEXT` | NULLABLE | `"Want to Read"` · `"Currently Reading"` · `"Finished"` |
+
+#### DAO Methods — `BookDao.java`
+
+| Method | Description |
+|---|---|
+| `insert(Book)` | Add a new book |
+| `update(Book)` | Save changes to an existing book |
+| `delete(Book)` | Remove a book |
+| `getAllBooks(userId)` | All books for user, newest first |
+| `getFavoriteBooks(userId)` | Favourite books for user, newest first |
+| `getBooksByCategory(userId, category)` | Filter by genre |
+| `searchBooks(userId, query)` | Full-text search across title and author |
+| `searchAndFilter(userId, query, category)` | Combined text + category filter (Home & Search tabs) |
+| `searchAndFilterByStatus(userId, query, status)` | Combined text + reading-status filter (Diary tab) |
+| `getBookById(bookId)` | Single book by primary key |
+| `getBookCount(userId)` | Total book count for a user |
+| `getFavoriteCount(userId)` | Favourite count for a user |
+| `getReviewCount(userId)` | Count books with non-empty review notes |
 
 ---
 
@@ -238,7 +264,7 @@ Login:
 
 Forgot Password:
   Enter email → findByEmail()
-  → found? navigate to ResetPasswordActivity (email passed as Extra)
+  → found? navigate to ResetPasswordActivity
   → not found? show inline field error
 
 Reset Password:
@@ -258,17 +284,15 @@ Tap "Continue with Google"
     → findByGoogleId(firebaseUid)
         ├── Found     → saveSession(user) → MainActivity
         └── Not found → findByEmail(email)
-                            ├── Found (existing email account)
-                            │       → link googleId + photoUrl → saveSession() → MainActivity
-                            └── Not found (brand new user)
-                                    → insertGoogleUser() → saveSession() → MainActivity
+                            ├── Found  → link googleId + photoUrl → saveSession() → MainActivity
+                            └── New    → insertGoogleUser() → saveSession() → MainActivity
 ```
 
 ---
 
 ## 📱 Session Management
 
-`SessionManager` uses `SharedPreferences` (file: `bookdiary_session`) to persist login state across app restarts — no login required on reopen.
+`SessionManager` uses `SharedPreferences` (file: `bookdiary_session`) to persist login state across app restarts.
 
 | Key | Type | Description |
 |---|---|---|
@@ -276,7 +300,7 @@ Tap "Continue with Google"
 | `user_id` | `Int` | Room database user ID |
 | `username` | `String` | Display name |
 | `email` | `String` | User's email address |
-| `photo_url` | `String` | Profile photo URL/path (Google or local) |
+| `photo_url` | `String` | Profile photo URL/path |
 
 **Usage from any Fragment:**
 ```java
@@ -300,30 +324,26 @@ int    userId   = session.getUserId();
 
 ### Theme Modes
 
-| Constant | Value | Behaviour |
-|---|---|---|
-| `MODE_LIGHT` | `AppCompatDelegate.MODE_NIGHT_NO` | Always light |
-| `MODE_DARK` | `AppCompatDelegate.MODE_NIGHT_YES` | Always dark |
-| `MODE_SYSTEM` | `AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM` | Follows device dark/light setting automatically |
-
-Applied in `BookDiaryApp.onCreate()` and `BaseActivity.onCreate()` so every screen respects the saved preference instantly, including when the device theme changes at runtime.
+| Constant | Behaviour |
+|---|---|
+| `MODE_LIGHT` | Always light |
+| `MODE_DARK` | Always dark |
+| `MODE_SYSTEM` | Follows device dark/light setting automatically |
 
 ### Accent Colours
 
-| Name | Hex | Usage |
+| Name | Hex | Applied to |
 |---|---|---|
-| Ocean Blue *(default)* | `#1152D4` | Buttons, FAB, active nav icon, profile pencil |
+| Ocean Blue *(default)* | `#1152D4` | Buttons, FAB, active nav icon, chip pills, stat highlights |
 | Royal Purple | `#7C3AED` | Same targets |
 | Emerald | `#10B981` | Same targets |
 | Sunset | `#F97316` | Same targets |
 
-`AccentColorHelper` applies the current accent colour dynamically to all tinted UI elements — bottom nav add button, save/preferences buttons, profile avatar pencil icon, stat card accents, and more.
+`BaseActivity` and `BaseFragment` re-apply the accent on every `onResume` via `AccentColorHelper`, so the whole app re-colours dynamically without a restart.
 
 ---
 
 ## 🔔 Notification System
-
-`NotificationPrefsManager` stores per-type preferences in `SharedPreferences` (file: `bookdiary_notification_prefs`).
 
 | Notification Type | Worker | Description |
 |---|---|---|
@@ -331,28 +351,23 @@ Applied in `BookDiaryApp.onCreate()` and `BaseActivity.onCreate()` so every scre
 | Daily Quote | `DailyQuoteWorker` | Inspirational reading quote each morning |
 | Recommendations | `RecommendationWorker` | Periodic book recommendation nudges |
 
-`NotificationScheduler` uses **WorkManager** to enqueue/cancel each worker based on toggle state. `BootReceiver` re-schedules notifications after device reboot. Runtime permission (`POST_NOTIFICATIONS`) is requested on Android 13+.
+`NotificationScheduler` uses **WorkManager** to enqueue/cancel workers. `BootReceiver` re-schedules after reboot. Runtime `POST_NOTIFICATIONS` permission requested on Android 13+.
 
 ---
 
 ## 🧭 Navigation
 
-The app uses a **fully custom bottom navigation bar** (not `BottomNavigationView`) to support the floating "Add" button that pops above the nav bar — matching the UI design exactly.
+Fully custom bottom navigation bar (not `BottomNavigationView`) to support the floating "Add" button that rises above the nav bar.
 
-### Bottom Nav Tabs
+| Tab | Fragment | Status |
+|---|---|---|
+| 🏠 Home | `HomeFragment` | ✅ Full — books list, favourites strip, search, filter |
+| 🔍 Search | `SearchFragment` | ✅ Full — text search, category, rating, favourites toggle |
+| ➕ **Add** *(floating)* | `AddFragment` | ✅ Full — cover photo, form, star rating, Room DB save |
+| 📓 Diary | `DiaryFragment` | ✅ Full — stats, search, status filter, book cards |
+| 👤 Profile | `ProfileFragment` | ✅ Full — avatar, stats, edit, settings, logout |
 
-| Tab | ID | Fragment | Icon | Active Colour |
-|---|---|---|---|---|
-| Home | `nav_home` | `HomeFragment` | Home | Accent colour |
-| Search | `nav_search` | `SearchFragment` | Search | Accent colour |
-| **Add** *(floating)* | `nav_add` | `AddFragment` | `add_circle` filled | Accent colour |
-| Diary | `nav_diary` | `DiaryFragment` | `menu_book` | Accent colour |
-| Profile | `nav_profile` | `ProfileFragment` | Person | Accent colour |
-
-- **Active colour:** current accent colour (default `#1152D4`)
-- **Inactive colour:** `#64748B` (slate-500)
-- **Add button** — floats **28dp above** the nav bar, always rendered in accent colour
-- Fragment transitions use `fade_in / fade_out` animation
+Fragment transitions use `fade_in / fade_out` animation. Back press from Login is blocked — users must log out from Profile.
 
 ---
 
@@ -361,7 +376,7 @@ The app uses a **fully custom bottom navigation bar** (not `BottomNavigationView
 ```
 BookDiary/
 ├── app/
-│   ├── google-services.json              ← Firebase config (⚠️ replace with your real file)
+│   ├── google-services.json              ← Firebase config (⚠️ replace with your file)
 │   ├── build.gradle.kts                  ← App-level Gradle (plugins, deps)
 │   └── src/main/
 │       ├── AndroidManifest.xml
@@ -369,40 +384,51 @@ BookDiary/
 │       │   ├── database/
 │       │   │   ├── AppDatabase.java      ← Room @Database singleton (version 2)
 │       │   │   ├── User.java             ← @Entity — users table
-│       │   │   └── UserDao.java          ← @Dao — all user queries
+│       │   │   ├── UserDao.java          ← @Dao — all user queries
+│       │   │   ├── Book.java             ← @Entity — books table
+│       │   │   └── BookDao.java          ← @Dao — all book queries (insert/update/delete/search/filter)
 │       │   │
 │       │   ├── utils/
-│       │   │   ├── AccentColorHelper.java    ← Applies accent colour to all tinted views
-│       │   │   ├── BootReceiver.java         ← Re-schedules notifications after reboot
-│       │   │   ├── DailyQuoteWorker.java     ← WorkManager worker — daily quote notification
-│       │   │   ├── GoogleSignInHelper.java   ← Credential Manager + Firebase Auth wrapper
-│       │   │   ├── NotificationHelper.java   ← Creates notification channels & posts notifications
-│       │   │   ├── NotificationPrefsManager.java ← SharedPreferences for notification settings
-│       │   │   ├── NotificationScheduler.java    ← WorkManager enqueue/cancel logic
-│       │   │   ├── PasswordUtils.java        ← BCrypt hash & verify for passwords
-│       │   │   ├── ReadingReminderWorker.java ← WorkManager worker — daily reading reminder
-│       │   │   ├── RecommendationWorker.java  ← WorkManager worker — recommendation nudge
-│       │   │   ├── SessionManager.java       ← SharedPreferences session handler
-│       │   │   └── ThemePrefsManager.java    ← SharedPreferences theme & accent prefs
+│       │   │   ├── AccentColorHelper.java        ← Applies accent colour to all tinted views
+│       │   │   ├── BootReceiver.java              ← Re-schedules notifications after reboot
+│       │   │   ├── DailyQuoteWorker.java          ← WorkManager — daily quote notification
+│       │   │   ├── GoogleSignInHelper.java        ← Credential Manager + Firebase Auth wrapper
+│       │   │   ├── NotificationHelper.java        ← Creates channels & posts notifications
+│       │   │   ├── NotificationPrefsManager.java  ← SharedPreferences for notification settings
+│       │   │   ├── NotificationScheduler.java     ← WorkManager enqueue/cancel logic
+│       │   │   ├── PasswordUtils.java             ← BCrypt hash & verify
+│       │   │   ├── ReadingReminderWorker.java     ← WorkManager — daily reading reminder
+│       │   │   ├── RecommendationWorker.java      ← WorkManager — recommendation nudge
+│       │   │   ├── SessionManager.java            ← SharedPreferences session handler
+│       │   │   └── ThemePrefsManager.java         ← SharedPreferences theme & accent prefs
 │       │   │
-│       │   ├── BaseActivity.java         ← Applies saved theme/accent on every Activity
-│       │   ├── BaseFragment.java         ← Applies accent colour on every Fragment attach
-│       │   ├── BookDiaryApp.java         ← Application class — sets theme mode at startup
-│       │   ├── SplashActivity.java       ← Animated launch screen, session-aware routing
-│       │   ├── LoginActivity.java        ← Email/password + Google Sign-In
-│       │   ├── RegisterActivity.java     ← New user registration with validation
-│       │   ├── ForgotPasswordActivity.java  ← Find account by email
-│       │   ├── ResetPasswordActivity.java   ← Set new BCrypt-hashed password in Room DB
-│       │   ├── MainActivity.java         ← Fragment host + custom bottom nav controller
-│       │   ├── EditProfileActivity.java  ← Update display name / change password
-│       │   ├── NotificationSettingsActivity.java ← Notification toggles + time picker
-│       │   ├── ThemePreferenceActivity.java  ← Theme mode + accent colour picker
+│       │   ├── BaseActivity.java                  ← Applies saved theme/accent on every Activity
+│       │   ├── BaseFragment.java                  ← Applies accent colour on every Fragment resume
+│       │   ├── BookDiaryApp.java                  ← Application class — sets theme mode at startup
 │       │   │
-│       │   ├── HomeFragment.java         ← Home tab (UI stub)
-│       │   ├── SearchFragment.java       ← Search & filter tab (UI stub)
-│       │   ├── AddFragment.java          ← Add book tab (UI stub)
-│       │   ├── DiaryFragment.java        ← Reading diary tab (UI stub)
-│       │   └── ProfileFragment.java      ← Profile & settings tab (fully functional)
+│       │   ├── SplashActivity.java                ← Animated launch screen, session-aware routing
+│       │   ├── LoginActivity.java                 ← Email/password + Google Sign-In
+│       │   ├── RegisterActivity.java              ← New user registration with validation
+│       │   ├── ForgotPasswordActivity.java        ← Find account by email
+│       │   ├── ResetPasswordActivity.java         ← Set new BCrypt-hashed password in Room DB
+│       │   │
+│       │   ├── MainActivity.java                  ← Fragment host + custom bottom nav controller
+│       │   ├── HomeFragment.java                  ← Home: favourites strip + all books + search + filter chips
+│       │   ├── SearchFragment.java                ← Search & filter: text + category + rating + fav toggle
+│       │   ├── AddFragment.java                   ← Add book: form + cover picker + star rating + DB save
+│       │   ├── DiaryFragment.java                 ← Diary: stats + search + status filter + book cards
+│       │   ├── ProfileFragment.java               ← Profile: avatar + stats + settings menu + logout
+│       │   │
+│       │   ├── BookDetailActivity.java            ← Full book detail: cover hero, stats, review, fav, menu
+│       │   ├── EditBookActivity.java              ← Edit/delete book with pre-filled form
+│       │   ├── EditProfileActivity.java           ← Update display name / change password
+│       │   ├── NotificationSettingsActivity.java  ← Notification toggles + time picker
+│       │   ├── ThemePreferenceActivity.java       ← Theme mode + accent colour picker
+│       │   │
+│       │   ├── AllBooksAdapter.java               ← RecyclerView adapter — Home "All Books" vertical list
+│       │   ├── FavoriteBookAdapter.java           ← RecyclerView adapter — Home favourites horizontal strip
+│       │   ├── SearchResultAdapter.java           ← RecyclerView adapter — Search results list
+│       │   └── DiaryBookAdapter.java              ← RecyclerView adapter — Diary book cards
 │       │
 │       └── res/
 │           ├── layout/
@@ -411,21 +437,29 @@ BookDiary/
 │           │   ├── activity_register.xml
 │           │   ├── activity_forgot_password.xml
 │           │   ├── activity_reset_password.xml
-│           │   ├── activity_main.xml              ← CoordinatorLayout + custom bottom nav
+│           │   ├── activity_main.xml                  ← CoordinatorLayout + custom bottom nav
+│           │   ├── activity_book_detail.xml           ← Hero cover, stats bar, review card, fav row
+│           │   ├── activity_edit_book.xml             ← Pre-filled edit form + delete button
 │           │   ├── activity_edit_profile.xml
 │           │   ├── activity_notification_settings.xml
 │           │   ├── activity_theme_preference.xml
 │           │   ├── fragment_home.xml
 │           │   ├── fragment_search.xml
 │           │   ├── fragment_add.xml
-│           │   ├── fragment_diary.xml
-│           │   └── fragment_profile.xml
-│           ├── drawable/                 ← 80+ vector icons, bg shapes, gradients, selectors
-│           ├── drawable-night/           ← Dark-mode drawable overrides
+│           │   ├── fragment_diary.xml                 ← Stats row + search + chips + RecyclerView
+│           │   ├── fragment_profile.xml
+│           │   ├── item_book_list.xml                 ← Card: cover + title + author + rating + category + fav
+│           │   ├── item_book_favorite.xml             ← Compact card for favourites horizontal strip
+│           │   ├── item_search_result.xml             ← Search result card with bookmark toggle
+│           │   ├── item_category_chip.xml             ← Reusable pill chip (Home, Search, Diary)
+│           │   └── item_diary_entry.xml               ← Diary card: cover + stars + status badge + actions
+│           ├── drawable/                              ← 80+ vector icons, bg shapes, gradients, selectors
+│           ├── drawable-night/                        ← Dark-mode drawable overrides
 │           └── values/
-│               ├── colors.xml
-│               ├── strings.xml
-│               ├── themes.xml
+│               ├── colors.xml                         ← Semantic colour aliases (light defaults)
+│               ├── values-night/colors.xml            ← Dark-mode overrides
+│               ├── strings.xml                        ← All app strings (20+ screen string groups)
+│               ├── themes.xml                         ← Material3 theme + BookCoverShape style + FormLabel
 │               └── dimens.xml
 │
 ├── gradle/
@@ -438,22 +472,23 @@ BookDiary/
 
 ## 🎨 Design System
 
-| Token | Value | Usage |
-|---|---|---|
-| `primary` *(default accent)* | `#1152D4` | Buttons, active nav, links, FAB — changes with accent selection |
-| `primary_dark` | `#0A3BA8` | Pressed/focused states |
-| `background_dark` | `#101622` | App background (dark theme) |
-| `surface_dark` | `#1A2236` | Cards, input containers (dark theme) |
-| `background_light` | `#F8FAFC` | App background (light theme) |
-| `surface_light` | `#FFFFFF` | Cards, input containers (light theme) |
-| `text_primary` | `#F1F5F9` / `#1E293B` | Headings, body text (dark / light) |
-| `text_secondary` | `#94A3B8` / `#64748B` | Subtitles, hints, labels (dark / light) |
-| `divider` | `#1E293B` | Borders, separators, bottom nav border |
-| `star` | `#FBBF24` | Star ratings |
+| Token | Light | Dark | Usage |
+|---|---|---|---|
+| `app_background` | `#F6F6F8` | `#101622` | Screen backgrounds |
+| `app_surface` | `#FFFFFF` | `#1A2236` | Cards, input containers |
+| `app_surface2` | `#F1F5F9` | `#0D1829` | Review cards, secondary surfaces |
+| `primary` *(default)* | `#1152D4` | — | Buttons, active nav, links, chips |
+| `text_primary` | `#0F172A` | `#F1F5F9` | Headings, body text |
+| `text_secondary` | `#64748B` | `#94A3B8` | Subtitles, labels |
+| `text_hint` | `#94A3B8` | `#64748B` | Placeholder text, empty states |
+| `app_divider` | `#E2E8F0` | `#1E293B` | Borders, separators |
+| `star_color` | `#FBBF24` | — | Star ratings |
 
-**Accent colour options:** Ocean Blue `#1152D4` · Royal Purple `#7C3AED` · Emerald `#10B981` · Sunset `#F97316`
+**Accent options:** Ocean Blue `#1152D4` · Royal Purple `#7C3AED` · Emerald `#10B981` · Sunset `#F97316`
 
-**Typography:** Manrope (Google Fonts) — letter-spacing and weight tuned per screen
+**Typography:** Manrope (Google Fonts) — letter-spacing and weight tuned per screen.
+
+**Book cover shape:** `BookCoverShape` — 12 dp rounded corners via `ShapeableImageView`.
 
 ---
 
@@ -482,98 +517,64 @@ git clone https://github.com/your-username/BookDiary.git
 #    Run → Run 'app'
 ```
 
-> Basic email/password features work offline with no setup needed.
+> Email/password features work fully offline with no extra setup.
 > Google Sign-In requires the Firebase configuration steps below.
 
 ---
 
 ## 🔵 Google Sign-In Setup
 
-Google Sign-In uses the **Android Credential Manager API** with a Firebase OAuth2 Web Client ID.
-
 ### Step 1 — Create a Firebase Project
 
 1. Go to **[Firebase Console](https://console.firebase.google.com)**
 2. Click **Add project** → name it `BookDiary` → Continue
-3. Follow the setup wizard to create the project
 
 ### Step 2 — Register your Android App
 
-1. In Firebase Console → click the **Android** icon
+1. Firebase Console → click the **Android** icon
 2. Enter package name: `me.nethma.bookdiary`
-3. Enter app nickname: `BookDiary`
-4. Get your **SHA-1 fingerprint**:
+3. Get your **SHA-1 fingerprint**:
    ```bash
-   # Windows
    keytool -list -v -keystore "%USERPROFILE%\.android\debug.keystore" ^
      -alias androiddebugkey -storepass android -keypass android
    ```
-   Copy the `SHA1:` value from the output
-5. Paste the SHA-1 into Firebase → **Register app**
-6. Download **`google-services.json`** → place it in the `/app/` folder, replacing the existing placeholder
+4. Paste the SHA-1 → **Register app**
+5. Download **`google-services.json`** → place in `/app/`
 
 ### Step 3 — Enable Google Sign-In
 
-1. Firebase Console → **Authentication** → **Sign-in method**
-2. Click **Google** → toggle **Enable** → **Save**
-3. Copy the **Web Client ID** (ends in `.apps.googleusercontent.com`)
+Firebase Console → **Authentication** → **Sign-in method** → Enable **Google** → Save.
 
-### Step 4 — Add Web Client ID to the app
-
-Open `utils/GoogleSignInHelper.java` and replace the placeholder:
+### Step 4 — Add Web Client ID
 
 ```java
-// app/src/main/java/me/nethma/bookdiary/utils/GoogleSignInHelper.java
-
+// utils/GoogleSignInHelper.java
 public static final String WEB_CLIENT_ID =
         "YOUR_WEB_CLIENT_ID.apps.googleusercontent.com";
 ```
-
-**Where to find it:**
-> Firebase Console → Project Settings → Your Apps → Web app → SDK config
-> OR
-> Google Cloud Console → APIs & Services → Credentials → OAuth 2.0 Client IDs → **Web client (auto created by Google Service)**
-
-### Step 5 — Sync & Run
-
-Sync Gradle files, then run the app. Tap **Continue with Google** on the login screen — the system account picker will appear.
-
-> **Note:** Google Sign-In works on physical devices and emulators with a Google account configured.
 
 ---
 
 ## 🔒 Security
 
-### Password Hashing
-All passwords are hashed with **BCrypt** via `utils/PasswordUtils.java` before being stored in Room DB.
-- Registration: `PasswordUtils.hash(password)` → stored hash
-- Login: `PasswordUtils.verify(inputPassword, storedHash)` → boolean
-- Reset Password: new password is hashed before `updatePassword()` call
-- Edit Profile (change password): current password is BCrypt-verified before allowing update
-
-No plain-text passwords are stored anywhere in the app.
-
-### Google Sign-In Authentication
-Implemented using the **Android Credential Manager API** (`androidx.credentials`).
-The Google **ID Token** is verified via **Firebase Authentication** (`GoogleAuthProvider.getCredential()`).
-No password is stored for Google users — identified by **Firebase UID** in the `googleId` column.
-
-### Thread Safety
-All Room database operations run on a **background thread** via `ExecutorService`, strictly following Android's main-thread policy.
+| Area | Implementation |
+|---|---|
+| **Password storage** | BCrypt hash (via `PasswordUtils`) — no plain text ever stored |
+| **Google auth** | Firebase ID Token verified server-side via `FirebaseAuth` |
+| **Data isolation** | All book queries scoped by `userId` — complete per-user privacy |
+| **Thread safety** | All Room operations run on background `ExecutorService` threads |
+| **Credential Manager** | Uses Android's modern `CredentialManager` API (not legacy `GoogleSignInClient`) |
 
 ---
 
-## 🔮 Upcoming / Planned Features
+## 🔮 Planned / Future Enhancements
 
-- [ ] 📚 **Books Database** — `books` table (title, author, genre, cover, status, rating, notes, dates)
-- [ ] 🏠 **Home Dashboard** — wire up stats cards and recent books to Room DB
-- [ ] 🔍 **Search & Filter** — live search by title/author, filter by genre/status/rating
-- [ ] ➕ **Add Book** — save form data to Room DB
-- [ ] ✏️ **Edit Book** — update book record in Room DB
-- [ ] 📋 **Book Details** — full book view with edit/delete/favourite actions
-- [ ] 📓 **Reading Diary** — per-book diary entries with timestamps
-- [ ] ⭐ **Ratings & Reviews** — star ratings and written reviews per book
-- [ ] ❤️ **Favourites** — bookmark favourite books, dedicated favourites screen
+- [ ] 🌐 **Cloud Sync** — Back up diary to Firestore for cross-device access
+- [ ] 📚 **Google Books API** — Search for books and auto-fill cover, author, page count
+- [ ] 🔁 **Reading Progress** — Track percentage progress for "Currently Reading" books
+- [ ] 📊 **Stats Dashboard** — Charts for books read per month, genre distribution, avg rating
+- [ ] 🔖 **Reading Lists** — Create and share custom curated book lists
+- [ ] 🌍 **Export Diary** — Export reading history as PDF or CSV
 
 ---
 
@@ -603,6 +604,3 @@ This project is submitted as academic coursework for ICT3214 — Mobile Applicat
   <i>"Read. Review. Remember."</i><br><br>
   Built with ❤️ for ICT3214 — Mobile Application Development
 </div>
-
-
-
