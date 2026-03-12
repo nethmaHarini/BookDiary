@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Selected state for a rating filter button (white card with primary border) -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <corners android:radius="8dp" />
+    <solid android:color="@color/app_surface" />
+    <stroke android:width="1dp" android:color="@color/primary_20" />
+</shape>
+

@@ -108,14 +108,18 @@ public class HomeFragment extends BaseFragment {
                 Toast.makeText(requireContext(),
                         "Notifications coming soon!", Toast.LENGTH_SHORT).show());
 
-        view.findViewById(R.id.btn_filter).setOnClickListener(v ->
-                Toast.makeText(requireContext(),
-                        "Advanced filter coming soon!", Toast.LENGTH_SHORT).show());
+        view.findViewById(R.id.btn_filter).setOnClickListener(v -> {
+            if (getActivity() instanceof MainActivity) {
+                ((MainActivity) getActivity()).navigateToSearch(searchQuery);
+            }
+        });
 
-        // "See all" → Favourites screen
-        view.findViewById(R.id.tv_see_all).setOnClickListener(v ->
-                Toast.makeText(requireContext(),
-                        "Favourites screen coming soon!", Toast.LENGTH_SHORT).show());
+        // "See all" → SearchFragment
+        view.findViewById(R.id.tv_see_all).setOnClickListener(v -> {
+            if (getActivity() instanceof MainActivity) {
+                ((MainActivity) getActivity()).navigateToSearch("");
+            }
+        });
 
         // Search
         etSearch.addTextChangedListener(new TextWatcher() {

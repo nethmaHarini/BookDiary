@@ -200,6 +200,16 @@ public class MainActivity extends BaseActivity {
         tx.commit();
     }
 
+    /**
+     * Called from HomeFragment's filter button.
+     * Opens SearchFragment pre-filled with the current home search query.
+     */
+    public void navigateToSearch(String initialQuery) {
+        selectedNavId = R.id.nav_search;
+        setNavSelected(R.id.nav_search);
+        loadFragment(SearchFragment.newInstance(initialQuery), true);
+    }
+
     /** Call from any Fragment to log out */
     public void logout() {
         sessionManager.clearSession();
