@@ -14,6 +14,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "557838479717-6t5agupkkg4s06r9a83f57ubguc130qd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "me.nethma.bookdiary",
+            "certificate_hash": "176b8faaf7b26b4b57b87dbee1910eeea824e3b4"
+          }
+        },
+        {
+          "client_id": "557838479717-bodu448iqlrgrmc75vupg3o1rpk62lt4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "me.nethma.bookdiary",
+            "certificate_hash": "f348b9ffb4f7f038448b19ee7b48e72a34fdd7d0"
+          }
+        },
+        {
           "client_id": "557838479717-c8t7k7i9u74bkdivr3mqja57o1ibrfjp.apps.googleusercontent.com",
           "client_type": 3
         }
