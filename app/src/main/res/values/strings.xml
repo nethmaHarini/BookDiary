@@ -67,4 +67,16 @@
     <string name="nav_add">Add</string>
     <string name="nav_diary">Diary</string>
     <string name="nav_profile">Profile</string>
+
+    <!-- Home Dashboard -->
+    <string name="home_title">Book Diary</string>
+    <string name="home_search_hint">Search books, authors…</string>
+    <string name="home_filter">Filter</string>
+    <string name="home_notifications">Notifications</string>
+    <string name="home_favorites_title">Favourite Books</string>
+    <string name="home_see_all">See all</string>
+    <string name="home_all_books_title">All Books</string>
+    <string name="home_empty_favorites">No favourites yet.\nMark a book as favourite to see it here.</string>
+    <string name="home_empty_books">No books yet</string>
+    <string name="home_empty_books_sub">Tap + to add your first book to your diary</string>
 </resources>
