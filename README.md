@@ -54,10 +54,11 @@ It's about **your relationship with books** — the ones you loved, the ones you
 | 🔍 **Search & Filter** | ✅ Done | Live text search (title/author), category chips, min-rating buttons, favourites-only toggle |
 | ➕ **Add Book** | ✅ Done | Title, author, category & status spinners, 1-5 star rating, cover photo picker, review notes — saves to Room DB |
 | ✏️ **Edit Book** | ✅ Done | Pre-filled form from DB, update all fields, cover re-pick, delete with confirmation dialog |
-| 📋 **Book Details** | ✅ Done | Hero cover, stats bar (rating/category/status), Read Now button, review card with stars, favourite toggle, Share intent, popup menu (favourite/delete), edit launcher with back-refresh |
+| 📋 **Book Details** | ✅ Done | Hero cover, stats bar (rating/category/status), Read Now button, review card with stars, favourite toggle, Ratings & Reviews entry row, Share intent, popup menu (favourite/delete), edit launcher with back-refresh |
 | 📓 **Reading Diary** | ✅ Done | Stats row (total/reviewed/favourites), live search, status filter chips, book cards with cover, star rating, coloured status badge, favourite/edit/view actions |
 | ❤️ **Favourites Screen** | ✅ Done | Dedicated full-screen Favourites activity — large book cards, live search, status filter chips (All / Reading / Want to Read / Finished), count badge, opens Book Details; linked from Home "See All" and Profile "My Favourites" row |
 | 👤 **Profile Stats (Live)** | ✅ Done | Total Books, Favourites, and Reviews counts loaded live from Room DB on every tab visit |
+| ⭐ **Ratings & Reviews** | ✅ Done | Dedicated ratings & reviews screen per book — overall avg rating, 5-star distribution bars, pageable review cards with coloured initials avatars, thumbs up/down voting, sort by Recent or Most Helpful, write/edit/delete own review via bottom sheet with interactive star picker, syncs rating & notes back to the book |
 
 ---
 
@@ -157,9 +158,28 @@ It's about **your relationship with books** — the ones you loved, the ones you
 │  • "Read Now" primary button + Edit (square icon button)                    │
 │  • My Review card: 5 stars + review text / empty-state hint                 │
 │  • Favourite toggle row (add/remove with icon + label)                      │
+│  • ⭐ Ratings & Reviews row → opens RatingsReviewsActivity                  │
 │  • Share button → system share sheet                                        │
 │  • More (⋮) popup menu → Mark Favourite / Remove Favourite / Delete Book    │
 │  • Edit opens EditBookActivity — result refreshes Detail & propagates up    │
+└──────────────┬───────────────────────────────────────────────────────────────┘
+               │ [Ratings & Reviews row]
+               ▼
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                  Ratings & Reviews Screen  ✅  NEW                           │
+│  • Overall avg rating — large number + 5-star summary + total count         │
+│  • Star distribution bars — animated progress bars for each star (1–5)      │
+│    with percentage labels                                                    │
+│  • User Reviews section:                                                    │
+│    – Review cards: coloured initials avatar, reviewer name, mini stars,     │
+│      date, review body text, 👍 / 👎 voting buttons (persisted to DB)       │
+│    – Options (⋮) button visible only on your own review → Edit / Delete     │
+│  • Sort toggle: Recent ↔ Most Helpful                                       │
+│  • Empty state when no reviews exist yet                                    │
+│  • "Write Review" / "Edit Your Review" header button                        │
+│    → Bottom Sheet: interactive 5-star picker + multi-line text input        │
+│    → Save syncs rating & notes back to the Book record                      │
+│    → Delete review with confirmation dialog                                 │
 └──────────────────────────────────────────────────────────────────────────────┘
         │ [nav Profile]
         ▼
@@ -185,7 +205,7 @@ It's about **your relationship with books** — the ones you loved, the ones you
 
 BookDiary uses the **Room Persistence Library** backed by SQLite.
 
-**Database:** `bookdiary.db` — version `2`
+**Database:** `bookdiary.db` — version `5`
 
 ---
 
@@ -221,10 +241,10 @@ BookDiary uses the **Room Persistence Library** backed by SQLite.
 | `title` | `TEXT` | NOT NULL | Book title |
 | `author` | `TEXT` | NOT NULL | Author name |
 | `category` | `TEXT` | — | Fiction / Non-Fiction / Science / Mystery / History / Sci-Fi & Fantasy / Biography |
-| `rating` | `FLOAT` | — | Star rating 0.0–5.0 |
+| `rating` | `FLOAT` | — | Star rating 0.0–5.0 (synced from own review when saved) |
 | `isFavorite` | `BOOLEAN` | — | Whether marked as favourite |
 | `coverUrl` | `TEXT` | NULLABLE | Local file path for picked cover image |
-| `notes` | `TEXT` | NULLABLE | Personal diary / review notes |
+| `notes` | `TEXT` | NULLABLE | Personal diary / review notes (synced from own review) |
 | `dateAdded` | `LONG` | — | Epoch milliseconds — used for default sort order |
 | `userId` | `INTEGER` | FK (logical) | Scopes all queries to the logged-in user |
 | `readingStatus` | `TEXT` | NULLABLE | `"Want to Read"` · `"Currently Reading"` · `"Finished"` |
@@ -247,6 +267,43 @@ BookDiary uses the **Room Persistence Library** backed by SQLite.
 | `getBookCount(userId)` | Total book count for a user |
 | `getFavoriteCount(userId)` | Favourite count for a user |
 | `getReviewCount(userId)` | Count books with non-empty review notes |
+
+---
+
+### `reviews` table — `Review.java` *(NEW)*
+
+Each row represents a single user review attached to a specific book.  Foreign-key cascade ensures reviews are deleted automatically when their parent book is deleted.
+
+| Column | Type | Constraints | Description |
+|---|---|---|---|
+| `id` | `INTEGER` | PK, autoGenerate | Auto-generated review ID |
+| `bookId` | `INTEGER` | FK → `books.id` CASCADE | The book being reviewed |
+| `userId` | `INTEGER` | — | Owner user ID — `0` for community/demo entries |
+| `reviewerName` | `TEXT` | — | Display name shown on the review card |
+| `reviewerInitials` | `TEXT` | — | 1–2 char initials for the avatar circle |
+| `rating` | `FLOAT` | — | Star rating 1.0–5.0 |
+| `reviewText` | `TEXT` | — | The written review body |
+| `dateMs` | `LONG` | — | Epoch milliseconds — used for "Recent" sort |
+| `thumbsUp` | `INTEGER` | — | Helpful vote count |
+| `thumbsDown` | `INTEGER` | — | Not-helpful vote count |
+| `isOwn` | `BOOLEAN` | — | `true` when written by the logged-in user → shows options (⋮) button |
+
+#### DAO Methods — `ReviewDao.java`
+
+| Method | Description |
+|---|---|
+| `insert(Review)` | Persist a new review |
+| `update(Review)` | Update an existing review |
+| `delete(Review)` | Remove a review |
+| `getReviewsForBook(bookId)` | All reviews for a book ordered by date descending (Recent) |
+| `getReviewsForBookByHelpful(bookId)` | All reviews ordered by thumbsUp descending (Most Helpful) |
+| `getOwnReview(bookId, userId)` | Current user's own review for a book (if any) |
+| `getReviewCount(bookId)` | Total review count for a book |
+| `getAverageRating(bookId)` | Computed average rating across all reviews |
+| `getCountForStars(bookId, stars)` | Count of reviews for a specific star level — used for distribution bars |
+| `deleteAllForBook(bookId)` | Bulk-delete all reviews when a book is deleted |
+| `incrementThumbsUp(reviewId)` | Atomic +1 to helpful votes |
+| `incrementThumbsDown(reviewId)` | Atomic +1 to not-helpful votes |
 
 ---
 
@@ -386,11 +443,13 @@ BookDiary/
 │       ├── AndroidManifest.xml
 │       ├── java/me/nethma/bookdiary/
 │       │   ├── database/
-│       │   │   ├── AppDatabase.java      ← Room @Database singleton (version 2)
+│       │   │   ├── AppDatabase.java      ← Room @Database singleton (version 5)
 │       │   │   ├── User.java             ← @Entity — users table
 │       │   │   ├── UserDao.java          ← @Dao — all user queries
 │       │   │   ├── Book.java             ← @Entity — books table
-│       │   │   └── BookDao.java          ← @Dao — all book queries (insert/update/delete/search/filter)
+│       │   │   ├── BookDao.java          ← @Dao — all book queries
+│       │   │   ├── Review.java           ← @Entity — reviews table (NEW)
+│       │   │   └── ReviewDao.java        ← @Dao — all review queries (NEW)
 │       │   │
 │       │   ├── utils/
 │       │   │   ├── AccentColorHelper.java        ← Applies accent colour to all tinted views
@@ -423,12 +482,13 @@ BookDiary/
 │       │   ├── DiaryFragment.java                 ← Diary: stats + search + status filter + book cards
 │       │   ├── ProfileFragment.java               ← Profile: avatar + stats + settings menu + logout
 │       │   │
-│       │   ├── BookDetailActivity.java            ← Full book detail: cover hero, stats, review, fav, menu
+│       │   ├── BookDetailActivity.java            ← Full book detail: cover hero, stats, review, fav, ratings row
 │       │   ├── EditBookActivity.java              ← Edit/delete book with pre-filled form
 │       │   ├── FavouritesActivity.java            ← Dedicated Favourites screen: search + filter + full cards
 │       │   ├── EditProfileActivity.java           ← Update display name / change password
 │       │   ├── NotificationSettingsActivity.java  ← Notification toggles + time picker
 │       │   ├── ThemePreferenceActivity.java       ← Theme mode + accent colour picker
+│       │   ├── RatingsReviewsActivity.java        ← Ratings & Reviews: summary, distribution, cards (NEW)
 │       │   │
 │       │   ├── AllBooksAdapter.java               ← RecyclerView adapter — Home "All Books" vertical list
 │       │   ├── FavoriteBookAdapter.java           ← RecyclerView adapter — Home favourites horizontal strip
@@ -443,31 +503,39 @@ BookDiary/
 │           │   ├── activity_register.xml
 │           │   ├── activity_forgot_password.xml
 │           │   ├── activity_reset_password.xml
-│           │   ├── activity_main.xml                  ← CoordinatorLayout + custom bottom nav
-│           │   ├── activity_book_detail.xml           ← Hero cover, stats bar, review card, fav row
-│           │   ├── activity_edit_book.xml             ← Pre-filled edit form + delete button
-│           │   ├── activity_favourites.xml            ← Favourites screen: search + filter chips + RecyclerView
+│           │   ├── activity_main.xml                    ← CoordinatorLayout + custom bottom nav
+│           │   ├── activity_book_detail.xml             ← Hero cover, stats bar, review card, fav row, ratings row
+│           │   ├── activity_edit_book.xml               ← Pre-filled edit form + delete button
+│           │   ├── activity_favourites.xml              ← Favourites screen: search + filter chips + RecyclerView
 │           │   ├── activity_edit_profile.xml
 │           │   ├── activity_notification_settings.xml
 │           │   ├── activity_theme_preference.xml
+│           │   ├── activity_ratings_reviews.xml         ← Ratings & Reviews screen layout (NEW)
 │           │   ├── fragment_home.xml
 │           │   ├── fragment_search.xml
 │           │   ├── fragment_add.xml
-│           │   ├── fragment_diary.xml                 ← Stats row + search + chips + RecyclerView
+│           │   ├── fragment_diary.xml                   ← Stats row + search + chips + RecyclerView
 │           │   ├── fragment_profile.xml
-│           │   ├── item_book_list.xml                 ← Card: cover + title + author + rating + category + fav
-│           │   ├── item_book_favorite.xml             ← Compact card for favourites horizontal strip
-│           │   ├── item_search_result.xml             ← Search result card with bookmark toggle
-│           │   ├── item_category_chip.xml             ← Reusable pill chip (Home, Search, Diary, Favourites)
-│           │   ├── item_diary_entry.xml               ← Diary card: cover + stars + status badge + actions
-│           │   └── item_fav_card.xml                  ← Favourites card: large cover + stars + category badge
-│           ├── drawable/                              ← 80+ vector icons, bg shapes, gradients, selectors
-│           ├── drawable-night/                        ← Dark-mode drawable overrides
+│           │   ├── item_book_list.xml                   ← Card: cover + title + author + rating + category + fav
+│           │   ├── item_book_favorite.xml               ← Compact card for favourites horizontal strip
+│           │   ├── item_search_result.xml               ← Search result card with bookmark toggle
+│           │   ├── item_category_chip.xml               ← Reusable pill chip (Home, Search, Diary, Favourites)
+│           │   ├── item_diary_entry.xml                 ← Diary card: cover + stars + status badge + actions
+│           │   ├── item_fav_card.xml                    ← Favourites card: large cover + stars + category badge
+│           │   ├── item_review_card.xml                 ← Review card: avatar + stars + text + thumbs (NEW)
+│           │   └── dialog_add_review.xml                ← Bottom sheet: star picker + review input (NEW)
+│           ├── drawable/                                ← 80+ vector icons, bg shapes, gradients, selectors
+│           │   ├── ic_thumb_up.xml                      ← Thumbs up icon (NEW)
+│           │   ├── ic_thumb_down.xml                    ← Thumbs down icon (NEW)
+│           │   ├── bg_reviewer_avatar.xml               ← Oval avatar background (NEW)
+│           │   ├── bg_user_review_card.xml              ← Rounded review card background (NEW)
+│           │   └── bg_rating_bar_progress.xml           ← Custom progress bar for distribution (NEW)
+│           ├── drawable-night/                          ← Dark-mode drawable overrides
 │           └── values/
-│               ├── colors.xml                         ← Semantic colour aliases (light defaults)
-│               ├── values-night/colors.xml            ← Dark-mode overrides
-│               ├── strings.xml                        ← All app strings (20+ screen string groups)
-│               ├── themes.xml                         ← Material3 theme + BookCoverShape style + FormLabel
+│               ├── colors.xml                           ← Semantic colour aliases (light defaults)
+│               ├── values-night/colors.xml              ← Dark-mode overrides
+│               ├── strings.xml                          ← All app strings (reviews_ group added)
+│               ├── themes.xml                           ← Material3 theme + BookCoverShape style + FormLabel
 │               └── dimens.xml
 │
 ├── gradle/
@@ -569,7 +637,7 @@ public static final String WEB_CLIENT_ID =
 |---|---|
 | **Password storage** | BCrypt hash (via `PasswordUtils`) — no plain text ever stored |
 | **Google auth** | Firebase ID Token verified server-side via `FirebaseAuth` |
-| **Data isolation** | All book queries scoped by `userId` — complete per-user privacy |
+| **Data isolation** | All book & review queries scoped by `userId` — complete per-user privacy |
 | **Thread safety** | All Room operations run on background `ExecutorService` threads |
 | **Credential Manager** | Uses Android's modern `CredentialManager` API (not legacy `GoogleSignInClient`) |
 
@@ -612,6 +680,4 @@ This project is submitted as academic coursework for ICT3214 — Mobile Applicat
   <i>"Read. Review. Remember."</i><br><br>
   Built with ❤️ for ICT3214 — Mobile Application Development
 </div>
-
-
 
