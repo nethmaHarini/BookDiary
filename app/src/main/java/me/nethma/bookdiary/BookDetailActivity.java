@@ -104,6 +104,9 @@ public class BookDetailActivity extends AppCompatActivity {
         // Favourite toggle row
         findViewById(R.id.btn_favourite).setOnClickListener(v -> toggleFavourite());
 
+        // Ratings & Reviews row
+        findViewById(R.id.btn_ratings_reviews).setOnClickListener(v -> openRatingsReviews());
+
         // Load book
         bookId = getIntent().getIntExtra(EXTRA_BOOK_ID, -1);
         if (bookId != -1) loadBook(bookId);
@@ -229,6 +232,13 @@ public class BookDetailActivity extends AppCompatActivity {
         Intent intent = new Intent(this, EditBookActivity.class);
         intent.putExtra(EditBookActivity.EXTRA_BOOK_ID, currentBook.id);
         editLauncher.launch(intent);
+    }
+
+    private void openRatingsReviews() {
+        if (currentBook == null) return;
+        Intent intent = new Intent(this, RatingsReviewsActivity.class);
+        intent.putExtra(RatingsReviewsActivity.EXTRA_BOOK_ID, currentBook.id);
+        editLauncher.launch(intent); // reuse editLauncher so we refresh on return
     }
 
     private void shareBook() {

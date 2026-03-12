@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/app_surface"
+    android:paddingBottom="32dp">
+
+    <!-- Drag handle -->
+    <View
+        android:layout_width="40dp"
+        android:layout_height="4dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="16dp"
+        android:background="@color/app_divider" />
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/tv_sheet_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        android:paddingBottom="20dp"
+        android:text="@string/reviews_write_title"
+        android:textColor="@color/text_primary"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <!-- divider -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/app_divider"
+        android:layout_marginBottom="20dp" />
+
+    <!-- Star rating label -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        android:layout_marginBottom="10dp"
+        android:text="@string/reviews_your_rating"
+        android:textColor="@color/text_secondary"
+        android:textSize="13sp"
+        android:textStyle="bold"
+        android:textAllCaps="true"
+        android:letterSpacing="0.08" />
+
+    <!-- Star selectors -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:layout_marginBottom="20dp">
+
+        <ImageView android:id="@+id/dial_star_1" android:layout_width="36dp" android:layout_height="36dp" android:src="@drawable/ic_star_filled" android:contentDescription="@string/cd_star_1" android:clickable="true" android:focusable="true" android:padding="4dp" android:background="?attr/selectableItemBackgroundBorderless" />
+        <ImageView android:id="@+id/dial_star_2" android:layout_width="36dp" android:layout_height="36dp" android:src="@drawable/ic_star_filled" android:contentDescription="@string/cd_star_2" android:clickable="true" android:focusable="true" android:padding="4dp" android:background="?attr/selectableItemBackgroundBorderless" />
+        <ImageView android:id="@+id/dial_star_3" android:layout_width="36dp" android:layout_height="36dp" android:src="@drawable/ic_star_filled" android:contentDescription="@string/cd_star_3" android:clickable="true" android:focusable="true" android:padding="4dp" android:background="?attr/selectableItemBackgroundBorderless" />
+        <ImageView android:id="@+id/dial_star_4" android:layout_width="36dp" android:layout_height="36dp" android:src="@drawable/ic_star_filled" android:contentDescription="@string/cd_star_4" android:clickable="true" android:focusable="true" android:padding="4dp" android:background="?attr/selectableItemBackgroundBorderless" />
+        <ImageView android:id="@+id/dial_star_5" android:layout_width="36dp" android:layout_height="36dp" android:src="@drawable/ic_star_filled" android:contentDescription="@string/cd_star_5" android:clickable="true" android:focusable="true" android:padding="4dp" android:background="?attr/selectableItemBackgroundBorderless" />
+
+    </LinearLayout>
+
+    <!-- Review text label -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        android:layout_marginBottom="8dp"
+        android:text="@string/reviews_your_review"
+        android:textColor="@color/text_secondary"
+        android:textSize="13sp"
+        android:textStyle="bold"
+        android:textAllCaps="true"
+        android:letterSpacing="0.08" />
+
+    <EditText
+        android:id="@+id/et_review"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="24dp"
+        android:minHeight="120dp"
+        android:hint="@string/reviews_hint"
+        android:textColorHint="@color/text_hint"
+        android:textColor="@color/text_primary"
+        android:textSize="14sp"
+        android:background="@drawable/bg_edit_input"
+        android:padding="16dp"
+        android:gravity="top|start"
+        android:inputType="textMultiLine|textCapSentences"
+        android:maxLines="8"
+        android:scrollbars="vertical"
+        android:autofillHints="no" />
+
+    <!-- Delete button (only for own review editing) -->
+    <TextView
+        android:id="@+id/btn_delete_review"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginBottom="12dp"
+        android:text="@string/reviews_delete"
+        android:textColor="#EF4444"
+        android:textSize="13sp"
+        android:textStyle="bold"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:visibility="gone" />
+
+    <!-- Save button -->
+    <LinearLayout
+        android:id="@+id/btn_save_review"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/bg_btn_primary_xl"
+        android:gravity="center"
+        android:clickable="true"
+        android:focusable="true">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/reviews_save"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+</LinearLayout>
