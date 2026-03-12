@@ -59,5 +59,19 @@ public interface BookDao {
     /** Favourite count for a user */
     @Query("SELECT COUNT(*) FROM books WHERE userId = :userId AND isFavorite = 1")
     int getFavoriteCount(int userId);
+
+    /** Books with a non-empty review/notes for a user */
+    @Query("SELECT COUNT(*) FROM books WHERE userId = :userId AND notes IS NOT NULL AND notes != ''")
+    int getReviewCount(int userId);
+
+    /**
+     * Diary query: search by title/author and optionally filter by reading status.
+     * Pass status = "All" to skip status filtering.
+     */
+    @Query("SELECT * FROM books WHERE userId = :userId " +
+           "AND (title LIKE '%' || :query || '%' OR author LIKE '%' || :query || '%') " +
+           "AND (:status = 'All' OR readingStatus = :status) " +
+           "ORDER BY dateAdded DESC")
+    List<Book> searchAndFilterByStatus(int userId, String query, String status);
 }
 

@@ -1,5 +1,6 @@
 package me.nethma.bookdiary;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.drawable.GradientDrawable;
@@ -15,6 +16,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SwitchCompat;
@@ -79,6 +82,9 @@ public class SearchFragment extends BaseFragment {
     private SessionManager sessionManager;
     private AppDatabase    db;
 
+    // ── Launcher ──────────────────────────────────────────────────────────────
+    private ActivityResultLauncher<Intent> detailLauncher;
+
     // ─────────────────────────────────────────────────────────────────────────
     // Fragment lifecycle
     // ─────────────────────────────────────────────────────────────────────────
@@ -93,6 +99,12 @@ public class SearchFragment extends BaseFragment {
 
         sessionManager = new SessionManager(requireContext());
         db             = AppDatabase.getInstance(requireContext());
+
+        detailLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK) applyFilters();
+                });
 
         // ── Bind views ────────────────────────────────────────────────────────
         etSearch        = view.findViewById(R.id.et_search);
@@ -311,8 +323,8 @@ public class SearchFragment extends BaseFragment {
     }
 
     private void openBookDetail(Book book) {
-        Intent intent = new Intent(requireContext(), EditBookActivity.class);
-        intent.putExtra(EditBookActivity.EXTRA_BOOK_ID, book.id);
-        startActivity(intent);
+        Intent intent = new Intent(requireContext(), BookDetailActivity.class);
+        intent.putExtra(BookDetailActivity.EXTRA_BOOK_ID, book.id);
+        detailLauncher.launch(intent);
     }
 }
