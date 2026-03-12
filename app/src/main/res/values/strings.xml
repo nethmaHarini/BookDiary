@@ -79,4 +79,17 @@
     <string name="home_empty_favorites">No favourites yet.\nMark a book as favourite to see it here.</string>
     <string name="home_empty_books">No books yet</string>
     <string name="home_empty_books_sub">Tap + to add your first book to your diary</string>
+
+    <!-- Search &amp; Filter screen -->
+    <string name="search_title">Search Books</string>
+    <string name="search_hint">Title, author, or category</string>
+    <string name="search_label_categories">Categories</string>
+    <string name="search_label_rating">Minimum Rating</string>
+    <string name="search_favorites_only">Favourites Only</string>
+    <string name="search_results_header">Search Results</string>
+    <string name="search_empty_title">No results found</string>
+    <string name="search_empty_sub">Try a different query or adjust your filters</string>
+
+    <!-- Content descriptions -->
+    <string name="cd_back">Back</string>
 </resources>

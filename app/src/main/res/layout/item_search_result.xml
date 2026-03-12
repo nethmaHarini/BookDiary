@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Individual search result card for fragment_search.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@drawable/bg_book_list_card"
+    android:padding="12dp"
+    android:layout_marginBottom="12dp"
+    android:clickable="true"
+    android:focusable="true">
+
+    <!-- Book cover (80×112 dp) -->
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/iv_cover"
+        android:layout_width="80dp"
+        android:layout_height="112dp"
+        android:scaleType="centerCrop"
+        android:contentDescription="@null"
+        app:shapeAppearanceOverlay="@style/BookCoverShape" />
+
+    <!-- Book details (right of cover) -->
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="112dp"
+        android:layout_weight="1"
+        android:layout_marginStart="12dp"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp">
+
+        <!-- Top: title + author -->
+        <LinearLayout
+            android:id="@+id/ll_top"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_alignParentTop="true">
+
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_primary"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:lineSpacingMultiplier="1.2"
+                android:maxLines="2"
+                android:ellipsize="end" />
+
+            <TextView
+                android:id="@+id/tv_author"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:textColor="@color/text_secondary"
+                android:textSize="13sp" />
+
+        </LinearLayout>
+
+        <!-- Bottom: star + rating + category  |  bookmark -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_alignParentBottom="true">
+
+            <!-- Star icon -->
+            <ImageView
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:src="@drawable/ic_star_filled"
+                android:contentDescription="@null" />
+
+            <!-- Rating number -->
+            <TextView
+                android:id="@+id/tv_rating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:textColor="@color/text_primary"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <!-- Category label -->
+            <TextView
+                android:id="@+id/tv_category"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:textColor="@color/text_hint"
+                android:textSize="11sp" />
+
+            <!-- Flexible spacer -->
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <!-- Bookmark / favourite toggle -->
+            <ImageView
+                android:id="@+id/iv_bookmark"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_bookmark"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@null" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>
+
