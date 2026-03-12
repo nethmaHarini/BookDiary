@@ -185,4 +185,38 @@
         <item>Currently Reading</item>
         <item>Finished</item>
     </string-array>
+
+    <!-- Ratings &amp; Reviews Screen -->
+    <string name="reviews_title">Ratings &amp; Reviews</string>
+    <string name="reviews_write">Write Review</string>
+    <string name="reviews_section_title">User Reviews</string>
+    <string name="reviews_sort_recent">Recent</string>
+    <string name="reviews_sort_helpful">Most Helpful</string>
+    <string name="reviews_count">Based on %d reviews</string>
+    <string name="reviews_count_single">Based on 1 review</string>
+    <string name="reviews_empty_title">No Reviews Yet</string>
+    <string name="reviews_empty_sub">Be the first to review this book</string>
+    <string name="reviews_write_title">Write a Review</string>
+    <string name="reviews_edit_title">Edit Your Review</string>
+    <string name="reviews_your_rating">Your Rating</string>
+    <string name="reviews_your_review">Your Review</string>
+    <string name="reviews_hint">Share your thoughts about this book…</string>
+    <string name="reviews_save">Save Review</string>
+    <string name="reviews_delete">Delete Review</string>
+    <string name="reviews_err_no_rating">Please select a star rating.</string>
+    <string name="reviews_err_empty">Please write a review.</string>
+    <string name="reviews_saved">Review saved!</string>
+    <string name="reviews_updated">Review updated!</string>
+    <string name="reviews_deleted">Review deleted.</string>
+    <string name="reviews_see_all">Ratings &amp; Reviews</string>
+    <string name="reviews_delete_confirm_title">Delete Review</string>
+    <string name="reviews_delete_confirm_msg">Are you sure you want to delete your review?</string>
+    <string name="cd_review_options">Review options</string>
+    <string name="cd_helpful">Helpful</string>
+    <string name="cd_not_helpful">Not helpful</string>
+    <string name="cd_star_1">1 star</string>
+    <string name="cd_star_2">2 stars</string>
+    <string name="cd_star_3">3 stars</string>
+    <string name="cd_star_4">4 stars</string>
+    <string name="cd_star_5">5 stars</string>
 </resources>
