@@ -55,6 +55,8 @@ dependencies {
     // Glide for cover images
     implementation(libs.glide)
     annotationProcessor(libs.glide.compiler)
+    // Splash Screen
+    implementation(libs.core.splashscreen)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

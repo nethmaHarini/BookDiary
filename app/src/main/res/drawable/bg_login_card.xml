@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Login card: bg-blue-950/30 = #0D1B3E at ~30% opacity over dark bg, border white/10, rounded-2xl -->
+<!-- Login card: uses semantic card_bg / card_border so it adapts to light & dark mode -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
     <corners android:radius="16dp" />
-    <solid android:color="#4D0A1628" />
-    <stroke android:width="1dp" android:color="#1AFFFFFF" />
+    <solid android:color="@color/card_bg" />
+    <stroke android:width="1dp" android:color="@color/card_border" />
 </shape>
 
