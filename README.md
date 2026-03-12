@@ -47,6 +47,7 @@ It's about **your relationship with books** — the ones you loved, the ones you
 | ✏️ **Edit Profile** | ✅ Done | Update display name, change password with current-password verification |
 | 📸 **Change Profile Picture** | ✅ Done | Camera capture or gallery pick, saved to private app storage |
 | 🔔 **Notification Settings** | ✅ Done | Per-type toggles (Reading Reminders, Daily Quote, Recommendations), time picker, WorkManager scheduling, runtime permission (Android 13+) |
+| 📬 **Notification Center** | ✅ Done | In-app notification inbox with unread badge dot on Home bell icon, swipe-to-dismiss, mark-all-read, clear-all, local persistence via `NotificationStore` |
 | 🌙 **Theme Preference** | ✅ Done | Light / Dark / System mode + 4 accent colours; entire app re-themes on save |
 | 🎨 **Accent Color System** | ✅ Done | Ocean Blue, Royal Purple, Emerald, Sunset — dynamic accent applied app-wide |
 | 🔒 **Password Hashing** | ✅ Done | BCrypt hashing via `PasswordUtils` for all password store and verify operations |
@@ -124,8 +125,9 @@ It's about **your relationship with books** — the ones you loved, the ones you
 │  • All Books vertical list — tap card → Book Details                        │
 │  • Live search bar + category filter chips (All / Fiction / Science / …)    │
 │  • Empty states for no books / no favourites                                │
-│  • Filter button → Search tab · Notifications button (bell)                 │
-│  • Bottom nav: Home ● | Search | [+ Add] | Diary | Profile                  │
+│  • Filter button → Search tab · Notifications button (bell) → NotificationCenterActivity  │
+│  • Notification bell shows red unread badge dot when there are unread notifications        │
+│  • Bottom nav: Home ● | Search | [+ Add] | Diary | Profile                                 │
 └───────┬──────────────────┬───────────────────┬───────────────────────────────┘
         │ [nav Search]     │ [nav Add]          │ ["See All" on Favourites strip]
         ▼                  ▼                    ▼
@@ -414,6 +416,17 @@ int    userId   = session.getUserId();
 
 `NotificationScheduler` uses **WorkManager** to enqueue/cancel workers. `BootReceiver` re-schedules after reboot. Runtime `POST_NOTIFICATIONS` permission requested on Android 13+.
 
+### In-App Notification Center *(v1.0 NEW)*
+
+All workers now also persist notifications to **`NotificationStore`** (SharedPreferences-backed JSON array) so they appear inside the app:
+
+- 🔔 Bell icon on the Home screen opens `NotificationCenterActivity`
+- Red badge dot on the bell shows unread notification count
+- Swipe left/right on any notification to dismiss it
+- **Mark all read** and **Clear all** action buttons
+- Notifications survive app restarts (persisted locally)
+- Types: 📚 Recommendations · 📖 Reading Reminders · ✨ Daily Quotes · 🚀 App Updates
+
 ---
 
 ## 🧭 Navigation
@@ -454,14 +467,16 @@ BookDiary/
 │       │   ├── utils/
 │       │   │   ├── AccentColorHelper.java        ← Applies accent colour to all tinted views
 │       │   │   ├── BootReceiver.java              ← Re-schedules notifications after reboot
-│       │   │   ├── DailyQuoteWorker.java          ← WorkManager — daily quote notification
+│       │   │   ├── DailyQuoteWorker.java          ← WorkManager — daily quote notification + NotificationStore
 │       │   │   ├── GoogleSignInHelper.java        ← Credential Manager + Firebase Auth wrapper
-│       │   │   ├── NotificationHelper.java        ← Creates channels & posts notifications
+│       │   │   ├── NotificationHelper.java        ← Creates channels & posts system notifications
+│       │   │   ├── NotificationItem.java          ← Model — single in-app notification entry (NEW)
 │       │   │   ├── NotificationPrefsManager.java  ← SharedPreferences for notification settings
 │       │   │   ├── NotificationScheduler.java     ← WorkManager enqueue/cancel logic
+│       │   │   ├── NotificationStore.java         ← In-app notification history store (NEW)
 │       │   │   ├── PasswordUtils.java             ← BCrypt hash & verify
-│       │   │   ├── ReadingReminderWorker.java     ← WorkManager — daily reading reminder
-│       │   │   ├── RecommendationWorker.java      ← WorkManager — recommendation nudge
+│       │   │   ├── ReadingReminderWorker.java     ← WorkManager — daily reading reminder + NotificationStore
+│       │   │   ├── RecommendationWorker.java      ← WorkManager — recommendation nudge + NotificationStore
 │       │   │   ├── SessionManager.java            ← SharedPreferences session handler
 │       │   │   └── ThemePrefsManager.java         ← SharedPreferences theme & accent prefs
 │       │   │
@@ -487,6 +502,7 @@ BookDiary/
 │       │   ├── FavouritesActivity.java            ← Dedicated Favourites screen: search + filter + full cards
 │       │   ├── EditProfileActivity.java           ← Update display name / change password
 │       │   ├── NotificationSettingsActivity.java  ← Notification toggles + time picker
+│       │   ├── NotificationCenterActivity.java    ← In-app notification inbox (NEW)
 │       │   ├── ThemePreferenceActivity.java       ← Theme mode + accent colour picker
 │       │   ├── RatingsReviewsActivity.java        ← Ratings & Reviews: summary, distribution, cards (NEW)
 │       │   │
@@ -509,6 +525,7 @@ BookDiary/
 │           │   ├── activity_favourites.xml              ← Favourites screen: search + filter chips + RecyclerView
 │           │   ├── activity_edit_profile.xml
 │           │   ├── activity_notification_settings.xml
+│           │   ├── activity_notification_center.xml             ← In-app notification center (NEW)
 │           │   ├── activity_theme_preference.xml
 │           │   ├── activity_ratings_reviews.xml         ← Ratings & Reviews screen layout (NEW)
 │           │   ├── fragment_home.xml
@@ -523,6 +540,7 @@ BookDiary/
 │           │   ├── item_diary_entry.xml                 ← Diary card: cover + stars + status badge + actions
 │           │   ├── item_fav_card.xml                    ← Favourites card: large cover + stars + category badge
 │           │   ├── item_review_card.xml                 ← Review card: avatar + stars + text + thumbs (NEW)
+│           │   ├── item_notification.xml                ← Notification list item card (NEW)
 │           │   └── dialog_add_review.xml                ← Bottom sheet: star picker + review input (NEW)
 │           ├── drawable/                                ← 80+ vector icons, bg shapes, gradients, selectors
 │           │   ├── ic_thumb_up.xml                      ← Thumbs up icon (NEW)
@@ -666,6 +684,7 @@ public static final String WEB_CLIENT_ID =
 | **Min SDK** | 24 (Android 7.0 Nougat) |
 | **Target SDK** | 36 |
 | **Last Updated** | March 2026 |
+| **Release** | v1.0 |
 
 ---
 
