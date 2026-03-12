@@ -72,8 +72,21 @@ public class GoogleSignInHelper {
                     @Override
                     public void onError(@NonNull GetCredentialException e) {
                         Log.e(TAG, "Credential error: " + e.getMessage(), e);
-                        activity.runOnUiThread(() ->
-                                callback.onError("Google Sign-In failed: " + e.getMessage()));
+                        String msg = e.getMessage() != null ? e.getMessage() : "";
+                        final String userMsg;
+                        // Error code 10 / [28444] = SHA-1 fingerprint not registered in
+                        // Firebase / Google Cloud Console for this build.
+                        if (msg.contains(": 10:") || msg.contains("[28444]")
+                                || msg.contains("Developer console is not set up")) {
+                            userMsg = "Google Sign-In is not configured for this build.\n\n"
+                                    + "Add this SHA-1 to your Firebase project:\n"
+                                    + "F3:48:B9:FF:B4:F7:F0:38:44:8B:19:EE:7B:48:E7:2A:34:FD:D7:D0\n\n"
+                                    + "Then re-download google-services.json.\n\n"
+                                    + "Use email/password login in the meantime.";
+                        } else {
+                            userMsg = "Google Sign-In failed. Please use email/password login.";
+                        }
+                        activity.runOnUiThread(() -> callback.onError(userMsg));
                     }
                 });
     }
