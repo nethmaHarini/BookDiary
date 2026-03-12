@@ -22,6 +22,7 @@ import me.nethma.bookdiary.database.AppDatabase;
 import me.nethma.bookdiary.database.User;
 import me.nethma.bookdiary.database.UserDao;
 import me.nethma.bookdiary.utils.PasswordUtils;
+import me.nethma.bookdiary.utils.SessionManager;
 
 public class RegisterActivity extends BaseActivity {
 
@@ -32,6 +33,7 @@ public class RegisterActivity extends BaseActivity {
 
     private boolean passwordVisible = false;
     private UserDao userDao;
+    private SessionManager sessionManager;
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
 
     @Override
@@ -49,6 +51,7 @@ public class RegisterActivity extends BaseActivity {
                 });
 
         userDao = AppDatabase.getInstance(this).userDao();
+        sessionManager = new SessionManager(this);
 
         bindViews();
         setListeners();
@@ -128,11 +131,16 @@ public class RegisterActivity extends BaseActivity {
                 try {
                     String hashedPassword = PasswordUtils.hash(password);
                     userDao.insertUser(new User(username, email, hashedPassword));
+                    // Fetch the inserted user to get the generated ID
+                    User insertedUser = userDao.findByEmail(email);
+                    int userId = insertedUser != null ? insertedUser.id : -1;
                     runOnUiThread(() -> {
+                        // Auto-login: save session so user goes straight to topic selection
+                        sessionManager.saveSession(userId, username, email, null);
                         Toast.makeText(this,
-                                "Account created! Please log in.", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(this, LoginActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                                "Welcome! Let's personalize your experience.", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(this, TopicSelectionActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
                         finish();
                     });

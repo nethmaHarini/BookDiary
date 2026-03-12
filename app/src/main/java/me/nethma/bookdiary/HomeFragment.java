@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +29,8 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import me.nethma.bookdiary.api.DiscoverBooksRepository;
+import me.nethma.bookdiary.api.OpenLibraryBook;
 import me.nethma.bookdiary.database.AppDatabase;
 import me.nethma.bookdiary.database.Book;
 import me.nethma.bookdiary.utils.SessionManager;
@@ -41,28 +44,33 @@ public class HomeFragment extends BaseFragment {
     // ── Views ─────────────────────────────────────────────────────────────────
     private RecyclerView       rvFavorites;
     private RecyclerView       rvAllBooks;
+    private RecyclerView       rvDiscover;
     private EditText           etSearch;
     private LinearLayout       chipContainer;
     private View               emptyFavoritesContainer;
     private View               emptyBooksContainer;
+    private View               discoverHeader;
+    private TextView           tvDiscoverSubtitle;
+    private ProgressBar        pbDiscover;
 
     // ── Adapters ──────────────────────────────────────────────────────────────
-    private FavoriteBookAdapter favoriteAdapter;
-    private AllBooksAdapter     allBooksAdapter;
+    private FavoriteBookAdapter   favoriteAdapter;
+    private AllBooksAdapter       allBooksAdapter;
+    private DiscoverBookAdapter   discoverAdapter;
 
     // ── State ─────────────────────────────────────────────────────────────────
     private String selectedCategory = "All";
     private String searchQuery      = "";
-    private static final String[] CATEGORIES =
-            {"All", "Fiction", "Science", "Mystery", "History"};
+    private String[] categories     = {"All", "Fiction", "Science", "Mystery", "History"};
 
     // ── Threading ─────────────────────────────────────────────────────────────
     private final ExecutorService executor    = Executors.newSingleThreadExecutor();
     private final Handler         mainHandler = new Handler(Looper.getMainLooper());
 
     // ── Dependencies ──────────────────────────────────────────────────────────
-    private SessionManager sessionManager;
-    private AppDatabase    db;
+    private SessionManager           sessionManager;
+    private AppDatabase              db;
+    private DiscoverBooksRepository  discoverRepo;
 
     // ── Launcher: refresh list when returning from BookDetailActivity ─────────
     private ActivityResultLauncher<Intent> detailLauncher;
@@ -83,6 +91,16 @@ public class HomeFragment extends BaseFragment {
 
         sessionManager = new SessionManager(requireContext());
         db = AppDatabase.getInstance(requireContext());
+        discoverRepo = new DiscoverBooksRepository(requireContext());
+
+        // Build dynamic categories from selected topics
+        List<String> topics = sessionManager.getSelectedTopics();
+        if (!topics.isEmpty()) {
+            String[] dynamic = new String[topics.size() + 1];
+            dynamic[0] = "All";
+            for (int i = 0; i < topics.size(); i++) dynamic[i + 1] = topics.get(i);
+            categories = dynamic;
+        }
 
         // Register result launchers before any possible start
         detailLauncher = registerForActivityResult(
@@ -99,10 +117,14 @@ public class HomeFragment extends BaseFragment {
         // Bind views
         rvFavorites             = view.findViewById(R.id.rv_favorites);
         rvAllBooks              = view.findViewById(R.id.rv_all_books);
+        rvDiscover              = view.findViewById(R.id.rv_discover);
         etSearch                = view.findViewById(R.id.et_search);
         chipContainer           = view.findViewById(R.id.chip_container);
         emptyFavoritesContainer = view.findViewById(R.id.empty_favorites_container);
         emptyBooksContainer     = view.findViewById(R.id.empty_books_container);
+        discoverHeader          = view.findViewById(R.id.discover_header);
+        tvDiscoverSubtitle      = view.findViewById(R.id.tv_discover_subtitle);
+        pbDiscover              = view.findViewById(R.id.pb_discover);
 
         // Set up adapters
         favoriteAdapter = new FavoriteBookAdapter(new FavoriteBookAdapter.OnBookClickListener() {
@@ -123,6 +145,15 @@ public class HomeFragment extends BaseFragment {
         rvAllBooks.setLayoutManager(new LinearLayoutManager(requireContext()));
         rvAllBooks.setAdapter(allBooksAdapter);
         rvAllBooks.setNestedScrollingEnabled(false);
+
+        // Discover RecyclerView (horizontal)
+        discoverAdapter = new DiscoverBookAdapter(book ->
+                Toast.makeText(requireContext(),
+                        "\"" + book.title + "\" — tap Add to add it to your library",
+                        Toast.LENGTH_SHORT).show());
+        rvDiscover.setLayoutManager(
+                new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
+        rvDiscover.setAdapter(discoverAdapter);
 
         // Header buttons
         view.findViewById(R.id.btn_notifications).setOnClickListener(v ->
@@ -155,8 +186,11 @@ public class HomeFragment extends BaseFragment {
         // Category chips
         buildCategoryChips();
 
-        // Seed demo data then load
-        seedSampleDataThenLoad();
+        // Load local books (no seeding — real API books are in discover section)
+        loadBooks();
+
+        // Load discover books from API
+        loadDiscoverBooks();
 
         return view;
     }
@@ -176,7 +210,7 @@ public class HomeFragment extends BaseFragment {
     private void buildCategoryChips() {
         chipContainer.removeAllViews();
         int accent = accentColor();
-        for (String cat : CATEGORIES) {
+        for (String cat : categories) {
             TextView chip = (TextView) LayoutInflater.from(requireContext())
                     .inflate(R.layout.item_category_chip, chipContainer, false);
             chip.setText(cat);
@@ -195,7 +229,7 @@ public class HomeFragment extends BaseFragment {
         int accent = accentColor();
         for (int i = 0; i < chipContainer.getChildCount(); i++) {
             TextView chip = (TextView) chipContainer.getChildAt(i);
-            applyChipStyle(chip, CATEGORIES[i].equals(selectedCategory), accent);
+            applyChipStyle(chip, categories[i].equals(selectedCategory), accent);
         }
     }
 
@@ -273,53 +307,58 @@ public class HomeFragment extends BaseFragment {
     }
 
     // ─────────────────────────────────────────────────────────────────────────
-    // Sample data seeding (first launch only)
+    // Discover Books (Open Library API)
     // ─────────────────────────────────────────────────────────────────────────
 
-    /**
-     * Seeds a handful of demo books when the user has no books yet.
-     * Called once on first launch so the Home screen is never blank.
-     */
-    private void seedSampleDataThenLoad() {
-        int userId = sessionManager.getUserId();
+    /** Fetch books from Open Library based on the user's selected topics. */
+    private void loadDiscoverBooks() {
+        if (!isAdded()) return;
+        List<String> topics = sessionManager.getSelectedTopics();
+        if (topics.isEmpty()) {
+            discoverHeader.setVisibility(View.GONE);
+            rvDiscover.setVisibility(View.GONE);
+            return;
+        }
 
-        executor.execute(() -> {
-            if (db.bookDao().getBookCount(userId) == 0) {
-                long now = System.currentTimeMillis();
+        // Show loading
+        discoverHeader.setVisibility(View.VISIBLE);
+        pbDiscover.setVisibility(View.VISIBLE);
+        rvDiscover.setVisibility(View.GONE);
 
-                db.bookDao().insert(book(userId, "The Great Gatsby",
-                        "F. Scott Fitzgerald", "Fiction",  4.8f, true,  now - days(7)));
-                db.bookDao().insert(book(userId, "Midnight Library",
-                        "Matt Haig",          "Fiction",  4.5f, true,  now - days(5)));
-                db.bookDao().insert(book(userId, "Circe",
-                        "Madeline Miller",    "Fiction",  4.9f, true,  now - days(3)));
-                db.bookDao().insert(book(userId, "Project Hail Mary",
-                        "Andy Weir",          "Science",  4.0f, false, now - days(2)));
-                db.bookDao().insert(book(userId, "Norwegian Wood",
-                        "Haruki Murakami",    "Fiction",  5.0f, false, now - days(1)));
-                db.bookDao().insert(book(userId, "The Alchemist",
-                        "Paulo Coelho",       "History",  4.3f, true,  now));
+        // Build subtitle with selected topics
+        StringBuilder sb = new StringBuilder("Based on: ");
+        for (int i = 0; i < topics.size(); i++) {
+            sb.append(topics.get(i));
+            if (i < topics.size() - 1) sb.append(", ");
+        }
+        tvDiscoverSubtitle.setText(sb.toString());
+
+        discoverRepo.fetchBooksForTopics(topics, new DiscoverBooksRepository.BooksCallback() {
+            @Override
+            public void onSuccess(List<OpenLibraryBook> books) {
+                mainHandler.post(() -> {
+                    if (!isAdded()) return;
+                    pbDiscover.setVisibility(View.GONE);
+                    if (!books.isEmpty()) {
+                        discoverAdapter.setBooks(books);
+                        rvDiscover.setVisibility(View.VISIBLE);
+                    }
+                });
             }
-            mainHandler.post(() -> {
-                if (isAdded()) loadBooks();
-            });
+
+            @Override
+            public void onError(String message) {
+                mainHandler.post(() -> {
+                    if (!isAdded()) return;
+                    pbDiscover.setVisibility(View.GONE);
+                });
+            }
         });
     }
 
-    /** Helper: create a Book entity with all required fields. */
-    private static Book book(int userId, String title, String author,
-                             String category, float rating,
-                             boolean fav, long dateAdded) {
-        Book b = new Book();
-        b.userId    = userId;
-        b.title     = title;
-        b.author    = author;
-        b.category  = category;
-        b.rating    = rating;
-        b.isFavorite = fav;
-        b.dateAdded = dateAdded;
-        return b;
-    }
+    // ─────────────────────────────────────────────────────────────────────────
+    // Helpers
+    // ─────────────────────────────────────────────────────────────────────────
 
     private static long days(int n) {
         return (long) n * 24 * 60 * 60 * 1000;
