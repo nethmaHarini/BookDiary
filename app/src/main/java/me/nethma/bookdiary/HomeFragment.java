@@ -66,6 +66,8 @@ public class HomeFragment extends BaseFragment {
 
     // ── Launcher: refresh list when returning from BookDetailActivity ─────────
     private ActivityResultLauncher<Intent> detailLauncher;
+    // ── Launcher: refresh list when returning from FavouritesActivity ────────
+    private ActivityResultLauncher<Intent> favsLauncher;
 
     // ─────────────────────────────────────────────────────────────────────────
     // Fragment lifecycle
@@ -82,8 +84,13 @@ public class HomeFragment extends BaseFragment {
         sessionManager = new SessionManager(requireContext());
         db = AppDatabase.getInstance(requireContext());
 
-        // Register result launcher before any possible start
+        // Register result launchers before any possible start
         detailLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK) loadBooks();
+                });
+        favsLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == Activity.RESULT_OK) loadBooks();
@@ -128,11 +135,10 @@ public class HomeFragment extends BaseFragment {
             }
         });
 
-        // "See all" → SearchFragment
+        // "See all" → FavouritesActivity
         view.findViewById(R.id.tv_see_all).setOnClickListener(v -> {
-            if (getActivity() instanceof MainActivity) {
-                ((MainActivity) getActivity()).navigateToSearch("");
-            }
+            Intent i = new Intent(requireContext(), FavouritesActivity.class);
+            favsLauncher.launch(i);
         });
 
         // Search

@@ -56,7 +56,8 @@ It's about **your relationship with books** — the ones you loved, the ones you
 | ✏️ **Edit Book** | ✅ Done | Pre-filled form from DB, update all fields, cover re-pick, delete with confirmation dialog |
 | 📋 **Book Details** | ✅ Done | Hero cover, stats bar (rating/category/status), Read Now button, review card with stars, favourite toggle, Share intent, popup menu (favourite/delete), edit launcher with back-refresh |
 | 📓 **Reading Diary** | ✅ Done | Stats row (total/reviewed/favourites), live search, status filter chips, book cards with cover, star rating, coloured status badge, favourite/edit/view actions |
-| ❤️ **Favourites** | ✅ Done | Favourite flag on every book; surfaced as horizontal strip on Home and filtered via Diary |
+| ❤️ **Favourites Screen** | ✅ Done | Dedicated full-screen Favourites activity — large book cards, live search, status filter chips (All / Reading / Want to Read / Finished), count badge, opens Book Details; linked from Home "See All" and Profile "My Favourites" row |
+| 👤 **Profile Stats (Live)** | ✅ Done | Total Books, Favourites, and Reviews counts loaded live from Room DB on every tab visit |
 
 ---
 
@@ -118,24 +119,24 @@ It's about **your relationship with books** — the ones you loved, the ones you
                                                 ▼
 ┌──────────────────────────────────────────────────────────────────────────────┐
 │                        MainActivity — Home Tab  ✅                           │
-│  • Favourites horizontal strip — tap card → Book Details                    │
+│  • Favourites horizontal strip — "See All" → FavouritesActivity             │
 │  • All Books vertical list — tap card → Book Details                        │
 │  • Live search bar + category filter chips (All / Fiction / Science / …)    │
 │  • Empty states for no books / no favourites                                │
 │  • Filter button → Search tab · Notifications button (bell)                 │
 │  • Bottom nav: Home ● | Search | [+ Add] | Diary | Profile                  │
-└───────┬──────────────────┬────────────────────┬──────────────────────────────┘
-        │ [nav Search]     │ [nav Add]           │ [book tap anywhere]
-        ▼                  ▼                     ▼
-┌──────────────────┐  ┌──────────────────────────────────┐
-│ Search & Filter  │  │         Add Book  ✅              │
-│  ✅  Done        │  │  Cover photo (gallery pick)       │
-│  Live text search│  │  Title, Author (validated)        │
-│  Category chips  │  │  Category & Status spinners       │
-│  Min-rating btns │  │  1–5 star tap rating             │
-│  Favourites only │  │  Review notes text field         │
-│  tap → Detail   │  │  Save → Room DB insert            │
-└──────────────────┘  └──────────────────────────────────┘
+└───────┬──────────────────┬───────────────────┬───────────────────────────────┘
+        │ [nav Search]     │ [nav Add]          │ ["See All" on Favourites strip]
+        ▼                  ▼                    ▼
+┌──────────────────┐  ┌───────────────────┐  ┌──────────────────────────────────┐
+│ Search & Filter  │  │   Add Book  ✅    │  │    Favourites Screen  ✅         │
+│  ✅  Done        │  │  Cover photo      │  │  Large book cards (96×144dp)     │
+│  Live text search│  │  Title, Author    │  │  Live search bar                 │
+│  Category chips  │  │  Category/Status  │  │  Status filter chips             │
+│  Min-rating btns │  │  1–5 star rating  │  │  Count badge in header           │
+│  Favourites only │  │  Review notes     │  │  Tap card → Book Details         │
+│  tap → Detail   │  │  Room DB insert   │  │  Empty state with ❤ icon         │
+└──────────────────┘  └───────────────────┘  └──────────────────────────────────┘
         │ [nav Diary]
         ▼
 ┌──────────────────────────────────────────────────────────────────────────────┐
@@ -164,16 +165,18 @@ It's about **your relationship with books** — the ones you loved, the ones you
         ▼
 ┌──────────────────────────────────────────────────────────────────────────────┐
 │                     Profile & Settings Screen  ✅                            │
-│  • Avatar + username + email + accent-coloured reading stat cards           │
+│  • Avatar + username + email                                                │
+│  • Reading stats (Total Books / Favourites / Reviews) — live from Room DB   │
 │  • Change profile photo → camera or gallery → saves to private storage     │
 │  • Edit Profile → update name / change password (current PW verified)      │
 │  • Notification Settings → per-type toggles + time picker + WorkManager    │
 │  • Theme Preference → Light / Dark / System + 4 accent colours             │
+│  • My Favourites → opens FavouritesActivity                                 │
 │  • Log Out button with confirmation dialog                                  │
-└─────────┬────────────────────┬──────────────────────────────────────────────┘
-          │ [Edit Profile]     │ [Notification Settings] / [Theme Preference]
-          ▼                    ▼
-  EditProfileActivity    NotificationSettingsActivity / ThemePreferenceActivity
+└─────────┬───────────────────┬──────────────────────────┬─────────────────────┘
+          │ [Edit Profile]    │ [Notification/Theme rows] │ [My Favourites row]
+          ▼                   ▼                           ▼
+  EditProfileActivity   Settings Activities        FavouritesActivity
 ```
 
 ---
@@ -239,6 +242,7 @@ BookDiary uses the **Room Persistence Library** backed by SQLite.
 | `searchBooks(userId, query)` | Full-text search across title and author |
 | `searchAndFilter(userId, query, category)` | Combined text + category filter (Home & Search tabs) |
 | `searchAndFilterByStatus(userId, query, status)` | Combined text + reading-status filter (Diary tab) |
+| `searchFavourites(userId, query, status)` | Favourite books only, with text + status filter (Favourites screen) |
 | `getBookById(bookId)` | Single book by primary key |
 | `getBookCount(userId)` | Total book count for a user |
 | `getFavoriteCount(userId)` | Favourite count for a user |
@@ -421,12 +425,14 @@ BookDiary/
 │       │   │
 │       │   ├── BookDetailActivity.java            ← Full book detail: cover hero, stats, review, fav, menu
 │       │   ├── EditBookActivity.java              ← Edit/delete book with pre-filled form
+│       │   ├── FavouritesActivity.java            ← Dedicated Favourites screen: search + filter + full cards
 │       │   ├── EditProfileActivity.java           ← Update display name / change password
 │       │   ├── NotificationSettingsActivity.java  ← Notification toggles + time picker
 │       │   ├── ThemePreferenceActivity.java       ← Theme mode + accent colour picker
 │       │   │
 │       │   ├── AllBooksAdapter.java               ← RecyclerView adapter — Home "All Books" vertical list
 │       │   ├── FavoriteBookAdapter.java           ← RecyclerView adapter — Home favourites horizontal strip
+│       │   ├── FavouritesCardAdapter.java         ← RecyclerView adapter — Favourites screen full cards
 │       │   ├── SearchResultAdapter.java           ← RecyclerView adapter — Search results list
 │       │   └── DiaryBookAdapter.java              ← RecyclerView adapter — Diary book cards
 │       │
@@ -440,6 +446,7 @@ BookDiary/
 │           │   ├── activity_main.xml                  ← CoordinatorLayout + custom bottom nav
 │           │   ├── activity_book_detail.xml           ← Hero cover, stats bar, review card, fav row
 │           │   ├── activity_edit_book.xml             ← Pre-filled edit form + delete button
+│           │   ├── activity_favourites.xml            ← Favourites screen: search + filter chips + RecyclerView
 │           │   ├── activity_edit_profile.xml
 │           │   ├── activity_notification_settings.xml
 │           │   ├── activity_theme_preference.xml
@@ -451,8 +458,9 @@ BookDiary/
 │           │   ├── item_book_list.xml                 ← Card: cover + title + author + rating + category + fav
 │           │   ├── item_book_favorite.xml             ← Compact card for favourites horizontal strip
 │           │   ├── item_search_result.xml             ← Search result card with bookmark toggle
-│           │   ├── item_category_chip.xml             ← Reusable pill chip (Home, Search, Diary)
-│           │   └── item_diary_entry.xml               ← Diary card: cover + stars + status badge + actions
+│           │   ├── item_category_chip.xml             ← Reusable pill chip (Home, Search, Diary, Favourites)
+│           │   ├── item_diary_entry.xml               ← Diary card: cover + stars + status badge + actions
+│           │   └── item_fav_card.xml                  ← Favourites card: large cover + stars + category badge
 │           ├── drawable/                              ← 80+ vector icons, bg shapes, gradients, selectors
 │           ├── drawable-night/                        ← Dark-mode drawable overrides
 │           └── values/
@@ -604,3 +612,6 @@ This project is submitted as academic coursework for ICT3214 — Mobile Applicat
   <i>"Read. Review. Remember."</i><br><br>
   Built with ❤️ for ICT3214 — Mobile Application Development
 </div>
+
+
+
