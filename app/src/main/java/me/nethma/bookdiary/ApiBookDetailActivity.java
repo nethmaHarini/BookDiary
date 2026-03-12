@@ -267,7 +267,8 @@ public class ApiBookDetailActivity extends BaseActivity {
             book.category     = (category != null && !category.isEmpty()) ? category : "Fiction";
             book.rating       = rating > 0 ? Math.min(rating, 5f) : 0f;
             book.coverUrl     = coverUrl;   // remote URL — Glide handles loading
-            book.notes        = fetchedDescription;
+            book.description  = fetchedDescription; // API description shown separately
+            book.notes        = null;       // user hasn't written a review yet
             book.isFavorite   = false;
             book.readingStatus = "Want to Read";
             book.dateAdded    = System.currentTimeMillis();
@@ -309,3 +310,5 @@ public class ApiBookDetailActivity extends BaseActivity {
         executor.shutdown();
     }
 }
+
+

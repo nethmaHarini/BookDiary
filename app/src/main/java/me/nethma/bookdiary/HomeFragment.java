@@ -25,6 +25,7 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -95,12 +96,7 @@ public class HomeFragment extends BaseFragment {
 
         // Build dynamic categories from selected topics
         List<String> topics = sessionManager.getSelectedTopics();
-        if (!topics.isEmpty()) {
-            String[] dynamic = new String[topics.size() + 1];
-            dynamic[0] = "All";
-            for (int i = 0; i < topics.size(); i++) dynamic[i + 1] = topics.get(i);
-            categories = dynamic;
-        }
+        categories = buildCategories(topics);
 
         // Register result launchers before any possible start
         detailLauncher = registerForActivityResult(
@@ -196,8 +192,29 @@ public class HomeFragment extends BaseFragment {
     public void onResume() {
         super.onResume();   // BaseFragment applies accent colour
         loadBooks();
-        // Refresh chip styles with potentially updated accent colour
-        refreshChipStyles();
+
+        // Rebuild category chips if selected topics have changed
+        List<String> latestTopics = sessionManager.getSelectedTopics();
+        String[] newCategories = buildCategories(latestTopics);
+        if (!Arrays.equals(newCategories, categories)) {
+            categories = newCategories;
+            selectedCategory = "All";
+            buildCategoryChips();
+            loadDiscoverBooks();
+        } else {
+            refreshChipStyles();
+        }
+    }
+
+    /** Build categories array from saved topics: "All" + each topic */
+    private String[] buildCategories(List<String> topics) {
+        if (topics.isEmpty()) {
+            return new String[]{"All", "Fiction", "Science", "Mystery", "History"};
+        }
+        String[] arr = new String[topics.size() + 1];
+        arr[0] = "All";
+        for (int i = 0; i < topics.size(); i++) arr[i + 1] = topics.get(i);
+        return arr;
     }
 
     // ─────────────────────────────────────────────────────────────────────────
