@@ -18,7 +18,9 @@ public class DailyQuoteWorker extends Worker {
     @NonNull
     @Override
     public Result doWork() {
-        NotificationHelper.sendDailyQuoteNotification(getApplicationContext());
+        Context ctx = getApplicationContext();
+        NotificationHelper.sendDailyQuoteNotification(ctx);
+        NotificationStore.seedQuote(ctx);
         return Result.success();
     }
 }

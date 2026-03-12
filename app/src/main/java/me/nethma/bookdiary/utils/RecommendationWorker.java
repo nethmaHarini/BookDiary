@@ -18,7 +18,9 @@ public class RecommendationWorker extends Worker {
     @NonNull
     @Override
     public Result doWork() {
-        NotificationHelper.sendRecommendationNotification(getApplicationContext());
+        Context ctx = getApplicationContext();
+        NotificationHelper.sendRecommendationNotification(ctx);
+        NotificationStore.seedRecommendation(ctx);
         return Result.success();
     }
 }

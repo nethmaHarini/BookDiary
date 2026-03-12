@@ -18,7 +18,9 @@ public class ReadingReminderWorker extends Worker {
     @NonNull
     @Override
     public Result doWork() {
-        NotificationHelper.sendReadingReminderNotification(getApplicationContext());
+        Context ctx = getApplicationContext();
+        NotificationHelper.sendReadingReminderNotification(ctx);
+        NotificationStore.seedReminder(ctx);
         return Result.success();
     }
 }
