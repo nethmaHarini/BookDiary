@@ -111,6 +111,12 @@
             android:exported="false"
             android:theme="@style/Theme.BookDiary" />
 
+        <!-- Notification Center Activity -->
+        <activity
+            android:name=".NotificationCenterActivity"
+            android:exported="false"
+            android:theme="@style/Theme.BookDiary" />
+
         <!-- Theme Preference Activity -->
         <activity
             android:name=".ThemePreferenceActivity"

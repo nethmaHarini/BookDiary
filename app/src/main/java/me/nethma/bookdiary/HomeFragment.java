@@ -16,7 +16,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -34,6 +33,7 @@ import me.nethma.bookdiary.api.DiscoverBooksRepository;
 import me.nethma.bookdiary.api.OpenLibraryBook;
 import me.nethma.bookdiary.database.AppDatabase;
 import me.nethma.bookdiary.database.Book;
+import me.nethma.bookdiary.utils.NotificationStore;
 import me.nethma.bookdiary.utils.SessionManager;
 
 /**
@@ -53,6 +53,7 @@ public class HomeFragment extends BaseFragment {
     private View               discoverHeader;
     private TextView           tvDiscoverSubtitle;
     private ProgressBar        pbDiscover;
+    private View               notifBadge;
 
     // ── Adapters ──────────────────────────────────────────────────────────────
     private FavoriteBookAdapter   favoriteAdapter;
@@ -149,9 +150,11 @@ public class HomeFragment extends BaseFragment {
         rvDiscover.setAdapter(discoverAdapter);
 
         // Header buttons
-        view.findViewById(R.id.btn_notifications).setOnClickListener(v ->
-                Toast.makeText(requireContext(),
-                        "Notifications coming soon!", Toast.LENGTH_SHORT).show());
+        notifBadge = view.findViewById(R.id.notif_badge);
+        updateNotifBadge();
+        view.findViewById(R.id.btn_notifications).setOnClickListener(v -> {
+            startActivity(new Intent(requireContext(), NotificationCenterActivity.class));
+        });
 
         view.findViewById(R.id.btn_filter).setOnClickListener(v -> {
             if (getActivity() instanceof MainActivity) {
@@ -192,6 +195,7 @@ public class HomeFragment extends BaseFragment {
     public void onResume() {
         super.onResume();   // BaseFragment applies accent colour
         loadBooks();
+        updateNotifBadge();
 
         // Rebuild category chips if selected topics have changed
         List<String> latestTopics = sessionManager.getSelectedTopics();
@@ -373,6 +377,13 @@ public class HomeFragment extends BaseFragment {
     // ─────────────────────────────────────────────────────────────────────────
     // Helpers
     // ─────────────────────────────────────────────────────────────────────────
+
+    /** Show/hide the red badge dot on the notification bell based on unread count. */
+    private void updateNotifBadge() {
+        if (notifBadge == null || !isAdded()) return;
+        int unread = new NotificationStore(requireContext()).getUnreadCount();
+        notifBadge.setVisibility(unread > 0 ? View.VISIBLE : View.GONE);
+    }
 
     private static long days(int n) {
         return (long) n * 24 * 60 * 60 * 1000;
