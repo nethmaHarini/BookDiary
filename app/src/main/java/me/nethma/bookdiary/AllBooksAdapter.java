@@ -12,6 +12,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -108,25 +112,34 @@ public class AllBooksAdapter extends RecyclerView.Adapter<AllBooksAdapter.ViewHo
             ivCover.setImageResource(R.drawable.ic_book_logo);
             ivCover.setImageTintList(ColorStateList.valueOf(0x80FFFFFF));
 
-            // ── Async cover load with recycling guard ──────────────────────
+            // ── Async cover load via Glide (handles both http URLs and local files) ──
             if (book.coverUrl != null && !book.coverUrl.isEmpty()) {
-                final String path = book.coverUrl;
-                ivCover.setTag(path);
-                new Thread(() -> {
-                    android.graphics.Bitmap bm =
-                            android.graphics.BitmapFactory.decodeFile(path);
-                    if (bm != null) {
-                        ivCover.post(() -> {
-                            if (path.equals(ivCover.getTag())) {
+                String url = book.coverUrl.startsWith("http")
+                        ? book.coverUrl
+                        : "file://" + book.coverUrl;
+                Glide.with(itemView.getContext())
+                        .load(url)
+                        .apply(new RequestOptions()
+                                .placeholder(R.drawable.ic_book_logo)
+                                .error(R.drawable.ic_book_logo)
+                                .transform(new RoundedCorners(24)))
+                        .listener(new com.bumptech.glide.request.RequestListener<android.graphics.drawable.Drawable>() {
+                            @Override
+                            public boolean onLoadFailed(com.bumptech.glide.load.engine.GlideException e,
+                                    Object model, com.bumptech.glide.request.target.Target<android.graphics.drawable.Drawable> target,
+                                    boolean isFirstResource) { return false; }
+                            @Override
+                            public boolean onResourceReady(android.graphics.drawable.Drawable resource,
+                                    Object model, com.bumptech.glide.request.target.Target<android.graphics.drawable.Drawable> target,
+                                    com.bumptech.glide.load.DataSource dataSource, boolean isFirstResource) {
                                 ivCover.setBackground(null);
-                                ivCover.setImageBitmap(bm);
-                                ivCover.setImageTintList(null); // clear placeholder tint
+                                ivCover.setImageTintList(null);
+                                return false;
                             }
-                        });
-                    }
-                }).start();
+                        })
+                        .into(ivCover);
             } else {
-                ivCover.setTag(null);
+                Glide.with(itemView.getContext()).clear(ivCover);
             }
 
             // ── Heart icon ─────────────────────────────────────────────────

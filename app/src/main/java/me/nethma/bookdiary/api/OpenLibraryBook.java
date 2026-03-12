@@ -22,6 +22,12 @@ public class OpenLibraryBook {
     @SerializedName("first_publish_year")
     public int firstPublishYear;
 
+    @SerializedName("ratings_average")
+    public float ratingsAverage;
+
+    @SerializedName("ratings_count")
+    public int ratingsCount;
+
     /** Returns the first author or "Unknown Author" */
     public String getAuthor() {
         if (authorName != null && !authorName.isEmpty()) {
@@ -38,4 +44,5 @@ public class OpenLibraryBook {
         return null;
     }
 }
+
 

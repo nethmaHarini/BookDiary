@@ -2,9 +2,6 @@ package me.nethma.bookdiary;
 
 import android.content.Intent;
 import android.content.res.ColorStateList;
-import android.content.res.Configuration;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -19,6 +16,10 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.util.Locale;
 import java.util.concurrent.ExecutorService;
@@ -157,12 +158,10 @@ public class BookDetailActivity extends AppCompatActivity {
     // ── Cover image loading ────────────────────────────────────────────────
 
     private void loadCover(Book book) {
-        // Show placeholder colour first
-        boolean dark = (getResources().getConfiguration().uiMode
-                & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
+        // Coloured placeholder based on title hash
         int[] colors = {0xFF6366F1, 0xFF8B5CF6, 0xFF06B6D4,
                         0xFF10B981, 0xFFF59E0B, 0xFFEF4444, 0xFFEC4899};
-        int   c      = colors[Math.abs(book.title.hashCode()) % colors.length];
+        int c = colors[Math.abs(book.title.hashCode()) % colors.length];
 
         android.graphics.drawable.GradientDrawable ph =
                 new android.graphics.drawable.GradientDrawable();
@@ -170,21 +169,33 @@ public class BookDetailActivity extends AppCompatActivity {
         ph.setCornerRadius(24f);
         ph.setColor(c);
         ivCover.setBackground(ph);
-        ivCover.setImageResource(R.drawable.ic_book_logo);
         ivCover.setImageTintList(ColorStateList.valueOf(0x80FFFFFF));
+        ivCover.setImageResource(R.drawable.ic_book_logo);
 
         if (book.coverUrl != null && !book.coverUrl.isEmpty()) {
-            final String path = book.coverUrl;
-            new Thread(() -> {
-                Bitmap bm = BitmapFactory.decodeFile(path);
-                if (bm != null) {
-                    ivCover.post(() -> {
-                        ivCover.setBackground(null);
-                        ivCover.setImageBitmap(bm);
-                        ivCover.setImageTintList(null);
+            // Determine if it's a remote URL or local file path
+            String url = book.coverUrl.startsWith("http")
+                    ? book.coverUrl
+                    : "file://" + book.coverUrl;
+            Glide.with(this)
+                    .load(url)
+                    .apply(new RequestOptions()
+                            .placeholder(R.drawable.ic_book_logo)
+                            .error(R.drawable.ic_book_logo)
+                            .transform(new RoundedCorners(24)))
+                    .into(new com.bumptech.glide.request.target.CustomTarget<android.graphics.drawable.Drawable>() {
+                        @Override
+                        public void onResourceReady(
+                                android.graphics.drawable.Drawable resource,
+                                com.bumptech.glide.request.transition.Transition<? super android.graphics.drawable.Drawable> transition) {
+                            ivCover.setBackground(null);
+                            ivCover.setImageTintList(null);
+                            ivCover.setImageDrawable(resource);
+                        }
+
+                        @Override
+                        public void onLoadCleared(android.graphics.drawable.Drawable placeholder) {}
                     });
-                }
-            }).start();
         }
     }
 
