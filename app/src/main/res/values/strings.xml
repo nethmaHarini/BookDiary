@@ -92,4 +92,50 @@
 
     <!-- Content descriptions -->
     <string name="cd_back">Back</string>
+
+    <!-- Add / Edit Book -->
+    <string name="add_book_title">Add New Book</string>
+    <string name="edit_book_title">Edit Book</string>
+    <string name="add_book_cover_hint">Upload Cover</string>
+    <string name="edit_book_cover_hint">Change Cover</string>
+    <string name="form_label_title">Book Title</string>
+    <string name="form_label_author">Author</string>
+    <string name="form_label_category">Category</string>
+    <string name="form_label_status">Reading Status</string>
+    <string name="form_label_rating">Your Rating</string>
+    <string name="form_label_review">Your Review</string>
+    <string name="form_hint_title">e.g. The Great Gatsby</string>
+    <string name="form_hint_author">e.g. F. Scott Fitzgerald</string>
+    <string name="form_hint_review">What did you think of this book?</string>
+    <string name="btn_save">Save</string>
+    <string name="btn_save_changes">Save Changes</string>
+    <string name="btn_delete_book">Delete Book</string>
+    <string name="delete_confirm_title">Delete Book</string>
+    <string name="delete_confirm_msg">Are you sure you want to delete this book? This action cannot be undone.</string>
+    <string name="delete_confirm_yes">Delete</string>
+    <string name="delete_confirm_no">Cancel</string>
+    <string name="msg_book_saved">Book saved!</string>
+    <string name="msg_book_updated">Book updated!</string>
+    <string name="msg_book_deleted">Book deleted.</string>
+    <string name="err_title_empty">Please enter a book title.</string>
+    <string name="err_author_empty">Please enter the author name.</string>
+    <string name="reading_status_default">Want to Read</string>
+
+    <!-- Category list (also used as spinner items) -->
+    <string-array name="book_categories">
+        <item>Fiction</item>
+        <item>Non-Fiction</item>
+        <item>Science</item>
+        <item>Mystery</item>
+        <item>History</item>
+        <item>Sci-Fi &amp; Fantasy</item>
+        <item>Biography</item>
+    </string-array>
+
+    <!-- Reading Status list -->
+    <string-array name="reading_statuses">
+        <item>Want to Read</item>
+        <item>Currently Reading</item>
+        <item>Finished</item>
+    </string-array>
 </resources>

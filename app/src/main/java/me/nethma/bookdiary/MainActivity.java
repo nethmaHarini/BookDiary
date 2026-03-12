@@ -210,6 +210,11 @@ public class MainActivity extends BaseActivity {
         loadFragment(SearchFragment.newInstance(initialQuery), true);
     }
 
+    /** Navigate back to the Home tab (called after Add / Edit). */
+    public void navigateHome() {
+        selectTab(R.id.nav_home, new HomeFragment());
+    }
+
     /** Call from any Fragment to log out */
     public void logout() {
         sessionManager.clearSession();

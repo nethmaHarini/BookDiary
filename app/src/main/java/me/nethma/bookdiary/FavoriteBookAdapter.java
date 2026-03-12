@@ -93,41 +93,44 @@ public class FavoriteBookAdapter extends RecyclerView.Adapter<FavoriteBookAdapte
             tvAuthor.setText(book.author);
             tvRating.setText(String.format(Locale.US, "%.1f", book.rating));
 
-            // ── Book cover placeholder ──────────────────────────────────────
+            // ── Always show placeholder first (correct recycled-view state) ──
             int colorIdx = Math.abs(book.title.hashCode()) % PLACEHOLDER_COLORS.length;
             GradientDrawable placeholder = new GradientDrawable();
             placeholder.setShape(GradientDrawable.RECTANGLE);
             placeholder.setCornerRadius(24f);
             placeholder.setColor(PLACEHOLDER_COLORS[colorIdx]);
+            ivCover.setBackground(placeholder);
+            ivCover.setImageResource(R.drawable.ic_book_logo);
+            ivCover.setImageTintList(ColorStateList.valueOf(0x80FFFFFF));
 
-            // If a local cover file exists load it, else show the colored placeholder
+            // ── Async cover load with recycling guard ──────────────────────
             if (book.coverUrl != null && !book.coverUrl.isEmpty()) {
-                android.graphics.Bitmap bm =
-                        android.graphics.BitmapFactory.decodeFile(book.coverUrl);
-                if (bm != null) {
-                    ivCover.setBackground(null);
-                    ivCover.setImageBitmap(bm);
-                } else {
-                    ivCover.setBackground(placeholder);
-                    ivCover.setImageResource(R.drawable.ic_book_logo);
-                    ivCover.setImageTintList(
-                            ColorStateList.valueOf(0x80FFFFFF));
-                }
+                final String path = book.coverUrl;
+                ivCover.setTag(path);
+                new Thread(() -> {
+                    android.graphics.Bitmap bm =
+                            android.graphics.BitmapFactory.decodeFile(path);
+                    if (bm != null) {
+                        ivCover.post(() -> {
+                            if (path.equals(ivCover.getTag())) {
+                                ivCover.setBackground(null);
+                                ivCover.setImageBitmap(bm);
+                                ivCover.setImageTintList(null); // clear placeholder tint
+                            }
+                        });
+                    }
+                }).start();
             } else {
-                ivCover.setBackground(placeholder);
-                ivCover.setImageResource(R.drawable.ic_book_logo);
-                ivCover.setImageTintList(
-                        ColorStateList.valueOf(0x80FFFFFF));
+                ivCover.setTag(null);
             }
 
             // ── Heart icon ─────────────────────────────────────────────────
             if (book.isFavorite) {
                 ivHeart.setImageResource(R.drawable.ic_heart_filled);
-                ivHeart.setImageTintList(null); // colour is baked into the icon
+                ivHeart.setImageTintList(null);
             } else {
                 ivHeart.setImageResource(R.drawable.ic_heart);
-                ivHeart.setImageTintList(
-                        ColorStateList.valueOf(0xFFFFFFFF));
+                ivHeart.setImageTintList(ColorStateList.valueOf(0xFFFFFFFF));
             }
 
             // ── Click listeners ────────────────────────────────────────────
