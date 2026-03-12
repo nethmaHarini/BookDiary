@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Dashed-border cover image placeholder (128×192dp) -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <corners android:radius="8dp" />
+    <solid android:color="@color/app_surface2" />
+    <stroke
+        android:width="2dp"
+        android:color="@color/text_hint"
+        android:dashWidth="8dp"
+        android:dashGap="4dp" />
+</shape>
+

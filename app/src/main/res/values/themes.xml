@@ -33,6 +33,17 @@
         <item name="cornerSize">12dp</item>
     </style>
 
+    <!-- Label above form fields (Book Title, Author, etc.) -->
+    <style name="FormLabel">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">6dp</item>
+        <item name="android:textColor">@color/text_secondary</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:paddingStart">2dp</item>
+    </style>
+
     <!-- Splash screen theme -->
     <style name="Theme.BookDiary.Splash" parent="Theme.BookDiary">
         <item name="android:windowBackground">@color/app_background</item>

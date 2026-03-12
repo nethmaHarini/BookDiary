@@ -1,5 +1,6 @@
 package me.nethma.bookdiary;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
@@ -247,8 +248,9 @@ public class HomeFragment extends BaseFragment {
     }
 
     private void openBookDetail(Book book) {
-        // TODO: launch BookDetailActivity, passing book.id
-        Toast.makeText(requireContext(), book.title, Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(requireContext(), EditBookActivity.class);
+        intent.putExtra(EditBookActivity.EXTRA_BOOK_ID, book.id);
+        startActivity(intent);
     }
 
     // ─────────────────────────────────────────────────────────────────────────

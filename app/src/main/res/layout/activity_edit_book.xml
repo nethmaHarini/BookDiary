@@ -4,30 +4,52 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/app_background"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:fitsSystemWindows="true">
 
     <!-- ═══ STICKY HEADER ═══ -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/app_background"
-        android:elevation="4dp"
-        android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingStart="20dp"
-        android:paddingEnd="20dp"
-        android:paddingTop="18dp"
+        android:orientation="horizontal"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:paddingTop="14dp"
         android:paddingBottom="14dp">
+
+        <FrameLayout
+            android:id="@+id/btn_back"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="10dp">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_arrow_back"
+                android:contentDescription="@string/cd_back"
+                app:tint="@color/text_primary" />
+        </FrameLayout>
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/add_book_title"
+            android:layout_marginStart="4dp"
+            android:text="@string/edit_book_title"
             android:textColor="@color/text_primary"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:textStyle="bold"
-            android:letterSpacing="-0.02" />
+            android:gravity="center" />
+
+        <!-- Spacer for symmetry -->
+        <View
+            android:layout_width="44dp"
+            android:layout_height="44dp" />
 
     </LinearLayout>
 
@@ -71,7 +93,6 @@
                     android:focusable="true"
                     android:clipToOutline="true">
 
-                    <!-- Preview (shown after image is picked) -->
                     <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/iv_cover_preview"
                         android:layout_width="match_parent"
@@ -80,7 +101,6 @@
                         android:visibility="gone"
                         app:shapeAppearanceOverlay="@style/BookCoverShape" />
 
-                    <!-- Placeholder (shown when no image picked) -->
                     <LinearLayout
                         android:id="@+id/cover_placeholder"
                         android:layout_width="match_parent"
@@ -92,7 +112,7 @@
                         <ImageView
                             android:layout_width="40dp"
                             android:layout_height="40dp"
-                            android:src="@drawable/ic_camera"
+                            android:src="@drawable/ic_edit"
                             android:contentDescription="@null"
                             app:tint="@color/text_hint" />
 
@@ -100,10 +120,12 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
-                            android:text="@string/add_book_cover_hint"
+                            android:text="@string/edit_book_cover_hint"
                             android:textColor="@color/text_hint"
                             android:textSize="11sp"
                             android:textStyle="bold"
+                            android:textAllCaps="true"
+                            android:letterSpacing="0.08"
                             android:gravity="center" />
 
                     </LinearLayout>
@@ -147,7 +169,7 @@
                 android:textColorHint="@color/text_hint"
                 android:textSize="15sp" />
 
-            <!-- ── Category spinner ── -->
+            <!-- ── Category ── -->
             <TextView style="@style/FormLabel" android:text="@string/form_label_category" />
             <FrameLayout
                 android:layout_width="match_parent"
@@ -166,6 +188,37 @@
                     android:paddingEnd="44dp"
                     android:gravity="center_vertical"
                     android:entries="@array/book_categories" />
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center_vertical|end"
+                    android:layout_marginEnd="14dp"
+                    android:src="@drawable/ic_expand_more"
+                    android:contentDescription="@null"
+                    android:clickable="false"
+                    android:focusable="false" />
+            </FrameLayout>
+
+            <!-- ── Reading Status ── -->
+            <TextView style="@style/FormLabel" android:text="@string/form_label_status" />
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/bg_form_input"
+                android:clickable="false"
+                android:focusable="false">
+
+                <Spinner
+                    android:id="@+id/spinner_status"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="44dp"
+                    android:gravity="center_vertical"
+                    android:entries="@array/reading_statuses" />
 
                 <ImageView
                     android:layout_width="20dp"
@@ -236,11 +289,12 @@
                 android:textColorHint="@color/text_hint"
                 android:textSize="15sp" />
 
-            <!-- ── Save button ── -->
+            <!-- ── Save Changes button ── -->
             <LinearLayout
                 android:id="@+id/btn_save"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
+                android:layout_marginBottom="14dp"
                 android:background="@drawable/bg_btn_primary_xl"
                 android:clickable="true"
                 android:focusable="true"
@@ -257,8 +311,37 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:text="@string/btn_save"
+                    android:text="@string/btn_save_changes"
                     android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <!-- ── Delete Book button ── -->
+            <LinearLayout
+                android:id="@+id/btn_delete"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:background="@drawable/bg_delete_btn"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_delete_photo"
+                    android:contentDescription="@null"
+                    app:tint="#EF4444" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="@string/btn_delete_book"
+                    android:textColor="#EF4444"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
@@ -268,3 +351,4 @@
     </ScrollView>
 
 </LinearLayout>
+

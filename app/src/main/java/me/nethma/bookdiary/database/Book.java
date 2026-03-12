@@ -27,5 +27,9 @@ public class Book {
     public long dateAdded;    // epoch milliseconds
 
     public int userId;        // links to the logged-in User row
+
+    @Nullable
+    public String readingStatus; // "Want to Read" | "Currently Reading" | "Finished"
 }
+
 

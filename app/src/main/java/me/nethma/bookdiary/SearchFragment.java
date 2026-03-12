@@ -1,5 +1,6 @@
 package me.nethma.bookdiary;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
@@ -13,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -311,7 +311,8 @@ public class SearchFragment extends BaseFragment {
     }
 
     private void openBookDetail(Book book) {
-        // TODO: launch BookDetailActivity
-        Toast.makeText(requireContext(), book.title, Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(requireContext(), EditBookActivity.class);
+        intent.putExtra(EditBookActivity.EXTRA_BOOK_ID, book.id);
+        startActivity(intent);
     }
 }

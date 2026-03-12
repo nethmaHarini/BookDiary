@@ -67,6 +67,13 @@
             android:windowSoftInputMode="adjustResize"
             android:theme="@style/Theme.BookDiary" />
 
+        <!-- Edit Book Activity -->
+        <activity
+            android:name=".EditBookActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/Theme.BookDiary" />
+
         <!-- Notification Settings Activity -->
         <activity
             android:name=".NotificationSettingsActivity"
