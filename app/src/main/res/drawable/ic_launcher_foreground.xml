@@ -6,7 +6,7 @@
         android:left="24dp"
         android:right="24dp">
         <bitmap
-            android:src="@drawable/logo"
+            android:src="@drawable/logo_resized"
             android:gravity="center"
             android:tileMode="disabled" />
     </item>

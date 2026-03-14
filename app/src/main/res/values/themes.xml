@@ -47,7 +47,7 @@
     <!-- Splash screen theme -->
     <style name="Theme.BookDiary.Splash" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/app_background</item>
-        <item name="windowSplashScreenAnimatedIcon">@drawable/logo</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/logo_resized</item>
         <item name="windowSplashScreenIconBackgroundColor">@color/app_background</item>
         <item name="postSplashScreenTheme">@style/Theme.BookDiary</item>
     </style>
